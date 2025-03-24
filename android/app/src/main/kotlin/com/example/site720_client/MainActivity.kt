@@ -1,4 +1,4 @@
-package com.example.site720_client
+package com.site720.client
 
 import io.flutter.embedding.android.FlutterActivity
 

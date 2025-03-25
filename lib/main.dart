@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:site720_client/screens/splashScreen.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(fontFamily: 'WixMadeforDisplay'),
@@ -13,6 +13,6 @@ Future<void> main() async {
   ));
 }
 
-initFirebase() async {
-  await Firebase.initializeApp();
-}
+// initFirebase() async {
+//   await Firebase.initializeApp();
+// }

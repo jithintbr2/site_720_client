@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Config {
-  static String get applicationName => "Home4";
-  static String get apiBaseUrl =>  "https://home4.login2.co.in/client/ApiV2/";
+  static String get applicationName => "Site720";
+  static String get apiBaseUrl => "https://s1.site720.com/clientv1/api/";
 
   static double get cartTileHeight => 60;
   static bool get addButtonInvert => false;

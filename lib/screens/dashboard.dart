@@ -284,28 +284,29 @@ class _DashboardState extends State<Dashboard> {
                                     ]),
                                   )
                                 : SizedBox(),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ListPage()),
-                                );
-                              },
-                              child: Container(
-                                height: 180,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/homes4slides-1.png"),
-                                      fit: BoxFit.fill,
-                                    )),
+                            Visibility(
+                              visible: false,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ListPage()),
+                                  );
+                                },
+                                child: Container(
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/homes4slides-1.png"),
+                                        fit: BoxFit.fill,
+                                      )),
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                           
                             InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -344,7 +345,7 @@ class _DashboardState extends State<Dashboard> {
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
                                       image: AssetImage(
-                                          "assets/images/homes4slides-3.png"),
+                                          "assets/images/homes4slides-3.jpg"),
                                       fit: BoxFit.fill,
                                     )),
                               ),

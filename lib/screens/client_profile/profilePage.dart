@@ -218,9 +218,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         }
                                       },
                                       child: Container(
+                                       
                                         decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 242, 174, 150),
+                                            color: Color.fromARGB(255, 199, 169, 159),
+                                                //   color: Color.fromARGB(
+                                                // 255, 242, 174, 150),
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             boxShadow: [
@@ -238,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  .08,
+                                                  .07,
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -267,13 +269,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ),
                                             ),
                                             SizedBox(
-                                              height: 20,
+                                              height:  20,
                                               child: Text(
                                                 iconsList!
                                                     .data.icons[index].iconName,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 12),
+                                                    overflow: TextOverflow.ellipsis,
                                               ),
                                             )
                                           ],

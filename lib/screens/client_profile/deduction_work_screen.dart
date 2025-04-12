@@ -96,7 +96,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                               width: MediaQuery.of(context).size.width * 0.95,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF96b2b5)),
+                                  color: Color(0xFF876B6F)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -111,12 +111,22 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
+                                            'Phase:${deductionWorks!.data[index].phaseName.toString()}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
                                             deductionWorks!.data[index].itemName
                                                 .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
-                                                fontSize: 18),
+                                                fontSize: 15),
                                           ),
                                           const SizedBox(
                                             height: 5,
@@ -136,6 +146,45 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                                     ),
                                     Column(
                                       children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.28,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.calendar_today,
+                                                      color: Colors.white,
+                                                      size: 12,
+                                                    ),
+                                                    SizedBox(width: 6),
+                                                    Text(
+                                                      deductionWorks!
+                                                          .data[index].createdAt
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
                                         Container(
                                           width: MediaQuery.of(context)
                                                   .size

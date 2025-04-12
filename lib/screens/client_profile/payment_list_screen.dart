@@ -91,10 +91,10 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 0.95,
+                              height: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF96b2b5)),
+                                    color: Color(0xFF876B6F)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -109,12 +109,33 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            paymentList!.data[index].paidDate
+                                            paymentList!
+                                                .data[index].transactionDate
                                                 .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                                 fontSize: 16),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "Phase : ${paymentList!.data[index].phaseName}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "Collected By : ${paymentList!.data[index].accountHead}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 14),
                                           ),
                                           const SizedBox(
                                             height: 5,
@@ -133,7 +154,45 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                       ),
                                     ),
                                     Column(
+                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.18,
+                                        
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: paymentList!.data[index]
+                                                      .paymentMethod == "CASH"?const Color.fromARGB(255, 0, 189, 85):const Color.fromARGB(255, 255, 255, 255),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(2.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .center,
+                                              children: [
+                                                Text(
+                                                  paymentList!.data[index]
+                                                      .paymentMethod,
+                                                  style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w700,
+                                                    color: Colors.black,
+                                                    fontSize: 11,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
                                         Container(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -144,7 +203,8 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                                   BorderRadius.circular(5),
                                               color: Colors.white),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
+                                            padding:
+                                                const EdgeInsets.all(6.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -159,7 +219,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                                 ),
                                                 Text(
                                                   paymentList!
-                                                      .data[index].paidAmount
+                                                      .data[index].amount
                                                       .toString(),
                                                   style: TextStyle(
                                                       fontWeight:

@@ -222,7 +222,6 @@ class HttpService {
     try {
       var result = await _dio.post("${Config.apiBaseUrl}getClientDeductionWork",
           data: formData);
-
       if (result.statusCode == 200) {
         DeductionWorkModel model = DeductionWorkModel.fromJson(result.data);
         return model;

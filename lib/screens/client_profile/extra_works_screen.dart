@@ -101,7 +101,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
                                   padding: const EdgeInsets.only(top: 5),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xFF96b2b5),
+                                     color: Color(0xFF876B6F),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -147,6 +147,46 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
                                                                   FontWeight
                                                                       .bold,
                                                               fontSize: 16),
+                                                        ),
+                                                          Text(
+                                                          'Phase:${extraWorks!
+                                                              .data[i].phaseName
+                                                              .toString()}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              
+                                                              fontSize: 14),
+                                                        ),
+                                                         Text(
+                                                          'Stage:${extraWorks!
+                                                              .data[i].stageName
+                                                              .toString()}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            
+                                                              fontSize: 14),
+                                                        ),
+                                                          Text(
+                                                          'Created at:${extraWorks!
+                                                              .data[i].createdAt
+                                                              .toString()}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                             
+                                                              fontSize: 14),
+                                                        ),
+                                                         Text(
+                                                          'Created by :${extraWorks!
+                                                              .data[i].createdBy
+                                                              .toString()}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              
+                                                              fontSize: 14),
                                                         ),
                                                         Text(
                                                           extraWorks!.data[i]

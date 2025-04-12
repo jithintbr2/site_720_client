@@ -19,6 +19,8 @@ class _StageScreenState extends State<StageScreen> {
   StageListModel? stages;
   bool? result = true;
   String token = "";
+  Map<int, bool> _isExpandedMap =
+      {}; // This will store the expansion state for each stage
 
   @override
   void initState() {
@@ -30,16 +32,12 @@ class _StageScreenState extends State<StageScreen> {
     token = await Common.getSharedPref("token");
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
-      setState(() {
-        result = false;
-      });
-    }
+    setState(() {
+      result = connectivityResult.contains(ConnectivityResult.mobile) ||
+              connectivityResult.contains(ConnectivityResult.wifi)
+          ? true
+          : false;
+    });
     stages = await HttpService.getStageList(token);
     if (stages != null) {
       setState(() {});
@@ -50,36 +48,27 @@ class _StageScreenState extends State<StageScreen> {
   Widget build(BuildContext context) {
     return result == true
         ? RefreshIndicator(
-            onRefresh: () async {
-              getData();
-              return;
-            },
+            onRefresh: () async => getData(),
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
-                ),
-                title: Text("Stages"),
+                elevation: 1,
+                iconTheme: const IconThemeData(color: Colors.black),
+                title: const Text("Stagewise Schedule",
+                    style: TextStyle(color: Colors.black)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(Assets.h4logo),
+                          fit: BoxFit.fitWidth,
                         ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -87,21 +76,35 @@ class _StageScreenState extends State<StageScreen> {
               body: stages != null
                   ? SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20.0, right: 20.0, top: 20.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 20.0),
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: stages!.data.length,
                           itemBuilder: (context, index) {
+                            final stage = stages!.data[index];
                             return Column(
-                              // mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TimelineTile(
                                   nodeAlign: TimelineNodeAlign.start,
                                   node: TimelineNode(
-                                    indicator: DotIndicator(
-                                      color: Colors.black,
+                                    indicator: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        DotIndicator(color: Colors.black),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          stage.startDate.isNotEmpty
+                                              ? stage.startDate
+                                              : '07-04-2025',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     startConnector: index == 0
                                         ? null
@@ -116,22 +119,20 @@ class _StageScreenState extends State<StageScreen> {
                                   contents: Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Card(
-                                      color: stages!.data[index].stageSts ==
-                                              "pending"
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      color: stage.stageStatus == "pending"
                                           ? Colors.orange.shade50
-                                          : stages!.data[index].stageSts ==
-                                                  "running"
+                                          : stage.stageStatus == "running"
                                               ? Colors.blue.shade100
-                                              : stages!.data[index].stageSts ==
-                                                      "completed"
+                                              : stage.stageStatus == "completed"
                                                   ? Colors.green.shade100
                                                   : Colors.grey.shade100,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .8,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
+                                      elevation: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: GestureDetector(
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -140,8 +141,6 @@ class _StageScreenState extends State<StageScreen> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Column(
                                                     crossAxisAlignment:
@@ -149,38 +148,35 @@ class _StageScreenState extends State<StageScreen> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        stages!.data[index]
-                                                            .stageName,
+                                                        stage.stageName,
                                                         style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Config
-                                                                .themeColor),
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Config.themeColor,
+                                                        ),
                                                       ),
-                                                      if (stages!.data[index]
-                                                              .startDate !=
-                                                          "")
+                                                      if (stage
+                                                          .startDate.isNotEmpty)
                                                         Text(
-                                                          stages!.data[index]
-                                                              .startDate,
+                                                          stage.startDate,
                                                           style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Config
-                                                                  .themeColor),
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Config
+                                                                .themeColor,
+                                                          ),
                                                         ),
                                                     ],
                                                   ),
                                                   Transform.scale(
-                                                    scale: .7,
+                                                    scale: .8,
                                                     child: Switch(
                                                       value: false,
-                                                      onChanged: (bool value) {
-                                                        setState(() {});
-                                                      },
+                                                      onChanged: (bool value) =>
+                                                          setState(() {}),
                                                       activeTrackColor: Colors
                                                           .purple
                                                           .withOpacity(0.2),
@@ -189,100 +185,282 @@ class _StageScreenState extends State<StageScreen> {
                                                       inactiveTrackColor: Colors
                                                           .grey
                                                           .withOpacity(0.2),
-                                                      // Other properties
                                                       thumbIcon:
                                                           WidgetStateProperty
                                                               .resolveWith<
-                                                                      Icon?>(
-                                                                  (states) {
-                                                        if (states.contains(
-                                                            WidgetState
-                                                                .selected)) {
-                                                          return Icon(
-                                                              Icons
-                                                                  .lock_rounded,
-                                                              size: 14);
-                                                        }
-                                                        return Icon(
-                                                            Icons.lock_open,
-                                                            size: 14);
-                                                      }),
+                                                                  Icon?>(
+                                                        (states) => states
+                                                                .contains(
+                                                                    WidgetState
+                                                                        .selected)
+                                                            ? const Icon(
+                                                                Icons
+                                                                    .lock_rounded,
+                                                                size: 14)
+                                                            : const Icon(
+                                                                Icons.lock_open,
+                                                                size: 14),
+                                                      ),
                                                       overlayColor:
                                                           WidgetStateProperty
                                                               .resolveWith<
-                                                                      Color>(
-                                                                  (states) {
-                                                        if (states.contains(
-                                                            WidgetState
-                                                                .pressed)) {
-                                                          return Colors.purple
-                                                              .withOpacity(0.1);
-                                                        }
-                                                        return Colors
-                                                            .transparent;
-                                                      }),
+                                                                  Color>(
+                                                        (states) => states
+                                                                .contains(
+                                                                    WidgetState
+                                                                        .pressed)
+                                                            ? Colors.purple
+                                                                .withOpacity(
+                                                                    0.1)
+                                                            : Colors
+                                                                .transparent,
+                                                      ),
                                                       materialTapTargetSize:
                                                           MaterialTapTargetSize
                                                               .shrinkWrap,
                                                     ),
-                                                  )
+                                                  ),
                                                 ],
                                               ),
-                                              if (stages!
-                                                      .data[index].startDate !=
-                                                  "")
+                                              const SizedBox(height: 8),
+                                              if (stage.startDate.isNotEmpty)
                                                 Text(
-                                                  "Scheduled Date : ${stages!.data[index].startDate}",
+                                                  "Scheduled Date : ${stage.startDate}",
                                                   style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Config.themeColor),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Config.themeColor,
+                                                  ),
                                                 ),
-                                              if (stages!.data[index].endDate !=
-                                                  "")
+                                              if (stage.endDate.isNotEmpty)
                                                 Text(
-                                                  "End Date : ${stages!.data[index].endDate}",
+                                                  "End Date : ${stage.endDate}",
                                                   style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Config.themeColor),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Config.themeColor,
+                                                  ),
                                                 ),
                                               Text(
-                                                "status : ${stages!.data[index].stageSts}",
+                                                "Status : ${stage.stageStatus}",
                                                 style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Config.themeColor),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Config.themeColor,
+                                                ),
                                               ),
-                                              // Row(
-                                              //   mainAxisAlignment:
-                                              //       MainAxisAlignment.end,
-                                              //   children: [
-                                              //     CircleAvatar(
-                                              //         backgroundColor:
-                                              //             Colors.white,
-                                              //         radius: 14,
-                                              //         child: Icon(
-                                              //           Icons.edit,
-                                              //           size: 18,
-                                              //           color: Colors.blue,
-                                              //         )),
-                                              //     SizedBox(
-                                              //       width: 5,
-                                              //     ),
-                                              //     CircleAvatar(
-                                              //         backgroundColor:
-                                              //             Colors.white,
-                                              //         radius: 14,
-                                              //         child: Icon(
-                                              //           Icons.delete,
-                                              //           color: Colors.red,
-                                              //           size: 18,
-                                              //         )),
-                                              //   ],
-                                              // )
+                                              Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _isExpandedMap[index] =
+                                                            !(_isExpandedMap[
+                                                                    index] ??
+                                                                false);
+                                                      });
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 150,
+                                                              top: 8),
+                                                      child: stages!
+                                                              .data[index]
+                                                              .workDetails
+                                                              .isNotEmpty
+                                                          ? Icon(
+                                                              Icons
+                                                                  .arrow_drop_down,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      12,
+                                                                      12,
+                                                                      12),
+                                                              size: 30,
+                                                            )
+                                                          : SizedBox(),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              if (_isExpandedMap[index] ??
+                                                  false)
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade100,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  child: SizedBox(
+                                                    height: stages!
+                                                            .data[index]
+                                                            .workDetails
+                                                            .length *
+                                                        100.0,
+                                                    child: ListView.builder(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemCount: stages!
+                                                          .data[index]
+                                                          .workDetails
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, i) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      6.0),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Container(
+                                                                    width: 10,
+                                                                    height: 10,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    stages!
+                                                                        .data[
+                                                                            index]
+                                                                        .workDetails[
+                                                                            i]
+                                                                        .workDate,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade600,
+                                                                      fontStyle:
+                                                                          FontStyle
+                                                                              .italic,
+                                                                      letterSpacing:
+                                                                          0.5,
+                                                                    ),
+                                                                  ),
+                                                                  if (index !=
+                                                                      4)
+                                                                    Container(
+                                                                      width: 2,
+                                                                      height:
+                                                                          50,
+                                                                      color: Colors
+                                                                          .blue
+                                                                          .shade300,
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 14),
+                                                              Expanded(
+                                                                child: ListTile(
+                                                                  contentPadding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          0),
+                                                                  title: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        stages!.data[index].workDetails[i].isWorking, 
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                               stages!.data[index].workDetails[i].isWorking=="Yes"?Colors.green:Colors.red,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          height:
+                                                                              4),
+                                                                      Text(
+                                                                        stages!.data[index].workDetails[i].laboursNo.isNotEmpty &&
+                                                                                stages!.data[index].workDetails[i].laboursNo != "0"
+                                                                            ? 'Labour No:${stages!.data[index].workDetails[i].laboursNo}'
+                                                                            : 'Status:${stages!.data[index].workDetails[i].workStatus}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.w300,
+                                                                          color:
+                                                                              Colors.black87,
+                                                                          fontStyle:
+                                                                              FontStyle.italic,
+                                                                          letterSpacing:
+                                                                              1.0,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    stages!
+                                                                        .data[
+                                                                            index]
+                                                                        .workDetails[
+                                                                            i]
+                                                                        .description,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w300,
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade600,
+                                                                      fontStyle:
+                                                                          FontStyle
+                                                                              .italic,
+                                                                      letterSpacing:
+                                                                          0.5,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
                                             ],
                                           ),
                                         ),
@@ -296,59 +474,42 @@ class _StageScreenState extends State<StageScreen> {
                         ),
                       ),
                     )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  : const Center(child: CircularProgressIndicator()),
               bottomNavigationBar: BottomNavigationBarScreen(),
             ),
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
-              width: MediaQuery.of(context).size.width * 1,
+            body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.noNetwork),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  Image.asset(
+                    Assets.noNetwork,
+                    width: 250,
                   ),
-                  Text(
-                    'No Network Found !',
+                  const SizedBox(height: 20),
+                  const Text(
+                    'No Network Found!',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   InkWell(
-                    onTap: () {
-                      getData();
-                    },
+                    onTap: getData,
                     child: Container(
                       width: 120,
-                      height: 35,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Try Again',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Try Again',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -356,6 +517,79 @@ class _StageScreenState extends State<StageScreen> {
                   ),
                 ],
               ),
-            ));
+            ),
+          );
   }
+}
+
+void _showStageDialog(BuildContext context, stage) {
+  List<String> additionalNames = ["Ansar", "Sruthy", "Pradeesh", "Sarath"];
+  List<String> additionalDates = [
+    "2025-04-02",
+    "2025-04-03",
+    "2025-04-05",
+    "2025-04-05"
+  ];
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          stage.stageName,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Start Date: 12-05-2025"),
+              Text("End Date: 25-05-2025"),
+              const SizedBox(height: 12),
+              Text("Additional Information:",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: additionalNames.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF876B6F),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      title: Text(
+                        additionalNames[index],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      subtitle: Text(
+                        additionalDates[index],
+                        style: TextStyle(
+                          color: Colors.grey.shade200,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      );
+    },
+  );
 }

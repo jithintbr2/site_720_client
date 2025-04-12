@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:site720_client/model/client_details/phase_video_model.dart';
 import 'package:site720_client/screens/bottomNavigationBarScreen.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../widget/youtube_player_widget.dart';
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({Key? key}) : super(key: key);
@@ -124,10 +128,10 @@ class _VideoScreenState extends State<VideoScreen> {
                                                   videoData!.data[i].phaseNo
                                                       .toString(),
                                                   style: TextStyle(
-                                                    color: vedioIndex == i
-                                                        ? Color(0xFF3c9f9a)
-                                                        : Color(0xFF717171),
-                                                  ),
+                                                      color: vedioIndex == i
+                                                          ? Color(0xFF3c9f9a)
+                                                          : Color(0xFF717171),
+                                                      fontSize: 12),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -163,55 +167,103 @@ class _VideoScreenState extends State<VideoScreen> {
                           SizedBox(
                             height: 20,
                           ),
+                          // Container(
+                          //     child: ListView.builder(
+                          //         shrinkWrap: true,
+                          //         physics: NeverScrollableScrollPhysics(),
+                          //         itemBuilder: (context, index) {
+                          //           final List<YoutubePlayerController>
+                          //               _controllers = [
+                          //             for (int i = 0;
+                          //                 i <
+                          //                     videoData!.data[vedioIndex]
+                          //                         .phaseVideo.length;
+                          //                 i++)
+                          //               videoData!
+                          //                   .data[vedioIndex].phaseVideo[i],
+                          //           ]
+                          //                   .map<YoutubePlayerController>(
+                          //                     (videoId) =>
+                          //                         YoutubePlayerController(
+                          //                       initialVideoId: videoId,
+                          //                       flags: const YoutubePlayerFlags(
+                          //                         autoPlay: false,
+                          //                       ),
+                          //                     ),
+                          //                   )
+                          //                   .toList();
+                          //           return Padding(
+                          //             padding: const EdgeInsets.only(
+                          //                 left: 20, right: 20, bottom: 20),
+                          //             child: InkWell(
+                          //               onTap: () {},
+                          //               child: YoutubePlayer(
+                          //                 key: ObjectKey(_controllers[index]),
+                          //                 controller: _controllers[index],
+                          //                 actionsPadding:
+                          //                     const EdgeInsets.only(left: 16.0),
+                          //                 bottomActions: [
+                          //                   CurrentPosition(),
+                          //                   const SizedBox(width: 10.0),
+                          //                   ProgressBar(isExpanded: true),
+                          //                   const SizedBox(width: 10.0),
+                          //                   RemainingDuration(),
+                          //                   FullScreenButton(),
+                          //                 ],
+                          //               ),
+                          //             ),
+                          //           );
+                          //         },
+                          //         itemCount: videoData!
+                          //             .data[vedioIndex].phaseVideo.length)),
                           Container(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final List<YoutubePlayerController>
-                                        _controllers = [
-                                      for (int i = 0;
-                                          i <
-                                              videoData!.data[vedioIndex]
-                                                  .phaseVideo.length;
-                                          i++)
-                                        videoData!
-                                            .data[vedioIndex].phaseVideo[i],
-                                    ]
-                                            .map<YoutubePlayerController>(
-                                              (videoId) =>
-                                                  YoutubePlayerController(
-                                                initialVideoId: videoId,
-                                                flags: const YoutubePlayerFlags(
-                                                  autoPlay: false,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  videoData!.data[vedioIndex].phaseVideo.length,
+                              itemBuilder: (context, index) {
+                                final videoUrl = videoData!
+                                    .data[vedioIndex].phaseVideo[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 20),
+                                  child: isYoutubeLink(videoUrl)
+                                      ? YoutubePlayerBuilderWidget(
+                                          videoUrl: videoUrl)
+                                      : Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 220,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: CachedNetworkImage(
+                                              imageUrl: videoUrl,
+                                              fit: BoxFit.cover,
+                                              placeholder: (_, __) => Center(
+                                                child: Lottie.asset(
+                                                  'assets/images/loading.json',
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
-                                            )
-                                            .toList();
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20, bottom: 20),
-                                      child: InkWell(
-                                        onTap: () {},
-                                        child: YoutubePlayer(
-                                          key: ObjectKey(_controllers[index]),
-                                          controller: _controllers[index],
-                                          actionsPadding:
-                                              const EdgeInsets.only(left: 16.0),
-                                          bottomActions: [
-                                            CurrentPosition(),
-                                            const SizedBox(width: 10.0),
-                                            ProgressBar(isExpanded: true),
-                                            const SizedBox(width: 10.0),
-                                            RemainingDuration(),
-                                            FullScreenButton(),
-                                          ],
+                                              errorWidget: (_, __, ___) =>
+                                                  Center(
+                                                child: Icon(
+                                                  Icons.error,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  itemCount: videoData!
-                                      .data[vedioIndex].phaseVideo.length)),
+                                );
+                              },
+                            ),
+                          ),
+
                           SizedBox(
                             height: 20,
                           ),

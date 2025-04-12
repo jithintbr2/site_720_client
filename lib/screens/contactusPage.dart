@@ -28,7 +28,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
   ServiceListModel? serviceList;
   bool? result = true;
   bool? result1 = true;
-
   // handleAsync() async {
   //   //await firebase.initialize();
   //   //print('before');
@@ -36,7 +35,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
   //
   //   print("Firebase token : $firebaseToken");
   // }
-
   void initState() {
     // TODO: implement initState
     super.initState();

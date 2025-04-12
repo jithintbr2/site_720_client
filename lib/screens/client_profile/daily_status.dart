@@ -101,7 +101,7 @@ class _DailyStatusState extends State<DailyStatus> {
                                   padding: const EdgeInsets.only(top: 5),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xFF96b2b5),
+                                    color: Color(0xFF876B6F),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -123,6 +123,9 @@ class _DailyStatusState extends State<DailyStatus> {
                                                         .spaceBetween,
                                                 children: [
                                                   Container(
+                                                    width: 200,
+                                                    padding: EdgeInsets.all(10),
+                                                    
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -131,32 +134,51 @@ class _DailyStatusState extends State<DailyStatus> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          workStatus!
-                                                              .data[i].workDate
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .calendar_month,
+                                                              color: const Color.fromARGB(255, 255, 255, 255), 
+                                                              size: 20,
+                                                            ),
+                                                            SizedBox(width: 8),
+                                                            Text(
+                                                              workStatus!
+                                                                  .data[i]
+                                                                  .workDate
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                color: const Color.fromARGB(255, 255, 255, 255), // text changed to black
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 6),
+                                                        Container(
+                                                          
+                                                          child: Text(
+                                                            'Stage : ${workStatus!.data[i].stageName}',
+                                                            style: TextStyle(
+                                                              color: const Color.fromARGB(255, 247, 246, 246), // text changed to black
+                                                              fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .bold,
-                                                              fontSize: 17),
+                                                                      .w500,
+                                                            ),
+                                                          ),
                                                         ),
-                                                        SizedBox(
-                                                          height: 6,
-                                                        ),
+                                                        SizedBox(height: 6),
                                                         Container(
-                                                          width: 220,
+                                                          
                                                           child: Text(
-                                                            'Remark :' +
-                                                                workStatus!
-                                                                    .data[i]
-                                                                    .description
-                                                                    .toString(),
+                                                            'Remark : ${workStatus!.data[i].description}',
                                                             style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
+                                                              color: const Color.fromARGB(255, 247, 246, 246), // text changed to black
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight

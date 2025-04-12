@@ -4,23 +4,19 @@
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
-
 StageListModel stageListModelFromJson(String str) =>
     StageListModel.fromJson(json.decode(str));
 
 String stageListModelToJson(StageListModel data) => json.encode(data.toJson());
-
 class StageListModel {
   List<Datum> data;
   bool status;
   String message;
-
   StageListModel({
     required this.data,
     required this.status,
     required this.message,
   });
-
   factory StageListModel.fromJson(Map<String, dynamic> json) => StageListModel(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         status: json["status"],
@@ -33,55 +29,75 @@ class StageListModel {
         "message": message,
       };
 }
-
 class Datum {
-  String id;
+  String stageId;
   String stageName;
-  String daysLeft;
-  bool isExpired;
-  String stageSts;
-  bool isCompleted;
+  String estDays;
+  String stageStatus;
   String startDate;
   String endDate;
-  String completedDate;
-  String endDateRaw;
-
+  List<WorkDetail> workDetails;
   Datum({
-    required this.id,
+    required this.stageId,
     required this.stageName,
-    required this.daysLeft,
-    required this.isExpired,
-    required this.stageSts,
-    required this.isCompleted,
+    required this.estDays,
+    required this.stageStatus,
     required this.startDate,
     required this.endDate,
-    required this.completedDate,
-    required this.endDateRaw,
+    required this.workDetails,
   });
-
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"] ?? "",
+        stageId: json["stage_id"] ?? "",
         stageName: json["stage_name"] ?? "",
-        daysLeft: json["days_left"] ?? "",
-        isExpired: json["is_expired"] ?? false,
-        stageSts: json["stage_sts"] ?? "",
-        isCompleted: json["is_completed"] ?? false,
+        estDays: json["est_days"] ?? "",
+        stageStatus: json["stage_status"] ?? "",
         startDate: json["start_date"] ?? "",
         endDate: json["end_date"] ?? "",
-        completedDate: json["completed_date"] ?? "",
-        endDateRaw: json["end_date_raw"] ?? "",
+        workDetails: json["work_details"] == null
+            ? []
+            : List<WorkDetail>.from(
+                json["work_details"].map((x) => WorkDetail.fromJson(x))),
       );
-
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "stage_id": stageId,
         "stage_name": stageName,
-        "days_left": daysLeft,
-        "is_expired": isExpired,
-        "stage_sts": stageSts,
-        "is_completed": isCompleted,
+        "est_days": estDays,
+        "stage_status": stageStatus,
         "start_date": startDate,
         "end_date": endDate,
-        "completed_date": completedDate,
-        "end_date_raw": endDateRaw,
+        "work_details": List<dynamic>.from(workDetails.map((x) => x.toJson())),
       };
 }
+class WorkDetail {
+  String isWorking;
+  String workDate;
+  String laboursNo;
+  String workStatusId;
+  String workStatus;
+  String description;
+  WorkDetail({
+    required this.isWorking,
+    required this.workDate,
+    required this.laboursNo,
+    required this.workStatusId,
+    required this.workStatus,
+    required this.description,
+  });
+  factory WorkDetail.fromJson(Map<String, dynamic> json) => WorkDetail(
+        isWorking: json["is_working"] ?? "",
+        workDate: json["work_date"] ?? "",
+        laboursNo: json["labours_no"] ?? "",
+        workStatusId: json["work_status_id"] ?? "",
+        workStatus: json["work_status"] ?? "",
+        description: json["description"] ?? "",
+      );
+  Map<String, dynamic> toJson() => {
+        "is_working": isWorking,
+        "work_date": workDate,
+        "labours_no": laboursNo,
+        "work_status_id": workStatusId,
+        "work_status": workStatus,
+        "description": description,
+      };
+}
+

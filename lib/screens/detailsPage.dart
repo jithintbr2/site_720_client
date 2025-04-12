@@ -78,7 +78,10 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       maxLines: 2,
                     ),
-                    card: NetworkImage(aboutUs!.data!.subImage.toString()),
+                    card: NetworkImage(
+                      aboutUs!.data!.subImage.toString(),
+                      
+                      ),
                     backButton: true,
                     backButtonColors: [Colors.white, Colors.black],
                     body: Container(

@@ -9,6 +9,9 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../utils/youtube_utils.dart';
+import '../../widget/youtube_player_widget.dart';
+
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({Key? key}) : super(key: key);
 
@@ -133,10 +136,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                                     gallery!.data[i].phaseNo
                                                         .toString(),
                                                     style: TextStyle(
-                                                      color: galleryIndex == i
-                                                          ? Color(0xFF3c9f9a)
-                                                          : Color(0xFF717171),
-                                                    ),
+                                                        color: galleryIndex == i
+                                                            ? Color(0xFF3c9f9a)
+                                                            : Color(0xFF717171),
+                                                        fontSize: 12),
                                                   ),
                                                   SizedBox(
                                                     height: 5,
@@ -191,41 +194,55 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                                             .phaseImages[index])),
                                               );
                                             },
-                                            child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    1,
-                                                height: 220,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: CachedNetworkImage(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              .3,
-                                                      imageUrl: gallery!
-                                                          .data[galleryIndex]
-                                                          .phaseImages[index],
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (_, __) =>
-                                                          Center(
-                                                            child: Lottie.asset(
-                                                                'assets/images/loading.json',
-                                                                fit: BoxFit
-                                                                    .fill),
+                                            child: isYoutubeLink(gallery!
+                                                    .data[galleryIndex]
+                                                    .phaseImages[index])
+                                                ? YoutubePlayerBuilderWidget(
+                                                    videoUrl: gallery!
+                                                        .data[galleryIndex]
+                                                        .phaseImages[index],
+                                                  )
+                                                : Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    height: 220,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: CachedNetworkImage(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.3,
+                                                        imageUrl: gallery!
+                                                            .data[galleryIndex]
+                                                            .phaseImages[index]
+                                                            .toString(),
+                                                        fit: BoxFit.cover,
+                                                        placeholder: (_, __) =>
+                                                            Center(
+                                                          child: Lottie.asset(
+                                                            'assets/images/loading.json',
+                                                            fit: BoxFit.fill,
                                                           ),
-                                                      errorWidget: (_, __,
-                                                              ___) =>
-                                                          Center(
-                                                              child: Icon(
-                                                                  Icons.error,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColor))),
-                                                )),
+                                                        ),
+                                                        errorWidget:
+                                                            (_, __, ___) =>
+                                                                Center(
+                                                          child: Icon(
+                                                              Icons.error,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+
                                             // Container(
                                             //   height: 220,
                                             //   decoration: BoxDecoration(

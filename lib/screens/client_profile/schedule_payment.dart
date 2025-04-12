@@ -96,7 +96,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                               width: MediaQuery.of(context).size.width * 0.95,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF96b2b5)),
+                                   color: Color(0xFF876B6F)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -115,7 +115,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                                               fontSize: 14),
                                         ),
                                         Container(
-                                          width: 80,
+                                          width: 90,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5),

@@ -9,17 +9,18 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class PhoneNumberPage extends StatefulWidget {
-  const PhoneNumberPage({Key? key}) : super(key: key);
+  const PhoneNumberPage({super.key});
 
   @override
   _PhoneNumberPageState createState() => _PhoneNumberPageState();
 }
 
 class _PhoneNumberPageState extends State<PhoneNumberPage> {
-  TextEditingController phoneNumber = new TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
   bool isVisible = true;
   late bool isLoading = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -34,7 +35,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
       backgroundColor: Colors.white,
       body: Form(
         key: formkey,
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
@@ -128,7 +129,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                                     int min =
                                         1000; //min and max values act as your 6 digit range
                                     int max = 9999;
-                                    var randomizer = new Random();
+                                    var randomizer = Random();
                                     var rNum =
                                         min + randomizer.nextInt(max - min);
                                     SendOtpModel otp =

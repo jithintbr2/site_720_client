@@ -10,7 +10,7 @@ import 'package:site720_client/settings/assets.dart';
 
 class ComplaintListPage extends StatefulWidget {
   String? token;
-  ComplaintListPage(this.token);
+  ComplaintListPage(this.token, {super.key});
 
   @override
   _ComplaintListPageState createState() => _ComplaintListPageState();
@@ -21,6 +21,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
   bool? result = true;
   bool? result1 = true;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -43,7 +44,6 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
     complaintList = await HttpService.complaintList(widget.token);
     if (complaintList != null) {
       setState(() {
-        ;
       });
     }
   }
@@ -74,7 +74,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
               ),
               body: complaintList != null
                   ? SingleChildScrollView(
-                      child: complaintList!.data!.length > 0
+                      child: complaintList!.data!.isNotEmpty
                           ? ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -178,7 +178,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                                 );
                               },
                             )
-                          : Container(
+                          : SizedBox(
                               width: MediaQuery.of(context).size.width * 1,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -234,7 +234,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +261,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

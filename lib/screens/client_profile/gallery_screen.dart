@@ -13,7 +13,7 @@ import '../../utils/youtube_utils.dart';
 import '../../widget/youtube_player_widget.dart';
 
 class GalleryScreen extends StatefulWidget {
-  const GalleryScreen({Key? key}) : super(key: key);
+  const GalleryScreen({super.key});
 
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
@@ -26,6 +26,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   String token = "";
   int galleryIndex = 0;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -59,7 +60,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -202,7 +203,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                                         .data[galleryIndex]
                                                         .phaseImages[index],
                                                   )
-                                                : Container(
+                                                : SizedBox(
                                                     width:
                                                         MediaQuery.of(context)
                                                             .size
@@ -271,7 +272,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -298,7 +299,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

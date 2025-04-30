@@ -107,7 +107,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Row(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 180,
                                           child: Row(
                                             children: [
@@ -206,7 +206,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Row(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 180,
                                           child: Row(
                                             children: [
@@ -302,7 +302,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Row(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 180,
                                           child: Row(
                                             children: [
@@ -442,7 +442,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -469,7 +469,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

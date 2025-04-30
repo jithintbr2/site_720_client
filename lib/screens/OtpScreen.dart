@@ -5,7 +5,7 @@ import 'package:site720_client/settings/assets.dart';
 class OtpVerificationScreen extends StatefulWidget {
   String? phoneNumber;
   String? rNO;
-  OtpVerificationScreen(this.phoneNumber, this.rNO);
+  OtpVerificationScreen(this.phoneNumber, this.rNO, {super.key});
 
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
@@ -122,6 +122,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: ButtonTheme(
                   height: 50,
                   child: TextButton(
@@ -159,10 +163,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     ),
                   ),
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(5),
-                ),
               ),
             ],
           ),
@@ -176,7 +176,7 @@ class OtpInput extends StatelessWidget {
   final TextEditingController controller;
   final bool autoFocus;
 
-  const OtpInput(this.controller, this.autoFocus, {Key? key}) : super(key: key);
+  const OtpInput(this.controller, this.autoFocus, {super.key});
 
   @override
   Widget build(BuildContext context) {

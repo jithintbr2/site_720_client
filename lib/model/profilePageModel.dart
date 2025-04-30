@@ -8,13 +8,13 @@ class ProfilePageModel {
   ProfilePageModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -83,7 +83,7 @@ class Data {
     if (json['site_drawings'] != null) {
       siteDrawings = <SiteDrawings>[];
       json['site_drawings'].forEach((v) {
-        siteDrawings!.add(new SiteDrawings.fromJson(v));
+        siteDrawings!.add(SiteDrawings.fromJson(v));
       });
     }
     workEndDate = json['work_end_date'];
@@ -91,80 +91,80 @@ class Data {
     if (json['gal'] != null) {
       gal = <Gal>[];
       json['gal'].forEach((v) {
-        gal!.add(new Gal.fromJson(v));
+        gal!.add(Gal.fromJson(v));
       });
     }
     if (json['video'] != null) {
       video = <Video>[];
       json['video'].forEach((v) {
-        video!.add(new Video.fromJson(v));
+        video!.add(Video.fromJson(v));
       });
     }
     if (json['pay'] != null) {
       pay = <Pay>[];
       json['pay'].forEach((v) {
-        pay!.add(new Pay.fromJson(v));
+        pay!.add(Pay.fromJson(v));
       });
     }
     if (json['phase'] != null) {
       phase = <Phase>[];
       json['phase'].forEach((v) {
-        phase!.add(new Phase.fromJson(v));
+        phase!.add(Phase.fromJson(v));
       });
     }
     totalPercentage = json['total_percentage'];
     if (json['work_step'] != null) {
       workStep = <WorkStep>[];
       json['work_step'].forEach((v) {
-        workStep!.add(new WorkStep.fromJson(v));
+        workStep!.add(WorkStep.fromJson(v));
       });
     }
     if (json['work_updation'] != null) {
       workUpdation = <WorkUpdation>[];
       json['work_updation'].forEach((v) {
-        workUpdation!.add(new WorkUpdation.fromJson(v));
+        workUpdation!.add(WorkUpdation.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['client_name'] = this.clientName;
-    data['project_name'] = this.projectName;
-    data['phone_number'] = this.phoneNumber;
-    data['place'] = this.place;
-    data['description'] = this.description;
-    data['estimated_cost'] = this.estimatedCost;
-    data['cctv_address'] = this.cctvAddress;
-    data['total_cost'] = this.totalCost;
-    data['cost_pending'] = this.costPending;
-    data['work_start_date'] = this.workStartDate;
-    data['text_details'] = this.textDetails;
-    if (this.siteDrawings != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['client_name'] = clientName;
+    data['project_name'] = projectName;
+    data['phone_number'] = phoneNumber;
+    data['place'] = place;
+    data['description'] = description;
+    data['estimated_cost'] = estimatedCost;
+    data['cctv_address'] = cctvAddress;
+    data['total_cost'] = totalCost;
+    data['cost_pending'] = costPending;
+    data['work_start_date'] = workStartDate;
+    data['text_details'] = textDetails;
+    if (siteDrawings != null) {
       data['site_drawings'] =
-          this.siteDrawings!.map((v) => v.toJson()).toList();
+          siteDrawings!.map((v) => v.toJson()).toList();
     }
-    data['work_end_date'] = this.workEndDate;
-    data['banner_image'] = this.bannerImage;
-    if (this.gal != null) {
-      data['gal'] = this.gal!.map((v) => v.toJson()).toList();
+    data['work_end_date'] = workEndDate;
+    data['banner_image'] = bannerImage;
+    if (gal != null) {
+      data['gal'] = gal!.map((v) => v.toJson()).toList();
     }
-    if (this.video != null) {
-      data['video'] = this.video!.map((v) => v.toJson()).toList();
+    if (video != null) {
+      data['video'] = video!.map((v) => v.toJson()).toList();
     }
-    if (this.pay != null) {
-      data['pay'] = this.pay!.map((v) => v.toJson()).toList();
+    if (pay != null) {
+      data['pay'] = pay!.map((v) => v.toJson()).toList();
     }
-    if (this.phase != null) {
-      data['phase'] = this.phase!.map((v) => v.toJson()).toList();
+    if (phase != null) {
+      data['phase'] = phase!.map((v) => v.toJson()).toList();
     }
-    data['total_percentage'] = this.totalPercentage;
-    if (this.workStep != null) {
-      data['work_step'] = this.workStep!.map((v) => v.toJson()).toList();
+    data['total_percentage'] = totalPercentage;
+    if (workStep != null) {
+      data['work_step'] = workStep!.map((v) => v.toJson()).toList();
     }
-    if (this.workUpdation != null) {
+    if (workUpdation != null) {
       data['work_updation'] =
-          this.workUpdation!.map((v) => v.toJson()).toList();
+          workUpdation!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -182,9 +182,9 @@ class SiteDrawings {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['remarks'] = this.remarks;
-    data['img_path'] = this.imgPath;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['remarks'] = remarks;
+    data['img_path'] = imgPath;
     return data;
   }
 }
@@ -201,9 +201,9 @@ class Gal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phase_no'] = this.phaseNo;
-    data['phase_images'] = this.phaseImages;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['phase_no'] = phaseNo;
+    data['phase_images'] = phaseImages;
     return data;
   }
 }
@@ -220,9 +220,9 @@ class Video {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phase_no'] = this.phaseNo;
-    data['phase_video'] = this.phaseVideo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['phase_no'] = phaseNo;
+    data['phase_video'] = phaseVideo;
     return data;
   }
 }
@@ -269,18 +269,18 @@ class Pay {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['client_id'] = this.clientId;
-    data['phase_no'] = this.phaseNo;
-    data['phase_description'] = this.phaseDescription;
-    data['phase_cost'] = this.phaseCost;
-    data['paid_amount'] = this.paidAmount;
-    data['balance_amount'] = this.balanceAmount;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['created_by'] = this.createdBy;
-    data['modified_at'] = this.modifiedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['client_id'] = clientId;
+    data['phase_no'] = phaseNo;
+    data['phase_description'] = phaseDescription;
+    data['phase_cost'] = phaseCost;
+    data['paid_amount'] = paidAmount;
+    data['balance_amount'] = balanceAmount;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['created_by'] = createdBy;
+    data['modified_at'] = modifiedAt;
     return data;
   }
 }
@@ -299,10 +299,10 @@ class Phase {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phase_no'] = this.phaseNo;
-    data['phase_description'] = this.phaseDescription;
-    data['phase_cost'] = this.phaseCost;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['phase_no'] = phaseNo;
+    data['phase_description'] = phaseDescription;
+    data['phase_cost'] = phaseCost;
     return data;
   }
 }
@@ -330,12 +330,12 @@ class WorkStep {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['from_date'] = this.fromDate;
-    data['to_date'] = this.toDate;
-    data['isWorked'] = this.isWorked;
-    data['percentage'] = this.percentage;
-    data['reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['from_date'] = fromDate;
+    data['to_date'] = toDate;
+    data['isWorked'] = isWorked;
+    data['percentage'] = percentage;
+    data['reason'] = reason;
     return data;
   }
 }
@@ -357,11 +357,11 @@ class WorkUpdation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['work_date'] = this.workDate;
-    data['is_working'] = this.isWorking;
-    data['total_labours'] = this.totalLabours;
-    data['description'] = this.description;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['work_date'] = workDate;
+    data['is_working'] = isWorking;
+    data['total_labours'] = totalLabours;
+    data['description'] = description;
     return data;
   }
 }

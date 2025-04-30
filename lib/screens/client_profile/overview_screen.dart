@@ -7,7 +7,7 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class OverviewScreen extends StatefulWidget {
-  const OverviewScreen({Key? key}) : super(key: key);
+  const OverviewScreen({super.key});
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
@@ -18,6 +18,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -49,7 +50,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -186,6 +187,150 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                 ),
                               ],
                             ),
+                            profilePage!.data.isFreezed == "Y"
+                                ? SizedBox(
+                                    height: 5,
+                                  )
+                                : SizedBox(),
+                            profilePage!.data.isFreezed == "Y"
+                                ? Column(
+                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                   
+                                      profilePage!.data.isFreezed == "Y"
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5),
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Color(0xFF876B6F),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .fromLTRB(
+                                                          16, 0, 16, 13),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 10,
+                                                                    bottom: 5),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      .5,
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "FREEZED",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 16),
+                                                                      ),
+                                                                      
+                                                                      Text(
+                                                                        'No of days :${profilePage!.data.freezedDiff}',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize: 14),
+                                                                      ),
+                                                                      Text(
+                                                                        "Reason:Payment Delay",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize: 14),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                   
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              12),
+                                                                      color: Colors
+                                                                          .white),
+                                                                  child:
+                                                                      Padding(
+                                                                 padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            6.0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .calendar_today,
+                                                                          size:
+                                                                              14,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                        SizedBox(
+                                                                            width:
+                                                                                8), 
+                                                                        Text(
+                                                                            profilePage!.data.freezedDate,
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  )
+                                : SizedBox(),
                           ],
                         ),
                       ),
@@ -198,7 +343,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -225,7 +370,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

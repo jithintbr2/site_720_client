@@ -13,16 +13,16 @@ import 'dashboard.dart';
 
 class QuotationEnquiryPage extends StatefulWidget {
   String? token;
-  QuotationEnquiryPage({this.token});
+  QuotationEnquiryPage({super.key, this.token});
 
   @override
   _QuotationEnquiryPageState createState() => _QuotationEnquiryPageState();
 }
 
 class _QuotationEnquiryPageState extends State<QuotationEnquiryPage> {
-  TextEditingController name = new TextEditingController();
-  TextEditingController phone = new TextEditingController();
-  TextEditingController message = new TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController message = TextEditingController();
   bool isVisible = true;
   late bool isLoading = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -42,6 +42,7 @@ class _QuotationEnquiryPageState extends State<QuotationEnquiryPage> {
   //   print("Firebase token : $firebaseToken");
   // }
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -68,7 +69,7 @@ class _QuotationEnquiryPageState extends State<QuotationEnquiryPage> {
     return result == true
         ? Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: double.infinity,
               child: Column(
                 children: [
@@ -362,7 +363,7 @@ class _QuotationEnquiryPageState extends State<QuotationEnquiryPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -389,7 +390,7 @@ class _QuotationEnquiryPageState extends State<QuotationEnquiryPage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

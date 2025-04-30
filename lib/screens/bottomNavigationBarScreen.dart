@@ -7,7 +7,7 @@ import 'contactusPage.dart';
 
 class BottomNavigationBarScreen extends StatelessWidget {
   String? token;
-  BottomNavigationBarScreen({this.token, Key? key}) : super(key: key);
+  BottomNavigationBarScreen({this.token, super.key});
 
   @override
   Widget build(BuildContext context) {

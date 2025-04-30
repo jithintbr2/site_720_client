@@ -11,14 +11,14 @@ import '../model/bhkFilterListModel.dart';
 import 'bottomNavigationBarScreen.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage();
+  const ListPage({super.key});
 
   @override
   _ListPageState createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool? result = true;
   bool? result1 = true;
@@ -28,13 +28,14 @@ class _ListPageState extends State<ListPage> {
   List<dynamic> items = [];
   bool isLoading = true;
   bool hasMoreData = false;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   RangeValues _values = RangeValues(1000000, 5000000);
   RangeValues _valuesSqr = RangeValues(500, 5000);
   String bhk = 'All';
   BhkFilterListModel? bhkFilterList;
   bool noRes = false;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -89,7 +90,7 @@ class _ListPageState extends State<ListPage> {
         items.addAll(projectList!.data!.project as Iterable);
         currentPage++;
         hasMoreData = false;
-        if (items.length == 0) {
+        if (items.isEmpty) {
           noRes = true;
         } else {
           noRes = false;
@@ -109,7 +110,7 @@ class _ListPageState extends State<ListPage> {
         ? RefreshIndicator(
             onRefresh: () async {
               // getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -272,13 +273,8 @@ class _ListPageState extends State<ListPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          _valuesSqr.start.toInt().toString() +
-                                              ' - ' +
-                                              _valuesSqr.end
-                                                  .toInt()
-                                                  .toString()
-                                                  .toString() +
-                                              ' Sqr.Ft',
+                                          '${_valuesSqr.start.toInt()} - ${_valuesSqr.end
+                                                  .toInt()} Sqr.Ft',
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold),
@@ -316,12 +312,7 @@ class _ListPageState extends State<ListPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          convertToLakh(_values.start.toInt())
-                                                  .toString() +
-                                              ' - ' +
-                                              convertToLakh(_values.end.toInt())
-                                                  .toString()
-                                                  .toString(),
+                                          '${convertToLakh(_values.start.toInt())} - ${convertToLakh(_values.end.toInt())}',
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold),
@@ -445,7 +436,7 @@ class _ListPageState extends State<ListPage> {
                                                                 .toString())),
                                               );
                                             },
-                                            child: Container(
+                                            child: SizedBox(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
@@ -577,7 +568,7 @@ class _ListPageState extends State<ListPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -604,7 +595,7 @@ class _ListPageState extends State<ListPage> {
                     onTap: () {
                       //getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

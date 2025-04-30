@@ -12,7 +12,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../widget/youtube_player_widget.dart';
 
 class VideoScreen extends StatefulWidget {
-  const VideoScreen({Key? key}) : super(key: key);
+  const VideoScreen({super.key});
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -24,6 +24,7 @@ class _VideoScreenState extends State<VideoScreen> {
   int vedioIndex = 0;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -55,7 +56,7 @@ class _VideoScreenState extends State<VideoScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -232,7 +233,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                   child: isYoutubeLink(videoUrl)
                                       ? YoutubePlayerBuilderWidget(
                                           videoUrl: videoUrl)
-                                      : Container(
+                                      : SizedBox(
                                           width:
                                               MediaQuery.of(context).size.width,
                                           height: 220,
@@ -278,7 +279,7 @@ class _VideoScreenState extends State<VideoScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -305,7 +306,7 @@ class _VideoScreenState extends State<VideoScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

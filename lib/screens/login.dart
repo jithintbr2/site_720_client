@@ -8,15 +8,15 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController username = new TextEditingController();
-  TextEditingController password = new TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool isVisible = true;
   late bool isLoading = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -32,6 +32,7 @@ class _LoginState extends State<Login> {
     // firebaseToken='123';
   }
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -45,7 +46,7 @@ class _LoginState extends State<Login> {
       backgroundColor: Colors.white,
       body: Form(
         key: formkey,
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [

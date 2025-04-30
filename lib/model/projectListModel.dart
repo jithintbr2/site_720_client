@@ -8,13 +8,13 @@ class ProjectListModel {
   ProjectListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -33,16 +33,16 @@ class Data {
     if (json['project'] != null) {
       project = <Project>[];
       json['project'].forEach((v) {
-        project!.add(new Project.fromJson(v));
+        project!.add(Project.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    if (this.project != null) {
-      data['project'] = this.project!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['count'] = count;
+    if (project != null) {
+      data['project'] = project!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -64,11 +64,11 @@ class Project {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['remarks'] = this.remarks;
-    data['project_image'] = this.projectImage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['remarks'] = remarks;
+    data['project_image'] = projectImage;
     return data;
   }
 }

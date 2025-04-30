@@ -7,7 +7,7 @@ import 'package:site720_client/settings/common.dart';
 
 class ResetPassword extends StatefulWidget {
   String phoneNumber;
-  ResetPassword(this.phoneNumber);
+  ResetPassword(this.phoneNumber, {super.key});
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -29,7 +29,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       backgroundColor: Colors.white,
       body: Form(
         key: formkey,
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [

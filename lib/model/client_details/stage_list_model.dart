@@ -2,7 +2,6 @@
 //
 //     final stageListModel = stageListModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 StageListModel stageListModelFromJson(String str) =>
     StageListModel.fromJson(json.decode(str));

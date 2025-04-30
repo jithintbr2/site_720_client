@@ -9,17 +9,17 @@ import 'package:site720_client/settings/common.dart';
 
 class ContactUsPage extends StatefulWidget {
   String? token;
-  ContactUsPage({this.token});
+  ContactUsPage({super.key, this.token});
 
   @override
   _ContactUsPageState createState() => _ContactUsPageState();
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
-  TextEditingController name = new TextEditingController();
-  TextEditingController phone = new TextEditingController();
-  TextEditingController place = new TextEditingController();
-  TextEditingController message = new TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController place = TextEditingController();
+  TextEditingController message = TextEditingController();
   bool isVisible = true;
   late bool isLoading = false;
   String service = 'Choose Service';
@@ -35,6 +35,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   //
   //   print("Firebase token : $firebaseToken");
   // }
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -57,7 +58,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
     serviceList = await HttpService.serviceList();
     if (serviceList != null) {
       setState(() {
-        ;
       });
     }
   }
@@ -68,7 +68,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
         ? Scaffold(
             backgroundColor: Colors.white,
             body: serviceList != null
-                ? Container(
+                ? SizedBox(
                     width: double.infinity,
                     child: Column(
                       children: [
@@ -403,7 +403,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -430,7 +430,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

@@ -13,13 +13,13 @@ import 'bottomNavigationBarScreen.dart';
 
 class VillaProjectListPage extends StatefulWidget {
   String? token;
-  VillaProjectListPage({this.token, Key? key}) : super(key: key);
+  VillaProjectListPage({this.token, super.key});
   @override
   State<VillaProjectListPage> createState() => _VillaProjectListPageState();
 }
 
 class _VillaProjectListPageState extends State<VillaProjectListPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool? result = true;
   bool? result1 = true;
@@ -27,18 +27,20 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
   String? name;
   String? imgPlan;
   int _currentPage = 0;
-  int _currentPage1 = 0;
+  final int _currentPage1 = 0;
   Timer? _timer;
-  PageController _pageController = PageController(
+  final PageController _pageController = PageController(
     initialPage: 0,
   );
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
   }
 
+  @override
   void dispose() {
     super.dispose();
     _timer?.cancel();
@@ -84,7 +86,7 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -108,7 +110,7 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
                             Container(
                               height: 10,
                             ),
-                            Container(
+                            SizedBox(
                               height: 200,
                               child: PageView.builder(
                                 controller: _pageController,
@@ -172,7 +174,7 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
                                     physics: NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       final List<YoutubePlayerController>
-                                          _controllers = [
+                                          controllers = [
                                         for (int i = 0;
                                             i <
                                                 villaProjects!
@@ -197,8 +199,8 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
                                         child: InkWell(
                                           onTap: () {},
                                           child: YoutubePlayer(
-                                            key: ObjectKey(_controllers[index]),
-                                            controller: _controllers[index],
+                                            key: ObjectKey(controllers[index]),
+                                            controller: controllers[index],
                                             actionsPadding:
                                                 const EdgeInsets.only(
                                                     left: 16.0),
@@ -229,7 +231,7 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -256,7 +258,7 @@ class _VillaProjectListPageState extends State<VillaProjectListPage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

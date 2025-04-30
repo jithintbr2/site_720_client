@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ForceUpdate extends StatefulWidget {
-  const ForceUpdate();
+  const ForceUpdate({super.key});
   @override
   _ForceUpdateState createState() => _ForceUpdateState();
 }

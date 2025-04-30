@@ -7,7 +7,7 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class DeductionWorkScreen extends StatefulWidget {
-  const DeductionWorkScreen({Key? key}) : super(key: key);
+  const DeductionWorkScreen({super.key});
 
   @override
   State<DeductionWorkScreen> createState() => _DeductionWorkScreenState();
@@ -18,6 +18,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -49,7 +50,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -146,7 +147,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                                     ),
                                     Column(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -240,7 +241,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +268,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

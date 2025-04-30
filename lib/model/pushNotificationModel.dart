@@ -16,13 +16,13 @@ class PushNotificationModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['message'] = this.message;
-    data['type'] = this.type;
-    data['notificationId'] = this.notificationId;
-    data['detailId'] = this.detailId;
-    data['detailParentId'] = this.detailParentId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['message'] = message;
+    data['type'] = type;
+    data['notificationId'] = notificationId;
+    data['detailId'] = detailId;
+    data['detailParentId'] = detailParentId;
     return data;
   }
 }

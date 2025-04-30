@@ -10,7 +10,7 @@ import 'package:site720_client/settings/common.dart';
 import 'package:lottie/lottie.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({Key? key}) : super(key: key);
+  const DrawerScreen({super.key});
 
   @override
   State<DrawerScreen> createState() => _DrawerScreenState();
@@ -21,6 +21,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -52,7 +53,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -103,7 +104,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                                 drawings!.data[index].imgPath)),
                                       );
                                     },
-                                    child: Container(
+                                    child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 1,
@@ -144,7 +145,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -171,7 +172,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

@@ -8,13 +8,13 @@ class AboutUsModel {
   AboutUsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -54,33 +54,33 @@ class Data {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     if (json['services'] != null) {
       services = <Services>[];
       json['services'].forEach((v) {
-        services!.add(new Services.fromJson(v));
+        services!.add(Services.fromJson(v));
       });
     }
     video = json['video'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['main_image'] = this.mainImage;
-    data['sub_image'] = this.subImage;
-    data['company_name'] = this.companyName;
-    data['short_description'] = this.shortDescription;
-    data['overview_title'] = this.overviewTitle;
-    data['overview_description'] = this.overviewDescription;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['main_image'] = mainImage;
+    data['sub_image'] = subImage;
+    data['company_name'] = companyName;
+    data['short_description'] = shortDescription;
+    data['overview_title'] = overviewTitle;
+    data['overview_description'] = overviewDescription;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    if (this.services != null) {
-      data['services'] = this.services!.map((v) => v.toJson()).toList();
+    if (services != null) {
+      data['services'] = services!.map((v) => v.toJson()).toList();
     }
-    data['video'] = this.video;
+    data['video'] = video;
     return data;
   }
 }
@@ -95,8 +95,8 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
     return data;
   }
 }
@@ -113,9 +113,9 @@ class Services {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['service'] = this.service;
-    data['service_description'] = this.serviceDescription;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['service'] = service;
+    data['service_description'] = serviceDescription;
     return data;
   }
 }

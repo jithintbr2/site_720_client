@@ -6,8 +6,10 @@ import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
+import '../../widget/custom_calender.dart';
+
 class DailyStatus extends StatefulWidget {
-  const DailyStatus({Key? key}) : super(key: key);
+  const DailyStatus({super.key});
 
   @override
   State<DailyStatus> createState() => _DailyStatusState();
@@ -18,6 +20,7 @@ class _DailyStatusState extends State<DailyStatus> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -41,7 +44,22 @@ class _DailyStatusState extends State<DailyStatus> {
     if (workStatus != null) {
       setState(() {});
     }
+
+
+
   }
+      void showCustomCalendar(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return CustomCalendarWidget();
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +67,7 @@ class _DailyStatusState extends State<DailyStatus> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -60,37 +78,27 @@ class _DailyStatusState extends State<DailyStatus> {
                 ),
                 title: Text("Daily Status"),
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                      ],
-                    ),
-                  ),
+                  IconButton(
+                icon: Icon(Icons.calendar_month, color: Colors.black),
+                onPressed: () {
+                  showCustomCalendar(context);
+                },
+              ),
                 ],
               ),
+                
               body: workStatus != null
                   ? SingleChildScrollView(
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
+                        
                         itemCount: workStatus!.data.length,
                         itemBuilder: (context, i) {
                           return Container(
                               child: Column(
                             children: [
+                           
                               SizedBox(
                                 height: 20,
                               ),
@@ -207,6 +215,12 @@ class _DailyStatusState extends State<DailyStatus> {
                                                         Container(
                                                           width: 40,
                                                           height: 40,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Colors
+                                                                      .white),
                                                           child: Center(
                                                             child: Text(
                                                               workStatus!
@@ -223,12 +237,6 @@ class _DailyStatusState extends State<DailyStatus> {
                                                               ),
                                                             ),
                                                           ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color: Colors
-                                                                      .white),
                                                         ),
                                                       ],
                                                     ),
@@ -256,7 +264,7 @@ class _DailyStatusState extends State<DailyStatus> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -283,7 +291,7 @@ class _DailyStatusState extends State<DailyStatus> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

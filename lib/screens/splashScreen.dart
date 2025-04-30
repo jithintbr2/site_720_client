@@ -10,6 +10,8 @@ import 'package:site720_client/settings/common.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -26,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     buildSignature: 'Unknown',
   );
 
+  @override
   void initState() {
     super.initState();
     // handleAsync();
@@ -40,14 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _packageInfo = info;
     });
-    final _appVersion = _packageInfo.version;
-    print(_appVersion);
+    final appVersion = _packageInfo.version;
+    print(appVersion);
     print('min version');
     print(updatedata!.data!.minVersion);
     print('current version');
     print(updatedata!.data!.currentVersion);
     int versionCompare =
-        _appVersion.compareTo(updatedata!.data!.minVersion.toString());
+        appVersion.compareTo(updatedata!.data!.minVersion.toString());
     print(versionCompare);
 
     if (versionCompare < 0) {
@@ -64,10 +67,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _loadWidget() async {
-    var _duration = Duration(seconds: splashDelay);
+    var duration = Duration(seconds: splashDelay);
     // return '';
     // return Timer(_duration, navigationPage);
-    return Timer(_duration, routeTOHomePage);
+    return Timer(duration, routeTOHomePage);
   }
 
   @override

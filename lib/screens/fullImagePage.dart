@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FullImagePage extends StatefulWidget {
   String imageUrl;
-  FullImagePage(this.imageUrl);
+  FullImagePage(this.imageUrl, {super.key});
 
   @override
   _FullImagePageState createState() => _FullImagePageState();

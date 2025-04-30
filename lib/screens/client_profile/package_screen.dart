@@ -10,7 +10,7 @@ import 'package:site720_client/settings/common.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PackageScreen extends StatefulWidget {
-  const PackageScreen({Key? key}) : super(key: key);
+  const PackageScreen({super.key});
 
   @override
   State<PackageScreen> createState() => _PackageScreenState();
@@ -22,6 +22,7 @@ class _PackageScreenState extends State<PackageScreen> {
   String token = "";
   String filePath = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -58,7 +59,7 @@ class _PackageScreenState extends State<PackageScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -107,7 +108,7 @@ class _PackageScreenState extends State<PackageScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +135,7 @@ class _PackageScreenState extends State<PackageScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

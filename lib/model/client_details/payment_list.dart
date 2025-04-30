@@ -30,7 +30,6 @@ class PaymentListModel {
         "message": message,
       };
 }
-
 class Datum {
   String amount;
   String transactionDate;

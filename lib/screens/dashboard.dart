@@ -24,14 +24,14 @@ import 'bottomNavigationBarScreen.dart';
 class Dashboard extends StatefulWidget {
   String? token;
 
-  Dashboard({this.token});
+  Dashboard({super.key, this.token});
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool? result = true;
   bool? result1 = true;
@@ -40,18 +40,20 @@ class _DashboardState extends State<Dashboard> {
   String? name;
   String? imgPlan;
   int _currentPage = 0;
-  int _currentPage1 = 0;
+  final int _currentPage1 = 0;
   Timer? _timer;
-  PageController _pageController = PageController(
+  final PageController _pageController = PageController(
     initialPage: 0,
   );
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
   }
 
+  @override
   void dispose() {
     super.dispose();
     _timer?.cancel();
@@ -99,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -143,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
                             Container(
                               height: 20,
                             ),
-                            Container(
+                            SizedBox(
                               height: 250,
                               child: PageView.builder(
                                 controller: _pageController,
@@ -198,9 +200,9 @@ class _DashboardState extends State<Dashboard> {
                                           children: [
                                             Container(
                                               alignment: Alignment.topCenter,
-                                              padding: new EdgeInsets.only(
+                                              padding: EdgeInsets.only(
                                                   right: 10.0, left: 10.0),
-                                              child: new Container(
+                                              child: SizedBox(
                                                 height: 85.0,
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -284,27 +286,27 @@ class _DashboardState extends State<Dashboard> {
                                     ]),
                                   )
                                 : SizedBox(),
-                            Visibility(
-                              visible: false,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ListPage()),
-                                  );
-                                },
-                                child: Container(
-                                  height: 180,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/homes4slides-1.png"),
-                                        fit: BoxFit.fill,
-                                      )),
-                                ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ListPage()),
+                                );
+                              },
+                              child: Container(
+                                height: 180,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/homes4slides-1.png"),
+                                      fit: BoxFit.fill,
+                                    )),
                               ),
+                            ),
+                             SizedBox(
+                              height: 20,
                             ),
                            
                             InkWell(
@@ -493,7 +495,7 @@ class _DashboardState extends State<Dashboard> {
                                   ListTile(
                                     dense: true,
                                     minLeadingWidth: 5,
-                                    leading: Container(
+                                    leading: SizedBox(
                                         width: 20,
                                         child: Center(
                                           child: Image.asset(
@@ -519,7 +521,7 @@ class _DashboardState extends State<Dashboard> {
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
-                                          leading: Container(
+                                          leading: SizedBox(
                                               width: 20,
                                               child: Center(
                                                 child: Image.asset(
@@ -546,7 +548,7 @@ class _DashboardState extends State<Dashboard> {
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
-                                          leading: Container(
+                                          leading: SizedBox(
                                               width: 20,
                                               child: Center(
                                                 child: Image.asset(
@@ -573,7 +575,7 @@ class _DashboardState extends State<Dashboard> {
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
-                                          leading: Container(
+                                          leading: SizedBox(
                                               width: 20,
                                               child: Center(
                                                 child: Image.asset(
@@ -599,7 +601,7 @@ class _DashboardState extends State<Dashboard> {
                                   ListTile(
                                     dense: true,
                                     minLeadingWidth: 5,
-                                    leading: Container(
+                                    leading: SizedBox(
                                         width: 20,
                                         child: Center(
                                           child: Image.asset(
@@ -625,7 +627,7 @@ class _DashboardState extends State<Dashboard> {
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
-                                          leading: Container(
+                                          leading: SizedBox(
                                               width: 20,
                                               child: Center(
                                                 child: Image.asset(
@@ -673,7 +675,7 @@ class _DashboardState extends State<Dashboard> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -700,7 +702,7 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

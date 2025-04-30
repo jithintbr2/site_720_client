@@ -39,12 +39,12 @@ class WorkUpdation {
     stageName = json['stage_name'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['work_date'] = this.workDate;
-    data['is_working'] = this.isWorking;
-    data['total_labours'] = this.totalLabours;
-    data['description'] = this.description;
-    data['stage_name'] = this.stageName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['work_date'] = workDate;
+    data['is_working'] = isWorking;
+    data['total_labours'] = totalLabours;
+    data['description'] = description;
+    data['stage_name'] = stageName;
     return data;
   }
 }

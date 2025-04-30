@@ -7,7 +7,7 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class SchedulePayment extends StatefulWidget {
-  const SchedulePayment({Key? key}) : super(key: key);
+  const SchedulePayment({super.key});
 
   @override
   State<SchedulePayment> createState() => _SchedulePaymentState();
@@ -18,6 +18,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -49,7 +50,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -58,7 +59,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                 iconTheme: IconThemeData(
                   color: Colors.black, //change your color here
                 ),
-                title: Text("Scheduled Payments"),
+                title: Text("Payments Scheduled"),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -294,7 +295,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -321,7 +322,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

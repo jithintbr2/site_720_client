@@ -8,13 +8,13 @@ class ProjectDetailsModel {
   ProjectDetailsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -62,25 +62,25 @@ class Data {
     if (json['imges'] != null) {
       imges = <Imges>[];
       json['imges'].forEach((v) {
-        imges!.add(new Imges.fromJson(v));
+        imges!.add(Imges.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['main_image'] = this.mainImage;
-    data['second_image'] = this.secondImage;
-    data['project_name'] = this.projectName;
-    data['starting_at'] = this.startingAt;
-    data['grounf_floor'] = this.grounfFloor;
-    data['first_floor'] = this.firstFloor;
-    data['porch'] = this.porch;
-    data['total_sq_ft'] = this.totalSqFt;
-    data['steel_package'] = this.steelPackage;
-    data['wood_package'] = this.woodPackage;
-    if (this.imges != null) {
-      data['imges'] = this.imges!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['main_image'] = mainImage;
+    data['second_image'] = secondImage;
+    data['project_name'] = projectName;
+    data['starting_at'] = startingAt;
+    data['grounf_floor'] = grounfFloor;
+    data['first_floor'] = firstFloor;
+    data['porch'] = porch;
+    data['total_sq_ft'] = totalSqFt;
+    data['steel_package'] = steelPackage;
+    data['wood_package'] = woodPackage;
+    if (imges != null) {
+      data['imges'] = imges!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -96,8 +96,8 @@ class Imges {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
     return data;
   }
 }

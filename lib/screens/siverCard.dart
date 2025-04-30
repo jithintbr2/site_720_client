@@ -1,4 +1,4 @@
-library sliverbar_with_card;
+library;
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -15,8 +15,8 @@ class CardSliverAppBar extends StatefulWidget {
   final Widget body;
   final ImageProvider? card;
 
-  CardSliverAppBar(
-      {required this.height,
+  const CardSliverAppBar(
+      {super.key, required this.height,
         required this.background,
         required this.title,
         required this.body,
@@ -113,8 +113,9 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
       stackOrder.add(_titleConstructor());
       if (_card != null) stackOrder.add(_cardConstructor());
       if (_action != null) stackOrder.add(_actionConstructor());
-      if (_backButton != null && _backButton)
+      if (_backButton != null && _backButton) {
         stackOrder.add(_backButtonConstructor());
+      }
     } else {
       stackOrder.add(_backgroundConstructor());
       if (_card != null) stackOrder.add(_cardConstructor());
@@ -122,8 +123,9 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
       stackOrder.add(_shadowConstructor());
       stackOrder.add(_titleConstructor());
       if (_action != null) stackOrder.add(_actionConstructor());
-      if (_backButton != null && _backButton)
+      if (_backButton != null && _backButton) {
         stackOrder.add(_backButtonConstructor());
+      }
     }
 
     return SafeArea(

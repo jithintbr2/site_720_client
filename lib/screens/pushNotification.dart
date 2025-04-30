@@ -10,7 +10,7 @@ class FirebaseServices {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  final initializationSettings = new InitializationSettings(
+  final initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'));
 
   Future<String?> get token => FirebaseMessaging.instance.getToken();

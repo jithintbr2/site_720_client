@@ -47,6 +47,9 @@ class Data {
   String costPending;
   String workStartDate;
   String workEndDate;
+  String isFreezed;
+  String freezedDate;
+  String freezedDiff;
   int totalPercentage;
   String textDetails;
   List<SiteDrawing> siteDrawings;
@@ -64,6 +67,9 @@ class Data {
     required this.costPending,
     required this.workStartDate,
     required this.workEndDate,
+      required this.isFreezed,
+      required this.freezedDate,
+      required this.freezedDiff,
     required this.totalPercentage,
     required this.textDetails,
     required this.siteDrawings,
@@ -82,6 +88,9 @@ class Data {
         costPending: json["cost_pending"] ?? "",
         workStartDate: json["work_start_date"] ?? "",
         workEndDate: json["work_end_date"] ?? "",
+        isFreezed: json["is_freezed"] ?? "",
+        freezedDate: json["freezed_date"] ?? "",
+         freezedDiff: json["freezed_diff"] ?? "",
         totalPercentage: json["total_percentage"] ?? "",
         textDetails: json["text_details"] ?? "",
         siteDrawings: json["site_drawings"] != null
@@ -106,6 +115,9 @@ class Data {
         "cost_pending": costPending,
         "work_start_date": workStartDate,
         "work_end_date": workEndDate,
+          "is_freezed": isFreezed,
+          "freezed_date": freezedDate,
+           "freezed_diff": freezedDiff,
         "total_percentage": totalPercentage,
         "text_details": textDetails,
         "site_drawings":

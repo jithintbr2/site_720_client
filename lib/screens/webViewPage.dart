@@ -5,7 +5,7 @@ class WebViewPage extends StatefulWidget {
   final String title;
   final String url;
 
-  WebViewPage(this.title, this.url);
+  const WebViewPage(this.title, this.url, {super.key});
 
   @override
   _WebViewPageState createState() => _WebViewPageState();

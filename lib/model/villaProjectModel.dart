@@ -8,13 +8,13 @@ class VillaProjectModel {
   VillaProjectModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -39,11 +39,11 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['heading'] = this.heading;
-    data['overview_description'] = this.overviewDescription;
-    data['images'] = this.images;
-    data['youtube_links'] = this.youtubeLinks;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['heading'] = heading;
+    data['overview_description'] = overviewDescription;
+    data['images'] = images;
+    data['youtube_links'] = youtubeLinks;
     return data;
   }
 }

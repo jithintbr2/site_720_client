@@ -7,7 +7,7 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class ExtraWorksScreen extends StatefulWidget {
-  const ExtraWorksScreen({Key? key}) : super(key: key);
+  const ExtraWorksScreen({super.key});
 
   @override
   State<ExtraWorksScreen> createState() => _ExtraWorksScreenState();
@@ -18,6 +18,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -49,7 +50,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -247,7 +248,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -274,7 +275,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

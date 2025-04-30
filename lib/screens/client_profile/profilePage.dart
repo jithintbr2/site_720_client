@@ -23,7 +23,7 @@ import '../bottomNavigationBarScreen.dart';
 
 class ProfilePage extends StatefulWidget {
   String token;
-  ProfilePage(this.token);
+  ProfilePage(this.token, {super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -39,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool? result1 = true;
   String? name;
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -68,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -236,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             SizedBox(
                                               height: 5,
                                             ),
-                                            Container(
+                                            SizedBox(
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -299,7 +300,7 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -326,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

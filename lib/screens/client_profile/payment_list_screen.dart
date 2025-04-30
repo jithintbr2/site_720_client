@@ -1,13 +1,18 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:site720_client/model/client_details/payment_list.dart';
-import 'package:site720_client/screens/bottomNavigationBarScreen.dart';
-import 'package:site720_client/service/service.dart';
-import 'package:site720_client/settings/assets.dart';
-import 'package:site720_client/settings/common.dart';
+
+import 'package:printing/printing.dart';
+import 'package:flutter/services.dart';
+
+import '../../model/client_details/payment_list.dart';
+import '../../service/service.dart';
+import '../../settings/assets.dart';
+import '../../settings/common.dart';
+import '../bottomNavigationBarScreen.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class PaymentListScreen extends StatefulWidget {
-  const PaymentListScreen({Key? key}) : super(key: key);
+  const PaymentListScreen({super.key});
 
   @override
   State<PaymentListScreen> createState() => _PaymentListScreenState();
@@ -18,6 +23,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
   bool? result = true;
   String token = "";
 
+  @override
   void initState() {
     super.initState();
     getData();
@@ -43,20 +49,96 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
     }
   }
 
+  Future<void> printReceipt(int index) async {
+    final payment = paymentList!.data[index];
+
+    final doc = pw.Document();
+    doc.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              children: [
+                // pw.Image(
+                //   pw.MemoryImage(yourLogoBytes),
+                //   width: 100,
+                //   height: 100,
+                // ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'Payment Receipt',
+                  style: pw.TextStyle(
+                    fontSize: 24,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Table(
+                  border: pw.TableBorder.all(width: 1),
+                  children: [
+                    _buildTableRow(
+                        'Transaction Date:', payment.transactionDate),
+                    _buildTableRow('Phase:', payment.phaseName),
+                    _buildTableRow('Collected By:', payment.accountHead),
+                    _buildTableRow('Description:', payment.description),
+                    _buildTableRow('Amount:', payment.amount),
+                    _buildTableRow('Payment Method:', payment.paymentMethod),
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'Thank you for your payment!',
+                  style: pw.TextStyle(
+                      fontSize: 14, fontStyle: pw.FontStyle.italic),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+    final success = await Printing.layoutPdf(
+      onLayout: (format) async {
+        return doc.save();
+      },
+    );
+    if (success) {
+      print('Printing successful!');
+    } else {
+      print('Printing failed or was cancelled.');
+    }
+  }
+  pw.TableRow _buildTableRow(String title, String value) {
+    return pw.TableRow(
+      children: [
+        pw.Padding(
+          padding: const pw.EdgeInsets.all(8.0),
+          child: pw.Text(
+            title,
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          ),
+        ),
+        pw.Padding(
+          padding: const pw.EdgeInsets.all(8.0),
+          child: pw.Text(value),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return result == true
         ? RefreshIndicator(
             onRefresh: () async {
               getData();
-              return null;
+              return;
             },
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: Colors.black, 
                 ),
                 title: Text("Payment Details"),
                 actions: [
@@ -74,8 +156,6 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                             ),
                           ),
                         ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
                       ],
                     ),
                   ),
@@ -94,7 +174,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                               height: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                    color: Color(0xFF876B6F)),
+                                  color: Color(0xFF876B6F)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -154,34 +234,36 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                       ),
                                     ),
                                     Column(
-                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
                                               0.18,
-                                        
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             color: paymentList!.data[index]
-                                                      .paymentMethod == "CASH"?const Color.fromARGB(255, 0, 189, 85):const Color.fromARGB(255, 255, 255, 255),
+                                                        .paymentMethod ==
+                                                    "CASH"
+                                                ? const Color.fromARGB(
+                                                    255, 0, 189, 85)
+                                                : const Color.fromARGB(
+                                                    255, 255, 255, 255),
                                           ),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   paymentList!.data[index]
                                                       .paymentMethod,
                                                   style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w700,
+                                                    fontWeight: FontWeight.w700,
                                                     color: Colors.black,
                                                     fontSize: 11,
                                                   ),
@@ -190,6 +272,44 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.18,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: const Color.fromARGB(
+                                                  255, 255, 255, 255),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 40,
+                                                    height: 30,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.print,
+                                                        size: 18,
+                                                        color: Colors.black,
+                                                      ),
+                                                      onPressed: () {
+                                                        printReceipt(index);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
                                         SizedBox(
                                           height: 10,
                                         ),
@@ -203,8 +323,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                                                   BorderRadius.circular(5),
                                               color: Colors.white),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(6.0),
+                                            padding: const EdgeInsets.all(6.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -249,7 +368,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -269,38 +388,9 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                     'No Network Found !',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      getData();
-                    },
-                    child: Container(
-                      width: 120,
-                      height: 35,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Try Again',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
-            ));
+            ),
+          );
   }
 }

@@ -11,7 +11,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'bottomNavigationBarScreen.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+  const DetailsPage({super.key});
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -26,6 +26,7 @@ class _DetailsPageState extends State<DetailsPage> {
   AboutUsModel? aboutUs;
   String? name;
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -97,9 +98,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             alignment: Alignment.centerLeft,
                             margin: EdgeInsets.only(left: 20),
                             child: Text(
-                                "Why go for " +
-                                    aboutUs!.data!.companyName.toString() +
-                                    "?",
+                                "Why go for ${aboutUs!.data!.companyName}?",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18)),
                           ),
@@ -490,7 +489,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                       physics: NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         final List<YoutubePlayerController>
-                                            _controllers = [
+                                            controllers = [
                                           for (int i = 0;
                                               i < aboutUs!.data!.video!.length;
                                               i++)
@@ -514,8 +513,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                             onTap: () {},
                                             child: YoutubePlayer(
                                               key: ObjectKey(
-                                                  _controllers[index]),
-                                              controller: _controllers[index],
+                                                  controllers[index]),
+                                              controller: controllers[index],
                                               actionsPadding:
                                                   const EdgeInsets.only(
                                                       left: 16.0),
@@ -581,7 +580,7 @@ class _DetailsPageState extends State<DetailsPage> {
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: Container(
+            body: SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -608,7 +607,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     onTap: () {
                       //getData();
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 35,
                       child: Padding(

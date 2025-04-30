@@ -30,8 +30,10 @@ import 'package:site720_client/model/serviceListModel.dart';
 import 'package:site720_client/settings/config.dart';
 
 import '../model/bhkFilterListModel.dart';
+import '../model/client_details/extrawork_dates_model.dart';
 import '../model/quotationEnquiryModel.dart';
 import '../model/villaProjectModel.dart';
+import '../model/workDateModel.dart';
 
 class HttpService {
   static final Dio _dio = Dio();
@@ -266,6 +268,54 @@ class HttpService {
       log(e.toString());
     }
   }
+
+ 
+  static Future<WorkDatesModel?> getWorkDates(String token, int year, int month) async {
+    var formData = FormData.fromMap({
+      'token': token,
+      'year': year,
+      'month': month,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}getWorkedDays", data: formData);
+      if (result.statusCode == 200) {
+        return workDatesModelFromJson(result.data);  
+      } else {
+        throw Exception('Failed to load work dates');
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+
+     static Future<ExtraworkDates?> getClientExtraWorkForDate(
+      String token,
+     DateTime selectedDate,
+    ) async {
+      var formData = FormData.fromMap({
+        'token': token,
+        'selected_date': selectedDate,
+       
+      });
+
+      try {
+        var result = await _dio.post(
+          "${Config.apiBaseUrl}getExtraWorkForDate", 
+          data: formData,
+        );
+        if (result.statusCode == 200) {
+        return ExtraworkDates.fromJson(result.data);
+        } else {
+          throw Exception('Failed to load extra work data');
+        }
+      } catch (e) {
+        print(e);
+        return null; 
+      }
+    }
+
 
   static Future getClientExtraWork(token) async {
     log(token);

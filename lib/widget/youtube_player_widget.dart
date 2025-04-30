@@ -5,8 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YoutubePlayerBuilderWidget extends StatefulWidget {
   final String videoUrl;
 
-  const YoutubePlayerBuilderWidget({Key? key, required this.videoUrl})
-      : super(key: key);
+  const YoutubePlayerBuilderWidget({super.key, required this.videoUrl});
 
   @override
   _YoutubePlayerBuilderWidgetState createState() =>
@@ -46,7 +45,7 @@ class _YoutubePlayerBuilderWidgetState
         progressIndicatorColor: Theme.of(context).primaryColor,
       ),
       builder: (context, player) {
-        return Container(
+        return SizedBox(
           height: 220,
           width: MediaQuery.of(context).size.width,
           child: ClipRRect(

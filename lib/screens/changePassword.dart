@@ -8,7 +8,7 @@ import 'package:site720_client/settings/common.dart';
 
 class ChangePassword extends StatefulWidget {
   String token;
-  ChangePassword(this.token);
+  ChangePassword(this.token, {super.key});
 
   @override
   _ChangePasswordState createState() => _ChangePasswordState();
@@ -26,6 +26,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     print("Firebase token : $firebaseToken");
   }
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -46,7 +47,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           children: [

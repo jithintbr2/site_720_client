@@ -6,14 +6,14 @@ import 'package:site720_client/settings/common.dart';
 
 class AddComplaint extends StatefulWidget {
   String token;
-  AddComplaint(this.token);
+  AddComplaint(this.token, {super.key});
 
   @override
   _AddComplaintState createState() => _AddComplaintState();
 }
 
 class _AddComplaintState extends State<AddComplaint> {
-  TextEditingController complaint = new TextEditingController();
+  TextEditingController complaint = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

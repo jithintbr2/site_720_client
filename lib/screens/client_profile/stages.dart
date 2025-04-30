@@ -19,7 +19,7 @@ class _StageScreenState extends State<StageScreen> {
   StageListModel? stages;
   bool? result = true;
   String token = "";
-  Map<int, bool> _isExpandedMap =
+  final Map<int, bool> _isExpandedMap =
       {}; // This will store the expansion state for each stage
 
   @override
@@ -301,7 +301,7 @@ class _StageScreenState extends State<StageScreen> {
                                                             .data[index]
                                                             .workDetails
                                                             .length *
-                                                        100.0,
+                                                        110.0,
                                                     child: ListView.builder(
                                                       shrinkWrap: true,
                                                       physics:
@@ -333,8 +333,7 @@ class _StageScreenState extends State<StageScreen> {
                                                                     height: 10,
                                                                     decoration:
                                                                         BoxDecoration(
-                                                                      color: Colors
-                                                                          .blue,
+                                                                      color:stages!.data[index].workDetails[i].isWorking=="Yes"?Colors.green:Colors.red,
                                                                       shape: BoxShape
                                                                           .circle,
                                                                     ),

@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:printing/printing.dart';
-import 'package:flutter/services.dart';
 
 import '../../model/client_details/payment_list.dart';
 import '../../service/service.dart';

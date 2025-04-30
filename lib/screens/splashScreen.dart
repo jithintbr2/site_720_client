@@ -75,9 +75,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      FirebaseServices().init(context);
-    });
+    // setState(() {
+    //   FirebaseServices().init(context);
+    // });
 
     return Scaffold(
         body: Container(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../utils/youtube_utils.dart';
+
 
 class YoutubePlayerBuilderWidget extends StatefulWidget {
   final String videoUrl;

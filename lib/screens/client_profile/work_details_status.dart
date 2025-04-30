@@ -1,7 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:site720_client/model/client_details/extra_work.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/common.dart';
 import '../../model/client_details/extrawork_dates_model.dart';

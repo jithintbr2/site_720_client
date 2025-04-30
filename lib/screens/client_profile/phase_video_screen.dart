@@ -7,8 +7,8 @@ import 'package:site720_client/screens/bottomNavigationBarScreen.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../utils/youtube_utils.dart';
 import '../../widget/youtube_player_widget.dart';
 
 class VideoScreen extends StatefulWidget {

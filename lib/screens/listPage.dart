@@ -186,58 +186,63 @@ class _ListPageState extends State<ListPage> {
                                               child: TextFormField(
                                                   onTap: () {
                                                     showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            scrollable: true,
-                                                            title: Text(
-                                                                'Category'),
-                                                            content: ListView
-                                                                .builder(
-                                                              shrinkWrap: true,
-                                                              itemCount:
-                                                                  bhkFilterList!
-                                                                      .data!
-                                                                      .length,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      ind) {
-                                                                return InkWell(
-                                                                  onTap: () {
-                                                                    setState(
-                                                                        () {
-                                                                      bhk = bhkFilterList!
-                                                                              .data![
-                                                                          ind];
-
-                                                                      // maxCount = usedProduct!.data![ind].qty.toString();
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Category'),
+                                                          content:
+                                                              ConstrainedBox(
+                                                            constraints:
+                                                                const BoxConstraints(
+                                                              maxHeight:
+                                                                  300,
+                                                            ),
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children:
+                                                                    bhkFilterList!
+                                                                        .data!
+                                                                        .map(
+                                                                            (item) {
+                                                                  return InkWell(
+                                                                    onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        bhk =
+                                                                            item;
+                                                                      });
                                                                       Navigator.pop(
                                                                           context,
                                                                           true);
-                                                                    });
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        bottom:
-                                                                            15),
-                                                                    child: Container(
-                                                                        child: Text(
-                                                                      bhkFilterList!
-                                                                              .data![
-                                                                          ind],
-                                                                      style: TextStyle(
-                                                                          fontSize:
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          bottom:
                                                                               15),
-                                                                    )),
-                                                                  ),
-                                                                );
-                                                              },
+                                                                      child:
+                                                                          Text(
+                                                                        item,
+                                                                        style: const TextStyle(
+                                                                            fontSize:
+                                                                                15),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }).toList(),
+                                                              ),
                                                             ),
-                                                          );
-                                                        });
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
                                                   },
                                                   maxLines: 1,
                                                   readOnly: true,
@@ -273,8 +278,7 @@ class _ListPageState extends State<ListPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          '${_valuesSqr.start.toInt()} - ${_valuesSqr.end
-                                                  .toInt()} Sqr.Ft',
+                                          '${_valuesSqr.start.toInt()} - ${_valuesSqr.end.toInt()} Sqr.Ft',
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold),

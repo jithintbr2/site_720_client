@@ -34,6 +34,7 @@ class Datum {
   String estDays;
   String stageStatus;
   String startDate;
+    String isLocked;
   String endDate;
   List<WorkDetail> workDetails;
   Datum({
@@ -42,6 +43,7 @@ class Datum {
     required this.estDays,
     required this.stageStatus,
     required this.startDate,
+     required this.isLocked,
     required this.endDate,
     required this.workDetails,
   });
@@ -51,6 +53,7 @@ class Datum {
         estDays: json["est_days"] ?? "",
         stageStatus: json["stage_status"] ?? "",
         startDate: json["start_date"] ?? "",
+        isLocked: json["is_locked"] ?? "",
         endDate: json["end_date"] ?? "",
         workDetails: json["work_details"] == null
             ? []
@@ -63,6 +66,7 @@ class Datum {
         "est_days": estDays,
         "stage_status": stageStatus,
         "start_date": startDate,
+         "is_locked": isLocked,
         "end_date": endDate,
         "work_details": List<dynamic>.from(workDetails.map((x) => x.toJson())),
       };

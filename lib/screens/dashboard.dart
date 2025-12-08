@@ -288,11 +288,30 @@ class _DashboardState extends State<Dashboard> {
                                 : SizedBox(),
                             InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ListPage()),
-                                );
+                                widget.token == null
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text("Login Required"),
+                                            content: const Text(
+                                                "Please login to continue."),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text("OK"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ListPage(token: widget.token!)),
+                                      );
                               },
                               child: Container(
                                 height: 180,
@@ -305,19 +324,36 @@ class _DashboardState extends State<Dashboard> {
                                     )),
                               ),
                             ),
-                             SizedBox(
+                            SizedBox(
                               height: 20,
                             ),
-                           
                             InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          VillaProjectListPage(
-                                              token: widget.token)),
-                                );
+                                widget.token == null
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text("Login Required"),
+                                            content: const Text(
+                                                "Please login to continue."),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text("OK"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VillaProjectListPage(
+                                                    token: widget.token)),
+                                      );
                               },
                               child: Container(
                                 height: 180,
@@ -334,13 +370,48 @@ class _DashboardState extends State<Dashboard> {
                               height: 20,
                             ),
                             InkWell(
+                              // onTap: () {
+                              //    widget.token == null
+                              //   ? Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => DetailsPage()),
+                              //   )
+                              //  :Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => DetailsPage()),
+                              //   );
+                              // },
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailsPage()),
-                                );
+                                if (widget.token == null) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Login Required"),
+                                        content: const Text(
+                                            "Please login to continue."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: const Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailsPage(),
+                                    ),
+                                  );
+                                }
                               },
+
                               child: Container(
                                 height: 180,
                                 decoration: BoxDecoration(

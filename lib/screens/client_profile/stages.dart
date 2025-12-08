@@ -44,6 +44,32 @@ class _StageScreenState extends State<StageScreen> {
     }
   }
 
+  String getMonthYear(String date) {
+    if (date.isEmpty) return "";
+    try {
+      final parts = date.split('-');
+      final month = int.parse(parts[1]);
+      final year = int.parse(parts[2]);
+      final monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ];
+      return "${monthNames[month - 1]} $year";
+    } catch (e) {
+      return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return result == true
@@ -55,7 +81,7 @@ class _StageScreenState extends State<StageScreen> {
                 backgroundColor: Colors.white,
                 elevation: 1,
                 iconTheme: const IconThemeData(color: Colors.black),
-                title: const Text("Stagewise Schedule",
+                title: const Text("Work Schedules",
                     style: TextStyle(color: Colors.black)),
                 actions: [
                   Padding(
@@ -88,12 +114,59 @@ class _StageScreenState extends State<StageScreen> {
                               children: [
                                 TimelineTile(
                                   nodeAlign: TimelineNodeAlign.start,
+                                  // node: TimelineNode(
+                                  //   indicator: Column(
+                                  //     mainAxisSize: MainAxisSize.min,
+                                  //     children: [
+                                  //       DotIndicator(color: Colors.black),
+                                  //       const SizedBox(height: 6),
+                                  //       Text(
+                                  //         stage.startDate.isNotEmpty
+                                  //             ? stage.startDate
+                                  //             : '07-04-2025',
+                                  //         style: const TextStyle(
+                                  //           color: Colors.black,
+                                  //           fontSize: 12,
+                                  //           fontWeight: FontWeight.w500,
+                                  //         ),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  //   startConnector: index == 0
+                                  //       ? null
+                                  //       : SolidLineConnector(
+                                  //           color: Config.themeColor),
+                                  //   endConnector:
+                                  //       index == stages!.data.length - 1
+                                  //           ? null
+                                  //           : SolidLineConnector(
+                                  //               color: Config.themeColor),
+                                  // ),
                                   node: TimelineNode(
                                     indicator: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        DotIndicator(color: Colors.black),
+                                        if (stage.startDate.isNotEmpty)
+                                          Text(
+                                            getMonthYear(stage.startDate),
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromARGB(
+                                                  255, 14, 13, 13),
+                                            ),
+                                          ),
+                                        const SizedBox(height: 4),
+
+                                        DotIndicator(
+                                            color: stage.stageStatus ==
+                                                    "completed"
+                                                ? Colors.green
+                                                : stage.stageStatus == "running"
+                                                    ? Colors.blue
+                                                    : Colors.orange),
                                         const SizedBox(height: 6),
+                                        // Day-Date below the dot
                                         Text(
                                           stage.startDate.isNotEmpty
                                               ? stage.startDate
@@ -116,6 +189,7 @@ class _StageScreenState extends State<StageScreen> {
                                             : SolidLineConnector(
                                                 color: Config.themeColor),
                                   ),
+
                                   contents: Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Card(
@@ -160,7 +234,8 @@ class _StageScreenState extends State<StageScreen> {
                                                       if (stage
                                                           .startDate.isNotEmpty)
                                                         Text(
-                                                          stage.startDate,
+                                                          //stage.startDate,
+                                                            "Start Date: ${stage.startDate}",
                                                           style: TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
@@ -174,14 +249,19 @@ class _StageScreenState extends State<StageScreen> {
                                                   Transform.scale(
                                                     scale: .8,
                                                     child: Switch(
-                                                      value: false,
-                                                      onChanged: (bool value) =>
-                                                          setState(() {}),
-                                                      activeTrackColor: Colors
-                                                          .purple
-                                                          .withOpacity(0.2),
+                                                      value:
+                                                          stage.isLocked == "Y",
+                                                      onChanged:
+                                                          null, // keep it disabled if locked
+                                                      activeTrackColor:
+                                                          const Color.fromARGB(
+                                                                  255,
+                                                                  176,
+                                                                  39,
+                                                                  39)
+                                                              .withOpacity(0.2),
                                                       inactiveThumbColor:
-                                                          Colors.grey,
+                                                          const Color.fromARGB(255, 255, 255, 255),
                                                       inactiveTrackColor: Colors
                                                           .grey
                                                           .withOpacity(0.2),
@@ -189,17 +269,22 @@ class _StageScreenState extends State<StageScreen> {
                                                           WidgetStateProperty
                                                               .resolveWith<
                                                                   Icon?>(
-                                                        (states) => states
-                                                                .contains(
-                                                                    WidgetState
-                                                                        .selected)
+                                                        (states) => (stage
+                                                                    .isLocked ==
+                                                                "Y")
                                                             ? const Icon(
                                                                 Icons
                                                                     .lock_rounded,
-                                                                size: 14)
+                                                                size: 14,
+                                                                color: Colors
+                                                                    .red,
+                                                              )
                                                             : const Icon(
                                                                 Icons.lock_open,
-                                                                size: 14),
+                                                                size: 14,
+                                                                color: Colors
+                                                                    .green,
+                                                              ),
                                                       ),
                                                       overlayColor:
                                                           WidgetStateProperty
@@ -222,6 +307,92 @@ class _StageScreenState extends State<StageScreen> {
                                                   ),
                                                 ],
                                               ),
+
+                                              // Row(
+                                              //   mainAxisAlignment:
+                                              //       MainAxisAlignment
+                                              //           .spaceBetween,
+                                              //   children: [
+                                              //     Column(
+                                              //       crossAxisAlignment:
+                                              //           CrossAxisAlignment
+                                              //               .start,
+                                              //       children: [
+                                              //         Text(
+                                              //           stage.stageName,
+                                              //           style: TextStyle(
+                                              //             fontSize: 16,
+                                              //             fontWeight:
+                                              //                 FontWeight.bold,
+                                              //             color:
+                                              //                 Config.themeColor,
+                                              //           ),
+                                              //         ),
+                                              //         if (stage
+                                              //             .startDate.isNotEmpty)
+                                              //           Text(
+                                              //             stage.startDate,
+                                              //             style: TextStyle(
+                                              //               fontSize: 12,
+                                              //               fontWeight:
+                                              //                   FontWeight.w500,
+                                              //               color: Config
+                                              //                   .themeColor,
+                                              //             ),
+                                              //           ),
+                                              //       ],
+                                              //     ),
+                                              //     Transform.scale(
+                                              //       scale: .8,
+                                              //       child: Switch(
+                                              //         value: false,
+                                              //         onChanged: (bool value) =>
+                                              //             setState(() {}),
+                                              //         activeTrackColor: Colors
+                                              //             .purple
+                                              //             .withOpacity(0.2),
+                                              //         inactiveThumbColor:
+                                              //             Colors.grey,
+                                              //         inactiveTrackColor: Colors
+                                              //             .grey
+                                              //             .withOpacity(0.2),
+                                              //         thumbIcon:
+                                              //             WidgetStateProperty
+                                              //                 .resolveWith<
+                                              //                     Icon?>(
+                                              //           (states) => states
+                                              //                   .contains(
+                                              //                       WidgetState
+                                              //                           .selected)
+                                              //               ? const Icon(
+                                              //                   Icons
+                                              //                       .lock_rounded,
+                                              //                   size: 14)
+                                              //               : const Icon(
+                                              //                   Icons.lock_open,
+                                              //                   size: 14),
+                                              //         ),
+                                              //         overlayColor:
+                                              //             WidgetStateProperty
+                                              //                 .resolveWith<
+                                              //                     Color>(
+                                              //           (states) => states
+                                              //                   .contains(
+                                              //                       WidgetState
+                                              //                           .pressed)
+                                              //               ? Colors.purple
+                                              //                   .withOpacity(
+                                              //                       0.1)
+                                              //               : Colors
+                                              //                   .transparent,
+                                              //         ),
+                                              //         materialTapTargetSize:
+                                              //             MaterialTapTargetSize
+                                              //                 .shrinkWrap,
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
                                               const SizedBox(height: 8),
                                               if (stage.startDate.isNotEmpty)
                                                 Text(
@@ -333,7 +504,12 @@ class _StageScreenState extends State<StageScreen> {
                                                                     height: 10,
                                                                     decoration:
                                                                         BoxDecoration(
-                                                                      color:stages!.data[index].workDetails[i].isWorking=="Yes"?Colors.green:Colors.red,
+                                                                      color: stages!.data[index].workDetails[i].isWorking ==
+                                                                              "Yes"
+                                                                          ? Colors
+                                                                              .green
+                                                                          : Colors
+                                                                              .red,
                                                                       shape: BoxShape
                                                                           .circle,
                                                                     ),
@@ -391,13 +567,17 @@ class _StageScreenState extends State<StageScreen> {
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                        stages!.data[index].workDetails[i].isWorking, 
+                                                                        stages!
+                                                                            .data[index]
+                                                                            .workDetails[i]
+                                                                            .isWorking,
                                                                         style:
                                                                             TextStyle(
                                                                           fontSize:
                                                                               12,
-                                                                          color:
-                                                                               stages!.data[index].workDetails[i].isWorking=="Yes"?Colors.green:Colors.red,
+                                                                          color: stages!.data[index].workDetails[i].isWorking == "Yes"
+                                                                              ? Colors.green
+                                                                              : Colors.red,
                                                                           fontWeight:
                                                                               FontWeight.bold,
                                                                         ),

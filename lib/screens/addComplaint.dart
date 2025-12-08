@@ -22,7 +22,7 @@ class _AddComplaintState extends State<AddComplaint> {
         bottomOpacity: 0.0,
         elevation: 0.0,
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.black,
         ),
         backgroundColor: Colors.white,
         title: Text(

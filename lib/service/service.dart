@@ -18,6 +18,9 @@ import 'package:site720_client/model/client_details/phase_video_model.dart';
 import 'package:site720_client/model/complaintListModel.dart';
 import 'package:site720_client/model/contactUsModel.dart';
 import 'package:site720_client/model/forceUpdateModel.dart';
+import 'package:site720_client/model/getDocsDetails.dart';
+import 'package:site720_client/model/getLaboursCount.dart';
+import 'package:site720_client/model/getPrecetageModel.dart';
 import 'package:site720_client/model/homePageModel.dart';
 import 'package:site720_client/model/loginModel.dart';
 import 'package:site720_client/model/phoneNumberCheck.dart';
@@ -216,6 +219,25 @@ class HttpService {
     }
   }
 
+   static Future getDocsData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_project_documents",
+          data: formData);
+      //log(params);
+
+      GetDocsDetails model = GetDocsDetails.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   static Future getClientDeductionWork(token) async {
     log(token);
     var formData = FormData.fromMap({
@@ -260,26 +282,25 @@ class HttpService {
       var result = await _dio.post("${Config.apiBaseUrl}getClientWorkUpdates",
           data: formData);
       //log(params);
-
       ClientWorkStatusModel model = ClientWorkStatusModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());
     }
   }
 
- 
-  static Future<WorkDatesModel?> getWorkDates(String token, int year, int month) async {
+  static Future<WorkDatesModel?> getWorkDates(
+      String token, int year, int month) async {
     var formData = FormData.fromMap({
       'token': token,
       'year': year,
       'month': month,
     });
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getWorkedDays", data: formData);
+      var result =
+          await _dio.post("${Config.apiBaseUrl}getWorkedDays", data: formData);
       if (result.statusCode == 200) {
-        return workDatesModelFromJson(result.data);  
+        return workDatesModelFromJson(result.data);
       } else {
         throw Exception('Failed to load work dates');
       }
@@ -289,33 +310,30 @@ class HttpService {
     }
   }
 
+  static Future<ExtraworkDates?> getClientExtraWorkForDate(
+    String token,
+    DateTime selectedDate,
+  ) async {
+    var formData = FormData.fromMap({
+      'token': token,
+      'selected_date': selectedDate,
+    });
 
-     static Future<ExtraworkDates?> getClientExtraWorkForDate(
-      String token,
-     DateTime selectedDate,
-    ) async {
-      var formData = FormData.fromMap({
-        'token': token,
-        'selected_date': selectedDate,
-       
-      });
-
-      try {
-        var result = await _dio.post(
-          "${Config.apiBaseUrl}getExtraWorkForDate", 
-          data: formData,
-        );
-        if (result.statusCode == 200) {
+    try {
+      var result = await _dio.post(
+        "${Config.apiBaseUrl}getExtraWorkForDate",
+        data: formData,
+      );
+      if (result.statusCode == 200) {
         return ExtraworkDates.fromJson(result.data);
-        } else {
-          throw Exception('Failed to load extra work data');
-        }
-      } catch (e) {
-        print(e);
-        return null; 
+      } else {
+        throw Exception('Failed to load extra work data');
       }
+    } catch (e) {
+      print(e);
+      return null;
     }
-
+  }
 
   static Future getClientExtraWork(token) async {
     log(token);
@@ -373,21 +391,43 @@ class HttpService {
     }
   }
 
-  static Future getClientSiteDrawings(token) async {
+  // static Future getClientSiteDrawings(token) async {
+  //   log(token);
+  //   var formData = FormData.fromMap({
+  //     'token': token,
+  //   });
+  //   try {
+  //     var result = await _dio.post("${Config.apiBaseUrl}getClientSiteDrawings",
+  //         data: formData);
+  //     //log(params);
+
+  //     DrawingsModel model = DrawingsModel.fromJson(result.data);
+
+  //     return model;
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+  static Future<DrawingsModel?> getClientSiteDrawings(String token) async {
     log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+    var formData = FormData.fromMap({'token': token});
+
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientSiteDrawings",
-          data: formData);
-      //log(params);
-
-      DrawingsModel model = DrawingsModel.fromJson(result.data);
-
-      return model;
-    } catch (e) {
-      log(e.toString());
+      var response = await _dio.post(
+        "${Config.apiBaseUrl}getClientSiteDrawings",
+        data: formData,
+      );
+      log("Response: ${response.data}");
+      if (response.data != null) {
+        DrawingsModel model = DrawingsModel.fromJson(response.data);
+        return model;
+      } else {
+        log("Response data is null");
+        return null;
+      }
+    } catch (e, st) {
+      log("Error fetching drawings: $e\n$st");
+      return null;
     }
   }
 
@@ -402,6 +442,43 @@ class HttpService {
       //log(params);
 
       GetIconsModel model = GetIconsModel.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future getGraphData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_stage_percent",
+          data: formData);
+      //log(params);
+
+      GetPercentModel model = GetPercentModel.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future getCountData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_labours_count",
+          data: formData);
+      //log(params);
+      GetCountLabours model = GetCountLabours.fromJson(result.data);
 
       return model;
     } catch (e) {
@@ -455,25 +532,61 @@ class HttpService {
     }
   }
 
-  static Future projectList(currentPage, itemPerPage, bhk, minAmount, maxAmount,
-      minSquareFeet, maxSquareFeet) async {
-    var params = {
-      "currentPage": currentPage,
-      "itemPerPage": itemPerPage,
-      "bhk": bhk,
-      "minAmount": minAmount,
-      "maxAmount": maxAmount,
-      "minSquareFeet": minSquareFeet,
-      "maxSquareFeet": maxSquareFeet
-    };
+  // static Future projectList(currentPage, itemPerPage, bhk, minAmount, maxAmount,
+  //     minSquareFeet, maxSquareFeet,token) async {
+  //   var params = {
+  //     "currentPage": currentPage,
+  //     "itemPerPage": itemPerPage,
+  //     "bhk": bhk,
+  //     "minAmount": minAmount,
+  //     "maxAmount": maxAmount,
+  //     "minSquareFeet": minSquareFeet,
+  //     "maxSquareFeet": maxSquareFeet,
+  //      "token": token,
+  //   };
+  //   try {
+  //     var result = await _dio.get("${Config.apiBaseUrl}newdashboard",
+  //         queryParameters: params);
+
+  //     ProjectListModel model = ProjectListModel.fromJson(result.data);
+  //     return model;
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+
+  static Future projectList(
+    currentPage,
+    itemPerPage,
+    bhk,
+    minAmount,
+    maxAmount,
+    minSquareFeet,
+    maxSquareFeet,
+    token,
+  ) async {
     try {
-      var result = await _dio.get("${Config.apiBaseUrl}newdashboard",
-          queryParameters: params);
+      FormData formData = FormData.fromMap({
+        "currentPage": currentPage,
+        "itemPerPage": itemPerPage,
+        "bhk": bhk,
+        "minAmount": minAmount,
+        "maxAmount": maxAmount,
+        "minSquareFeet": minSquareFeet,
+        "maxSquareFeet": maxSquareFeet,
+        "token": token,
+      });
+
+      var result = await _dio.post(
+        "${Config.apiBaseUrl}newdashboard",
+        data: formData,
+      );
 
       ProjectListModel model = ProjectListModel.fromJson(result.data);
       return model;
     } catch (e) {
-      log(e.toString());
+      log("projectList error: ${e.toString()}");
+      return null;
     }
   }
 

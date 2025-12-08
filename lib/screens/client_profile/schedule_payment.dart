@@ -30,323 +30,194 @@ class _SchedulePaymentState extends State<SchedulePayment> {
         await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
+      setState(() => result = true);
     } else {
-      setState(() {
-        result = false;
-      });
+      setState(() => result = false);
     }
     paymentList = await HttpService.getClientScheduledPayment(token);
-    if (paymentList != null) {
-      setState(() {});
-    }
+    if (paymentList != null) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return result == true
         ? RefreshIndicator(
-            onRefresh: () async {
-              getData();
-              return;
-            },
+            onRefresh: () async => getData(),
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
+                elevation: 0,
                 backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                centerTitle: true,
+                title: const Text(
+                  "Payments Scheduled",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
                 ),
-                title: Text("Payments Scheduled"),
+                iconTheme: const IconThemeData(color: Colors.black),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                      ],
-                    ),
+                    child: Image.asset(Assets.h4logo, height: 28, width: 28),
                   ),
                 ],
               ),
               body: paymentList != null
-                  ? SingleChildScrollView(
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        reverse: true,
-                        // reverse: true,
-                        itemCount: paymentList!.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.95,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                   color: Color(0xFF876B6F)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                  ? ListView.builder(
+                      padding: const EdgeInsets.all(12),
+                      itemCount: paymentList!.data.length,
+                      itemBuilder: (context, index) {
+                        final item = paymentList!.data[index];
+                        return Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          color: const Color(0xFF876B6F),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// Phase & Status Row
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          paymentList!.data[index].phaseNo
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Container(
-                                          width: 90,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: paymentList!
-                                                          .data[index].status
-                                                          .toString() ==
-                                                      'Open'
-                                                  ? Color(0xFF5f8d4e)
-                                                  : Colors.red),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(3.0),
-                                            child: Center(
-                                              child: Text(
-                                                  paymentList!
-                                                      .data[index].status
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.white,
-                                                      fontSize: 12)),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      "Phase ${item.phaseNo}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          fontSize: 16),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          paymentList!.data[index].description
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        // Text(
-                                        //     paymentList!.data
-                                        //         [index].phaseNo
-                                        //         .toString(),
-                                        //     style: TextStyle(
-                                        //         fontWeight:
-                                        //             FontWeight.w400,
-                                        //         color: Colors.white,
-                                        //         fontSize: 14)),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                const Text(
-                                                  'Estimated amount',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
-                                                      fontSize: 9),
-                                                ),
-                                                Text(
-                                                  paymentList!
-                                                      .data[index].estCost
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.black,
-                                                      fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Paid amount',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black,
-                                                        fontSize: 9)),
-                                                Text(
-                                                    paymentList!
-                                                        .data[index].paidAmount
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black,
-                                                        fontSize: 14)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Balance',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black,
-                                                        fontSize: 9)),
-                                                Text(
-                                                  paymentList!
-                                                      .data[index].balanceAmount
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.black,
-                                                      fontSize: 14),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: item.status == 'Open'
+                                            ? const Color(0xFF5f8d4e)
+                                            : Colors.red,
+                                      ),
+                                      child: Text(
+                                        item.status ?? "",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
+                                const SizedBox(height: 6),
+
+                                /// Description
+                                Text(
+                                    "Stage: ${ item.description}",
+                                  //item.description ?? "",
+                                  style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                const SizedBox(height: 16),
+
+                                /// Amounts Row
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _amountBox("Estimated", item.estCost),
+                                    _amountBox("Paid", item.paidAmount),
+                                    _amountBox("Balance", item.balanceAmount),
+                                  ],
+                                )
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  : const Center(child: CircularProgressIndicator()),
               bottomNavigationBar: BottomNavigationBarScreen(),
             ),
           )
-        : Scaffold(
-            backgroundColor: Colors.white,
-            body: SizedBox(
-              width: MediaQuery.of(context).size.width * 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.noNetwork),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'No Network Found !',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      getData();
-                    },
-                    child: SizedBox(
-                      width: 120,
-                      height: 35,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Try Again',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        : _noNetworkWidget();
+  }
+
+  Widget _amountBox(String label, dynamic value) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.26,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 4,
+              offset: const Offset(2, 2))
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: Colors.black54),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value.toString(),
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _noNetworkWidget() {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(Assets.noNetwork, width: 220, height: 220),
+            const SizedBox(height: 20),
+            const Text(
+              'No Network Found!',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey.shade400,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               ),
-            ));
+              onPressed: () => getData(),
+              child: const Text(
+                'Try Again',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -11,7 +11,8 @@ import '../model/bhkFilterListModel.dart';
 import 'bottomNavigationBarScreen.dart';
 
 class ListPage extends StatefulWidget {
-  const ListPage({super.key});
+  final String token;
+  const ListPage({super.key, required this.token});
 
   @override
   _ListPageState createState() => _ListPageState();
@@ -19,7 +20,6 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   bool? result = true;
   bool? result1 = true;
   ProjectListModel? projectList;
@@ -82,7 +82,8 @@ class _ListPageState extends State<ListPage> {
           _values.start.toString(),
           _values.end.toString(),
           _valuesSqr.start.toString(),
-          _valuesSqr.end.toString());
+          _valuesSqr.end.toString(),
+          widget.token);
       if (projectList != null) {
         setState(() {});
       }

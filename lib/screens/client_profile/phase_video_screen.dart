@@ -34,16 +34,12 @@ class _VideoScreenState extends State<VideoScreen> {
     token = await Common.getSharedPref("token");
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
-      setState(() {
-        result = false;
-      });
-    }
+
+    setState(() {
+      result = connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi);
+    });
+
     videoData = await HttpService.getClientPhasesVideo(token);
     if (videoData != null) {
       setState(() {});
@@ -55,35 +51,29 @@ class _VideoScreenState extends State<VideoScreen> {
     return result == true
         ? RefreshIndicator(
             onRefresh: () async {
-              getData();
-              return;
+              await getData();
             },
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
-                ),
-                title: Text("Videos"),
+                elevation: 1,
+                iconTheme: const IconThemeData(color: Colors.black),
+                title: const Text("Videos",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(Assets.h4logo),
+                          fit: BoxFit.fitWidth,
                         ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -91,246 +81,145 @@ class _VideoScreenState extends State<VideoScreen> {
               body: videoData != null
                   ? SingleChildScrollView(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 5),
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(left: 10, top: 18),
-                            width: MediaQuery.of(context).size.width,
-                            height: 30,
-                            child: ListView(
+                          const SizedBox(height: 10),
+
+                          /// Phase tabs
+                          SizedBox(
+                            height: 45,
+                            child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              children: <Widget>[
-                                for (int i = 0; i < videoData!.data.length; i++)
-                                  InkWell(
+                              itemCount: videoData!.data.length,
+                              itemBuilder: (context, i) {
+                                final isSelected = vedioIndex == i;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 8),
+                                  child: InkWell(
                                     onTap: () {
                                       setState(() {
                                         vedioIndex = i;
                                       });
                                     },
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          .25,
-                                      height: 30,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18, vertical: 6),
                                       decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.white, width: 0),
-                                          color: Colors.white,
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(6))),
+                                        color: isSelected
+                                            ? const Color(0xFF3c9f9a)
+                                            : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
                                       child: Center(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  videoData!.data[i].phaseNo
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      color: vedioIndex == i
-                                                          ? Color(0xFF3c9f9a)
-                                                          : Color(0xFF717171),
-                                                      fontSize: 12),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                vedioIndex == i
-                                                    ? Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          color:
-                                                              Color(0xFF3c9f9a),
-                                                        ),
-                                                        height: 3,
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .2,
-                                                      )
-                                                    : Container(),
-                                              ],
-                                            ),
-                                          ],
+                                        child: Text(
+                                          videoData!.data[i].phaseNo.toString(),
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: isSelected
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          // Container(
-                          //     child: ListView.builder(
-                          //         shrinkWrap: true,
-                          //         physics: NeverScrollableScrollPhysics(),
-                          //         itemBuilder: (context, index) {
-                          //           final List<YoutubePlayerController>
-                          //               _controllers = [
-                          //             for (int i = 0;
-                          //                 i <
-                          //                     videoData!.data[vedioIndex]
-                          //                         .phaseVideo.length;
-                          //                 i++)
-                          //               videoData!
-                          //                   .data[vedioIndex].phaseVideo[i],
-                          //           ]
-                          //                   .map<YoutubePlayerController>(
-                          //                     (videoId) =>
-                          //                         YoutubePlayerController(
-                          //                       initialVideoId: videoId,
-                          //                       flags: const YoutubePlayerFlags(
-                          //                         autoPlay: false,
-                          //                       ),
-                          //                     ),
-                          //                   )
-                          //                   .toList();
-                          //           return Padding(
-                          //             padding: const EdgeInsets.only(
-                          //                 left: 20, right: 20, bottom: 20),
-                          //             child: InkWell(
-                          //               onTap: () {},
-                          //               child: YoutubePlayer(
-                          //                 key: ObjectKey(_controllers[index]),
-                          //                 controller: _controllers[index],
-                          //                 actionsPadding:
-                          //                     const EdgeInsets.only(left: 16.0),
-                          //                 bottomActions: [
-                          //                   CurrentPosition(),
-                          //                   const SizedBox(width: 10.0),
-                          //                   ProgressBar(isExpanded: true),
-                          //                   const SizedBox(width: 10.0),
-                          //                   RemainingDuration(),
-                          //                   FullScreenButton(),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           );
-                          //         },
-                          //         itemCount: videoData!
-                          //             .data[vedioIndex].phaseVideo.length)),
-                          Container(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  videoData!.data[vedioIndex].phaseVideo.length,
-                              itemBuilder: (context, index) {
-                                final videoUrl = videoData!
-                                    .data[vedioIndex].phaseVideo[index];
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, bottom: 20),
-                                  child: isYoutubeLink(videoUrl)
-                                      ? YoutubePlayerBuilderWidget(
-                                          videoUrl: videoUrl)
-                                      : SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 220,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: CachedNetworkImage(
-                                              imageUrl: videoUrl,
-                                              fit: BoxFit.cover,
-                                              placeholder: (_, __) => Center(
-                                                child: Lottie.asset(
-                                                  'assets/images/loading.json',
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              ),
-                                              errorWidget: (_, __, ___) =>
-                                                  Center(
-                                                child: Icon(
-                                                  Icons.error,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
                                 );
                               },
                             ),
                           ),
 
-                          SizedBox(
-                            height: 20,
+                          const SizedBox(height: 20),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount:
+                                videoData!.data[vedioIndex].phaseVideo.length,
+                            itemBuilder: (context, index) {
+                              final videoUrl =
+                                  videoData!.data[vedioIndex].phaseVideo[index];
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 12),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: isYoutubeLink(videoUrl)
+                                      ? YoutubePlayerBuilderWidget(
+                                          videoUrl: videoUrl,
+                                        )
+                                      : SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 220,
+                                          child: CachedNetworkImage(
+                                            imageUrl: videoUrl,
+                                            fit: BoxFit.cover,
+                                            placeholder: (_, __) => Center(
+                                              child: Lottie.asset(
+                                                'assets/images/loading.json',
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            errorWidget: (_, __, ___) =>
+                                                const Center(
+                                              child: Icon(Icons.error,
+                                                  color: Colors.red),
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                              );
+                            },
                           ),
+                          const SizedBox(height: 30),
                         ],
                       ),
                     )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  : const Center(child: CircularProgressIndicator()),
               bottomNavigationBar: BottomNavigationBarScreen(),
             ),
           )
         : Scaffold(
             backgroundColor: Colors.white,
             body: SizedBox(
-              width: MediaQuery.of(context).size.width * 1,
+              width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.noNetwork),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  Image.asset(
+                    Assets.noNetwork,
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.cover,
                   ),
-                  Text(
+                  const SizedBox(height: 15),
+                  const Text(
                     'No Network Found !',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      getData();
-                    },
-                    child: SizedBox(
-                      width: 120,
-                      height: 35,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Try Again',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade400,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onPressed: getData,
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      child: Text(
+                        'Try Again',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ],
               ),
-            ));
+            ),
+          );
   }
 }

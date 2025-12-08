@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:site720_client/model/forceUpdateModel.dart';
 import 'package:site720_client/screens/dashboard.dart';
 import 'package:site720_client/screens/forceUpdate.dart';
-import 'package:site720_client/screens/pushNotification.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';

@@ -1,6 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-
 import 'package:printing/printing.dart';
 
 import '../../model/client_details/payment_list.dart';
@@ -34,18 +33,12 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
         await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
+      setState(() => result = true);
     } else {
-      setState(() {
-        result = false;
-      });
+      setState(() => result = false);
     }
     paymentList = await HttpService.getClientPaymentDetails(token);
-    if (paymentList != null) {
-      setState(() {});
-    }
+    if (paymentList != null) setState(() {});
   }
 
   Future<void> printReceipt(int index) async {
@@ -58,12 +51,6 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
           return pw.Center(
             child: pw.Column(
               children: [
-                // pw.Image(
-                //   pw.MemoryImage(yourLogoBytes),
-                //   width: 100,
-                //   height: 100,
-                // ),
-                pw.SizedBox(height: 20),
                 pw.Text(
                   'Payment Receipt',
                   style: pw.TextStyle(
@@ -75,8 +62,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                 pw.Table(
                   border: pw.TableBorder.all(width: 1),
                   children: [
-                    _buildTableRow(
-                        'Transaction Date:', payment.transactionDate),
+                    _buildTableRow('Transaction Date:', payment.transactionDate),
                     _buildTableRow('Phase:', payment.phaseName),
                     _buildTableRow('Collected By:', payment.accountHead),
                     _buildTableRow('Description:', payment.description),
@@ -96,17 +82,11 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
         },
       ),
     );
-    final success = await Printing.layoutPdf(
-      onLayout: (format) async {
-        return doc.save();
-      },
+    await Printing.layoutPdf(
+      onLayout: (format) async => doc.save(),
     );
-    if (success) {
-      print('Printing successful!');
-    } else {
-      print('Printing failed or was cancelled.');
-    }
   }
+
   pw.TableRow _buildTableRow(String title, String value) {
     return pw.TableRow(
       children: [
@@ -124,267 +104,191 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return result == true
         ? RefreshIndicator(
-            onRefresh: () async {
-              getData();
-              return;
-            },
+            onRefresh: () async => getData(),
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Colors.black, 
+                elevation: 1,
+                iconTheme: const IconThemeData(color: Colors.black),
+                title: const Text(
+                  "Payment Details",
+                  style: TextStyle(color: Colors.black),
                 ),
-                title: Text("Payment Details"),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Image.asset(
+                      Assets.h4logo,
+                      height: 28,
                     ),
                   ),
                 ],
               ),
               body: paymentList != null
-                  ? SingleChildScrollView(
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: paymentList!.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF876B6F)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                  ? ListView.builder(
+                      padding: const EdgeInsets.all(12),
+                      itemCount: paymentList!.data.length,
+                      itemBuilder: (context, index) {
+                        final payment = paymentList!.data[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          color: const Color(0xFF876B6F),
+                          elevation: 4,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // LEFT SIDE
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        payment.transactionDate.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        "Phase: ${payment.phaseName}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        "Collected By: ${payment.accountHead}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        "Description: ${payment.description}",
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                // RIGHT SIDE
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .56,
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            payment.paymentMethod == "CASH"
+                                                ? Colors.greenAccent.shade400
+                                                : Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        payment.paymentMethod,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    InkWell(
+                                      onTap: () => printReceipt(index),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: const Icon(
+                                          Icons.print,
+                                          size: 20,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            paymentList!
-                                                .data[index].transactionDate
-                                                .toString(),
+                                          const Text(
+                                            "Amount",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 16),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black54,
+                                            ),
                                           ),
                                           Text(
-                                            "Phase : ${paymentList!.data[index].phaseName}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 14),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "Collected By : ${paymentList!.data[index].accountHead}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 14),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "Description : ${paymentList!.data[index].description.toString()}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.white,
-                                                fontSize: 14),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
+                                            payment.amount.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.18,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: paymentList!.data[index]
-                                                        .paymentMethod ==
-                                                    "CASH"
-                                                ? const Color.fromARGB(
-                                                    255, 0, 189, 85)
-                                                : const Color.fromARGB(
-                                                    255, 255, 255, 255),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  paymentList!.data[index]
-                                                      .paymentMethod,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.black,
-                                                    fontSize: 11,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.18,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: const Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 40,
-                                                    height: 30,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.print,
-                                                        size: 18,
-                                                        color: Colors.black,
-                                                      ),
-                                                      onPressed: () {
-                                                        printReceipt(index);
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                const Text(
-                                                  'Amount',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
-                                                      fontSize: 9),
-                                                ),
-                                                Text(
-                                                  paymentList!
-                                                      .data[index].amount
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.black,
-                                                      fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  : const Center(child: CircularProgressIndicator()),
               bottomNavigationBar: BottomNavigationBarScreen(),
             ),
           )
         : Scaffold(
             backgroundColor: Colors.white,
-            body: SizedBox(
-              width: MediaQuery.of(context).size.width * 1,
+            body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.noNetwork),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  Image.asset(
+                    Assets.noNetwork,
+                    width: 200,
+                    height: 200,
                   ),
-                  Text(
-                    'No Network Found !',
+                  const SizedBox(height: 20),
+                  const Text(
+                    'No Network Found!',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],

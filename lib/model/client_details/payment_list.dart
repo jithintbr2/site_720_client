@@ -54,15 +54,15 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        amount: json["amount"],
-        transactionDate: json["transaction_date"],
-        description: json["description"],
-        collectedById: json["collected_by_id"],
-        paymentMethodId: json["payment_method_id"],
-        phaseId: json["phase_id"],
-        phaseName: json["phase_name"],
-        accountHead: json["account_head"],
-        paymentMethod: json["payment_method"],
+        amount: json["amount"]??"",
+        transactionDate: json["transaction_date"]??"",
+        description: json["description"]??"",
+        collectedById: json["collected_by_id"]??"",
+        paymentMethodId: json["payment_method_id"]??"",
+        phaseId: json["phase_id"]??"",
+        phaseName: json["phase_name"]??"",
+        accountHead: json["account_head"]??"",
+        paymentMethod: json["payment_method"]??"",
       );
 
   Map<String, dynamic> toJson() => {

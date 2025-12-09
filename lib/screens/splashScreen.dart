@@ -36,28 +36,68 @@ class _SplashScreenState extends State<SplashScreen> {
     //_loadWidget();
   }
 
+  // getData() async {
+  //   updatedata = await HttpService.forceUpdate();
+  //   final info = await PackageInfo.fromPlatform();
+  //   setState(() {
+  //     _packageInfo = info;
+  //   });
+  //   final appVersion = _packageInfo.version;
+  //   print(appVersion);
+  //   print('min version');
+  //   print(updatedata!.data!.minVersion);
+  //   print('current version');
+  //   print(updatedata!.data!.currentVersion);
+  //   int versionCompare =
+  //       appVersion.compareTo(updatedata!.data!.minVersion.toString());
+  //   print(versionCompare);
+
+  //   if (versionCompare < 0) {
+  //     _checkVersion();
+  //   } else {
+  //     _loadWidget();
+  //   }
+  // }
   getData() async {
-    updatedata = await HttpService.forceUpdate();
+  try {
     final info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
     });
+
     final appVersion = _packageInfo.version;
     print(appVersion);
+
+    updatedata = await HttpService.forceUpdate();
+
+    // ✅ Null safety check
+    if (updatedata == null || updatedata!.data == null) {
+      print("Force update API failed, skipping version check");
+      _loadWidget();
+      return;
+    }
+
     print('min version');
     print(updatedata!.data!.minVersion);
+
     print('current version');
     print(updatedata!.data!.currentVersion);
+
     int versionCompare =
         appVersion.compareTo(updatedata!.data!.minVersion.toString());
-    print(versionCompare);
 
     if (versionCompare < 0) {
       _checkVersion();
     } else {
       _loadWidget();
     }
+
+  } catch (e) {
+    print("Splash error: $e");
+    _loadWidget(); // ✅ Never crash, always move forward
   }
+}
+
 
   void _checkVersion() async {
     Navigator.of(context).pushAndRemoveUntil(

@@ -1,21 +1,19 @@
 class AddComplaintModel {
-  bool? status;
-  String? message;
-  bool? data;
+  final bool status;
+  final String message;
+  final bool data;
 
-  AddComplaintModel({this.status, this.message, this.data});
+  AddComplaintModel({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
 
-  AddComplaintModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    data = json['data'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
-    data['data'] = this.data;
-    return data;
+  factory AddComplaintModel.fromJson(Map<String, dynamic> json) {
+    return AddComplaintModel(
+      status: json['status'] ?? false,
+      message: json['message'] ?? 'Unknown error',
+      data: json['data'] ?? false,
+    );
   }
 }

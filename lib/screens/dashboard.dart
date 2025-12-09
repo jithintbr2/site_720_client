@@ -59,23 +59,71 @@ class _DashboardState extends State<Dashboard> {
     _timer?.cancel();
   }
 
+  // getData() async {
+  //   name = await Common.getSharedPref("name");
+  //   imgPlan = await Common.getSharedPref("plan");
+  //   final List<ConnectivityResult> connectivityResult =
+  //       await (Connectivity().checkConnectivity());
+  //   if (connectivityResult.contains(ConnectivityResult.mobile) ||
+  //       connectivityResult.contains(ConnectivityResult.wifi)) {
+  //     setState(() {
+  //       result = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       result = false;
+  //     });
+  //   }
+  //   dashboardDetails = await HttpService.dashboard();
+  //   if (dashboardDetails != null) {
+  //     setState(() {
+  //       _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+  //         if (_currentPage < dashboardDetails!.data.banner.length - 1) {
+  //           _currentPage++;
+  //         } else {
+  //           _currentPage = 0;
+  //         }
+  //         _pageController.animateToPage(
+  //           _currentPage,
+  //           duration: Duration(milliseconds: 350),
+  //           curve: Curves.easeIn,
+  //         );
+  //       });
+  //     });
+  //   }
+  // }
   getData() async {
-    name = await Common.getSharedPref("name");
-    imgPlan = await Common.getSharedPref("plan");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
-      setState(() {
-        result = false;
-      });
-    }
-    dashboardDetails = await HttpService.dashboard();
-    if (dashboardDetails != null) {
+    try {
+      name = await Common.getSharedPref("name");
+      imgPlan = await Common.getSharedPref("plan");
+
+      final List<ConnectivityResult> connectivityResult =
+          await Connectivity().checkConnectivity();
+
+      if (connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi)) {
+        setState(() {
+          result = true;
+        });
+      } else {
+        setState(() {
+          result = false;
+        });
+        return;
+      }
+
+      // ✅ Safe API call
+      dashboardDetails = await HttpService.dashboard(
+        (widget.token ?? "").toString(),
+      );
+
+      if (dashboardDetails == null) {
+        print("Dashboard API failed – showing empty state");
+        return;
+      }
+
+      if (!mounted) return;
+
       setState(() {
         _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
           if (_currentPage < dashboardDetails!.data.banner.length - 1) {
@@ -90,6 +138,8 @@ class _DashboardState extends State<Dashboard> {
           );
         });
       });
+    } catch (e) {
+      print("Dashboard Error: $e");
     }
   }
 
@@ -305,10 +355,9 @@ class _DashboardState extends State<Dashboard> {
                                     )),
                               ),
                             ),
-                             SizedBox(
+                            SizedBox(
                               height: 20,
                             ),
-                           
                             InkWell(
                               onTap: () {
                                 Navigator.push(

@@ -15,6 +15,7 @@ import 'package:site720_client/screens/client_profile/payment_list_screen.dart';
 import 'package:site720_client/screens/client_profile/phase_video_screen.dart';
 import 'package:site720_client/screens/client_profile/schedule_payment.dart';
 import 'package:site720_client/screens/client_profile/stages.dart';
+import 'package:site720_client/screens/installmentList.dart';
 import 'package:site720_client/screens/siverCard.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
@@ -215,6 +216,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     OverviewScreen(),
+                                              ));
+                                        }
+                                        else if (iconsList!
+                                                .data.icons[index].iconId ==
+                                            "13") {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InstallmentScreen(iconsList!
+                                                .data.projectId,token: widget.token!,),
                                               ));
                                         }
                                       },

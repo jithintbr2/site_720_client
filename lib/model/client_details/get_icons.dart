@@ -21,8 +21,8 @@ class GetIconsModel {
 
     factory GetIconsModel.fromJson(Map<String, dynamic> json) => GetIconsModel(
         data: Data.fromJson(json["data"]),
-        status: json["status"],
-        message: json["message"],
+        status: json["status"] ?? false,
+        message: json["message"] ?? '',
     );
 
     Map<String, dynamic> toJson() => {
@@ -36,26 +36,44 @@ class Data {
     String bannerImage;
     String clientName;
     String projectName;
+    String projectId;
     List<IconData> icons;
 
     Data({
         required this.bannerImage,
         required this.clientName,
         required this.projectName,
+        required this.projectId,
         required this.icons,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
-        bannerImage: json["banner_image"],
-        clientName: json["client_name,"],
-        projectName: json["project_name,"],
-        icons: List<IconData>.from(json["icons"].map((x) => IconData.fromJson(x))),
+        // JSON has "banner_image" (with underscore, no comma)
+        bannerImage: json["banner_image"]?.toString() ?? '',
+        
+        // JSON has "client_name," (with comma) but model expects without comma
+        // Handle both possibilities
+        clientName: json["client_name"]?.toString() ?? 
+                   json["client_name,"]?.toString() ?? '',
+        
+        // JSON has "project_name," (with comma)
+        projectName: json["project_name"]?.toString() ?? 
+                    json["project_name,"]?.toString() ?? '',
+        
+        // JSON has "project_id" (no comma)
+        projectId: json["project_id"]?.toString() ?? 
+                  json["project_id,"]?.toString() ?? '',
+        
+        icons: json["icons"] != null 
+            ? List<IconData>.from(json["icons"].map((x) => IconData.fromJson(x)))
+            : [],
     );
 
     Map<String, dynamic> toJson() => {
         "banner_image": bannerImage,
-        "client_name,": clientName,
-        "project_name,": projectName,
+        "client_name": clientName,
+        "project_name": projectName,
+        "project_id": projectId,
         "icons": List<dynamic>.from(icons.map((x) => x.toJson())),
     };
 }
@@ -72,9 +90,9 @@ class IconData {
     });
 
     factory IconData.fromJson(Map<String, dynamic> json) => IconData(
-        iconId: json["icon_id"],
-        iconName: json["icon_name"],
-        iconUrl: json["icon_url"],
+        iconId: json["icon_id"]?.toString() ?? '',
+        iconName: json["icon_name"]?.toString() ?? '',
+        iconUrl: json["icon_url"]?.toString() ?? '',
     );
 
     Map<String, dynamic> toJson() => {

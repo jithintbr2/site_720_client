@@ -64,11 +64,11 @@ class _PackageScreenState extends State<PackageScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Package Details"),
+                title: Text("Package Details",style: TextStyle(color: Colors.white)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -103,7 +103,7 @@ class _PackageScreenState extends State<PackageScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

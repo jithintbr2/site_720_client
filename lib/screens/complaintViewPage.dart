@@ -256,62 +256,62 @@ class ComplaintViewPage extends StatelessWidget {
                     const SizedBox(height: 30),
                     Row(
                       children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Edit functionality
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: cardColor,
-                              foregroundColor: textPrimary,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: textSecondary.withOpacity(0.2),
-                                ),
-                              ),
-                              elevation: 0,
-                            ),
-                            icon: Icon(
-                              Icons.edit_outlined,
-                              color: primaryColor,
-                            ),
-                            label: Text(
-                              'Edit Complaint',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: textPrimary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Share functionality
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            icon: const Icon(Icons.share_outlined),
-                            label: const Text(
-                              'Share',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: ElevatedButton.icon(
+                        //     onPressed: () {
+                        //       // Edit functionality
+                        //     },
+                        //     style: ElevatedButton.styleFrom(
+                        //       backgroundColor: cardColor,
+                        //       foregroundColor: textPrimary,
+                        //       padding: const EdgeInsets.symmetric(
+                        //           vertical: 16),
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //         side: BorderSide(
+                        //           color: textSecondary.withOpacity(0.2),
+                        //         ),
+                        //       ),
+                        //       elevation: 0,
+                        //     ),
+                        //     icon: Icon(
+                        //       Icons.edit_outlined,
+                        //       color: primaryColor,
+                        //     ),
+                        //     label: Text(
+                        //       'Edit Complaint',
+                        //       style: TextStyle(
+                        //         fontWeight: FontWeight.w600,
+                        //         color: textPrimary,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 12),
+                        // Expanded(
+                        //   child: ElevatedButton.icon(
+                        //     onPressed: () {
+                        //       // Share functionality
+                        //     },
+                        //     style: ElevatedButton.styleFrom(
+                        //       backgroundColor: primaryColor,
+                        //       foregroundColor: Colors.white,
+                        //       padding: const EdgeInsets.symmetric(
+                        //           vertical: 16),
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //       ),
+                        //       elevation: 0,
+                        //     ),
+                        //     icon: const Icon(Icons.share_outlined),
+                        //     label: const Text(
+                        //       'Share',
+                        //       style: TextStyle(
+                        //         fontWeight: FontWeight.w600,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
 

@@ -19,6 +19,8 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController confirmPassword = TextEditingController();
   bool isVisible = true;
   late bool isLoading = false;
+    bool? isPinVerified = false;
+  String? userPin;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   String? firebaseToken;
   handleAsync() async {
@@ -31,6 +33,21 @@ class _ChangePasswordState extends State<ChangePassword> {
     // TODO: implement initState
     super.initState();
     handleAsync();
+    _checkPinStatus();
+  }
+
+  Future<void> _checkPinStatus() async {
+    String? pinVerified = await Common.getSharedPref("pin_verified");
+    userPin = await Common.getSharedPref("user_pin");
+
+    if (mounted) {
+      setState(() {
+        isPinVerified = pinVerified == "true";
+      });
+    }
+    if (userPin != null && userPin!.isNotEmpty) {
+      print('Saved PIN: $userPin');
+    }
   }
 
   @override
@@ -169,13 +186,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 Common.showProgressDialog(context, "Loading..");
                                 ChangePasswordModel object =
                                     await HttpService.login(widget.token,
-                                        confirmPassword.text, firebaseToken);
+                                        confirmPassword.text, firebaseToken,"");
                                 if (object.status == true) {
                                   Common.toastMessaage(
                                       object.message, Colors.green);
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (context) => Login()),
+                                          builder: (context) => Login(
+                                                userPin: userPin,
+                                              )),
                                       (Route<dynamic> route) => false);
                                 } else {
                                   Common.toastMessaage(

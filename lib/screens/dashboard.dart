@@ -13,12 +13,12 @@ import 'package:site720_client/screens/detailsPage.dart';
 import 'package:site720_client/screens/listPage.dart';
 import 'package:site720_client/screens/login.dart';
 import 'package:site720_client/screens/client_profile/profilePage.dart';
+import 'package:site720_client/screens/splashScreen.dart';
 import 'package:site720_client/screens/villaProjectListPage.dart';
 import 'package:site720_client/screens/webViewPage.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
-
 import 'bottomNavigationBarScreen.dart';
 
 class Dashboard extends StatefulWidget {
@@ -45,12 +45,28 @@ class _DashboardState extends State<Dashboard> {
   final PageController _pageController = PageController(
     initialPage: 0,
   );
-
+  bool? isPinVerified = false;
+  String? userPin;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
+    _checkPinStatus();
+  }
+
+  Future<void> _checkPinStatus() async {
+    String? pinVerified = await Common.getSharedPref("pin_verified");
+    userPin = await Common.getSharedPref("user_pin");
+
+    if (mounted) {
+      setState(() {
+        isPinVerified = pinVerified == "true";
+      });
+    }
+    if (userPin != null && userPin!.isNotEmpty) {
+      print('Saved PIN: $userPin');
+    }
   }
 
   @override
@@ -84,10 +100,10 @@ class _DashboardState extends State<Dashboard> {
   //           _currentPage = 0;
   //         }
   //         _pageController.animateToPage(
-  //           _currentPage,
   //           duration: Duration(milliseconds: 350),
   //           curve: Curves.easeIn,
   //         );
+  //           _currentPage,
   //       });
   //     });
   //   }
@@ -160,7 +176,7 @@ class _DashboardState extends State<Dashboard> {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: Color(0xFFC24B68), //change your color here
                 ),
                 actions: [
                   Padding(
@@ -226,7 +242,7 @@ class _DashboardState extends State<Dashboard> {
                             SizedBox(
                               height: 20,
                             ),
-                            widget.token != null
+                           widget.token != null && widget.token!=""
                                 ? Padding(
                                     padding: const EdgeInsets.only(bottom: 20),
                                     child: Stack(children: [
@@ -314,7 +330,7 @@ class _DashboardState extends State<Dashboard> {
                                                   width: 100,
                                                   height: 35,
                                                   decoration: BoxDecoration(
-                                                      color: Colors.orange,
+                                                      color: Color(0xFFC24B68),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5)),
@@ -376,7 +392,7 @@ class _DashboardState extends State<Dashboard> {
                                       image: AssetImage(
                                           "assets/images/homes4slides-2.png"),
                                       fit: BoxFit.fill,
-                                    )),
+                                    )), 
                               ),
                             ),
                             SizedBox(
@@ -404,7 +420,7 @@ class _DashboardState extends State<Dashboard> {
                             SizedBox(
                               height: 20,
                             ),
-                            widget.token == null
+                            widget.token == null || widget.token==""
                                 ? Stack(children: [
                                     Container(
                                       width:
@@ -427,14 +443,16 @@ class _DashboardState extends State<Dashboard> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Login()),
+                                                builder: (context) => Login(
+                                                      userPin: userPin,
+                                                    )),
                                           );
                                         },
                                         child: Container(
                                           width: 100,
                                           height: 35,
                                           decoration: BoxDecoration(
-                                              color: Colors.orange,
+                                              color: Color(0xFFC24B68),
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Center(
@@ -488,7 +506,7 @@ class _DashboardState extends State<Dashboard> {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            widget.token == null
+                                            widget.token == null || widget.token==""
                                                 ? InkWell(
                                                     onTap: () {
                                                       Navigator.push(
@@ -566,7 +584,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     },
                                   ),
-                                  widget.token != null
+                                 widget.token != null && widget.token!=""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -593,7 +611,7 @@ class _DashboardState extends State<Dashboard> {
                                           },
                                         )
                                       : SizedBox(),
-                                  widget.token != null
+                                  widget.token != null && widget.token!=""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -620,7 +638,7 @@ class _DashboardState extends State<Dashboard> {
                                           },
                                         )
                                       : SizedBox(),
-                                  widget.token != null
+                                  widget.token != null && widget.token!=""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -672,7 +690,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     },
                                   ),
-                                  widget.token != null
+                                   widget.token != null && widget.token!=""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -779,30 +797,79 @@ class _DashboardState extends State<Dashboard> {
             ));
   }
 
+  // void _dialogue(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext ctx) {
+  //         return AlertDialog(
+  //           title: Text('Please Confirm'),
+  //           content: Text('Are you sure to Logout?'),
+  //           actions: [
+  //             // The "Yes" button
+  //             TextButton(
+  //                 onPressed: () {
+  //                   Common.saveSharedPref("Logout", "success");
+  //                   Navigator.of(context).pushAndRemoveUntil(
+  //                       MaterialPageRoute(builder: (context) => Dashboard()),
+  //                       (Route<dynamic> route) => false);
+  //                 },
+  //                 child: Text('Yes')),
+  //             TextButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('No'))
+  //           ],
+  //         );
+  //       });
+  // }
   void _dialogue(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: Text('Please Confirm'),
-            content: Text('Are you sure to Logout?'),
-            actions: [
-              // The "Yes" button
-              TextButton(
-                  onPressed: () {
-                    Common.saveSharedPref("Logout", "success");
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Dashboard()),
-                        (Route<dynamic> route) => false);
-                  },
-                  child: Text('Yes')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('No'))
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: const Text('Please Confirm'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _performLogout();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const SplashScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      await Common.removeSharedPref('token');
+      await Common.removeSharedPref('user_id');
+      await Common.removeSharedPref('user_name');
+      await Common.removeSharedPref('user_email');
+      await Common.removeSharedPref('project_id');
+
+      // await Common.removeSharedPref('pin_verified');
+      // await Common.removeSharedPref('user_pin');
+
+      print('Logout successful - Session cleared, PIN remains');
+    } catch (e) {
+      print('Error during logout: $e');
+    }
   }
 }

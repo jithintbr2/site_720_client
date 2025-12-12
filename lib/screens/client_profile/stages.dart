@@ -52,11 +52,11 @@ class _StageScreenState extends State<StageScreen> {
             child: Scaffold(
               backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 elevation: 1,
-                iconTheme: const IconThemeData(color: Colors.black),
+                iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
                 title: const Text("Stagewise Schedule",
-                    style: TextStyle(color: Colors.black)),
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -474,7 +474,7 @@ class _StageScreenState extends State<StageScreen> {
                       ),
                     )
                   : const Center(child: CircularProgressIndicator()),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token,),
             ),
           )
         : Scaffold(

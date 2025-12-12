@@ -55,11 +55,13 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Extra Works"),
+                title: Text("Extra Works",
+                    style: TextStyle(
+                        color: const Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -102,7 +104,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
                                   padding: const EdgeInsets.only(top: 5),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                     color: Color(0xFF876B6F),
+                                     color: Color(0xFFC430011),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -243,7 +245,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

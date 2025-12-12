@@ -22,7 +22,7 @@ class _DetailsPageState extends State<DetailsPage> {
   int serviceIndex = 0;
   bool? result = true;
   bool? result1 = true;
-
+  String token = "";
   AboutUsModel? aboutUs;
   String? name;
 
@@ -34,6 +34,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   getData() async {
+     token = await Common.getSharedPref("token");
     name = await Common.getSharedPref("name");
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
@@ -576,7 +577,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 : Center(
                     child: CircularProgressIndicator(),
                   ),
-            bottomNavigationBar: BottomNavigationBarScreen(),
+            bottomNavigationBar: BottomNavigationBarScreen(token:token),
           )
         : Scaffold(
             backgroundColor: Colors.white,

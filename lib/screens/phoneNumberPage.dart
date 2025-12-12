@@ -32,7 +32,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFC24B68),
       body: Form(
         key: formkey,
         child: SizedBox(
@@ -73,7 +73,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color: const Color.fromARGB(221, 255, 255, 255),
                                   letterSpacing: 1,
                                 ),
                               ),

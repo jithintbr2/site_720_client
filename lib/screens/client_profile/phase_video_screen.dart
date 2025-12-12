@@ -61,11 +61,11 @@ class _VideoScreenState extends State<VideoScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor:Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Videos"),
+                title: Text("Videos",style: TextStyle(color: Colors.white)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -274,7 +274,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

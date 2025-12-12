@@ -18,14 +18,11 @@ class Common {
     final prefs = await SharedPreferences.getInstance();
     if (key == 'token') {
       prefs.setString(key, val);
-    }
-    else if (key == 'name') {
+    } else if (key == 'name') {
       prefs.setString(key, val);
-    }
-    else if (key == 'plan') {
+    } else if (key == 'plan') {
       prefs.setString(key, val);
-    }
-    else {
+    } else {
       await prefs.clear();
     }
   }
@@ -35,6 +32,43 @@ class Common {
     final prefs = await SharedPreferences.getInstance();
     //print( prefs);
     return prefs.get(key);
+  }
+
+  static Future<void> setSharedPref(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  static Future<void> removeSharedPref(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+
+  static Future<bool> containsKey(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey(key);
+  }
+
+  static Future<void> clearAllPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  // Pin-specific methods
+  static Future<void> clearPinVerification() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('pin_verified');
+    await prefs.remove('user_pin');
+  }
+
+  static Future<bool> isPinVerified() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('pin_verified') == 'true';
+  }
+
+  static Future<String?> getUserPin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_pin');
   }
 
   static showProgressDialog(BuildContext context, String title) {
@@ -54,12 +88,12 @@ class Common {
                   title.isEmpty
                       ? Container()
                       : Flexible(
-                      flex: 8,
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      )),
+                          flex: 8,
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )),
                 ],
               ),
             );

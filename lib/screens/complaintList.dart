@@ -427,8 +427,8 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                       icon: Icons.edit_outlined,
                       label: 'Edit',
                       color: Colors.orange,
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        var result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddComplaint(
@@ -439,6 +439,10 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                             ),
                           ),
                         );
+
+                        if (result == true) {
+                          getData(); // 🔥 Refresh updated list
+                        }
                       },
                     ),
 
@@ -626,13 +630,17 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  var result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => AddComplaint(widget.token!),
                     ),
                   );
+
+                  if (result == true) {
+                    getData();
+                  }
                 },
                 icon: const Icon(Icons.add, size: 22),
                 label: const Text(

@@ -6,6 +6,7 @@ import 'package:site720_client/screens/projectDetailsPage.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:site720_client/settings/common.dart';
 
 import '../model/bhkFilterListModel.dart';
 import 'bottomNavigationBarScreen.dart';
@@ -34,7 +35,7 @@ class _ListPageState extends State<ListPage> {
   String bhk = 'All';
   BhkFilterListModel? bhkFilterList;
   bool noRes = false;
-
+  String token = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -58,6 +59,7 @@ class _ListPageState extends State<ListPage> {
   // }
 
   getData() async {
+     token = await Common.getSharedPref("token");
     if (!hasMoreData) {
       setState(() {
         hasMoreData = true;
@@ -82,7 +84,8 @@ class _ListPageState extends State<ListPage> {
           _values.start.toString(),
           _values.end.toString(),
           _valuesSqr.start.toString(),
-          _valuesSqr.end.toString());
+          _valuesSqr.end.toString(),
+          token);
       if (projectList != null) {
         setState(() {});
       }
@@ -437,7 +440,7 @@ class _ListPageState extends State<ListPage> {
                                                         ProjectDetailsPage(
                                                             items[index]
                                                                 .id
-                                                                .toString())),
+                                                                .toString(),token)),
                                               );
                                             },
                                             child: SizedBox(
@@ -567,7 +570,7 @@ class _ListPageState extends State<ListPage> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

@@ -27,7 +27,10 @@ import 'package:site720_client/model/complaintTypeModel.dart';
 import 'package:site720_client/model/contactUsModel.dart';
 import 'package:site720_client/model/emiListModel.dart';
 import 'package:site720_client/model/forceUpdateModel.dart';
+import 'package:site720_client/model/getDocDetailsModel.dart';
+import 'package:site720_client/model/getPercentageModel.dart';
 import 'package:site720_client/model/homePageModel.dart';
+import 'package:site720_client/model/labourCountModel.dart';
 import 'package:site720_client/model/loginModel.dart';
 import 'package:site720_client/model/phoneNumberCheck.dart';
 import 'package:site720_client/model/profilePageModel.dart';
@@ -56,8 +59,9 @@ class HttpService {
     }
   }
 
-  static Future login(phone, password, deviceToken) async {
+  static Future login(userPin, phone, password, deviceToken) async {
     var formData = FormData.fromMap({
+      'userPin': userPin,
       'phone': phone,
       'password': password,
       'deviceToken': deviceToken,
@@ -434,7 +438,7 @@ class HttpService {
     }
   }
 
-  static Future<AddComplaintModel> addComplaint({
+ static Future<AddComplaintModel?> addComplaint({
   required String token,
   required String complaintType,
   required String reportedBy,
@@ -443,150 +447,90 @@ class HttpService {
   required String nature,
   File? image,
 }) async {
-  FormData formData = FormData.fromMap({
-    'token': token,
-    'complaint_type': complaintType,
-    'reported_by': reportedBy,
-    'incident_date': incidentDate,
-    'description': description,
-    'nature': nature,
-  });
-
-  if (image != null) {
-    formData.files.add(
-      MapEntry(
-        'image',
-        await MultipartFile.fromFile(image.path),
-      ),
-    );
-  }
-
   try {
-    var result = await _dio.post(
+    FormData formData = FormData.fromMap({
+      "token": token,
+      "complaint_type": complaintType,
+      "reported_by": reportedBy,
+      "incident_date": incidentDate,
+      "description": description,
+      "nature": nature,
+      if (image != null)
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: image.path.split('/').last,
+        ),
+    });
+
+    final response = await _dio.post(
       "${Config.apiBaseUrl}add_complaint",
       data: formData,
-      options: Options(
-        responseType: ResponseType.plain, 
-      ),
-    );
-    
-    log("Raw response string: ${result.data}");
-    if (result.data is String) {
-      String responseString = result.data.toString().trim();
-      if (responseString.startsWith('"') && responseString.endsWith('"')) {
-        responseString = responseString.substring(1, responseString.length - 1);
-        responseString = responseString.replaceAll(r'\"', '"');
-      }
-      
-      log("Cleaned response: $responseString");
-      
-      try {
-        Map<String, dynamic> jsonResponse = jsonDecode(responseString);
-        return AddComplaintModel.fromJson(jsonResponse);
-      } catch (e) {
-        log("JSON decode error: $e");
-        log("String that failed to decode: $responseString");
-        try {
-          responseString = responseString.replaceAll(r'\"', '"');
-          Map<String, dynamic> jsonResponse = jsonDecode(responseString);
-          return AddComplaintModel.fromJson(jsonResponse);
-        } catch (e2) {
-          return AddComplaintModel(
-            status: false,
-            message: "Failed to parse server response: $e",
-            data: false,
-          );
-        }
-      }
-    }
-    if (result.data is Map<String, dynamic>) {
-      return AddComplaintModel.fromJson(result.data as Map<String, dynamic>);
-    }
-    
-    return AddComplaintModel(
-      status: false,
-      message: "Unexpected response format",
-      data: false,
-    );
-    
-  } on DioException catch (e) {
-    log("Dio Error: ${e.message}");
-    log("Response data: ${e.response?.data}");
-    log("Status code: ${e.response?.statusCode}");
-    if (e.response?.data is String) {
-      try {
-        String errorString = e.response!.data as String;
-        if (errorString.startsWith('"') && errorString.endsWith('"')) {
-          errorString = errorString.substring(1, errorString.length - 1);
-        }
-        Map<String, dynamic> errorJson = jsonDecode(errorString);
-        return AddComplaintModel(
-          status: false,
-          message: errorJson['message']?.toString() ?? "Request failed",
-          data: false,
-        );
-      } catch (_) {
-        return AddComplaintModel(
-          status: false,
-          message: e.response!.data.toString(),
-          data: false,
-        );
-      }
-    }
-    
-    return AddComplaintModel(
-      status: false,
-      message: e.message ?? "Network error",
-      data: false,
-    );
-  } catch (e) {
-    log("General error: $e");
-    return AddComplaintModel(
-      status: false,
-      message: "An unexpected error occurred",
-      data: false,
-    );
-  }
-}
-
- static Future<HomePageModel?> dashboard(String token) async {
-  try {
-    var result = await _dio.get(
-      "${Config.apiBaseUrl}home",
-      options: Options(
-        headers: {
-          "Authorization": "Bearer $token",
-        },
-      ),
     );
 
-    return HomePageModel.fromJson(result.data);
-  } catch (e) {
-    log("Dashboard error: $e");
+    if (response.statusCode == 200) {
+      return AddComplaintModel.fromJson(response.data);
+    } else {
+      throw Exception("Failed to add complaint");
+    }
+  } catch (e, st) {
+    log("Add Complaint Error: $e\n$st");
     return null;
   }
 }
 
 
-  static Future projectList(currentPage, itemPerPage, bhk, minAmount, maxAmount,
-      minSquareFeet, maxSquareFeet) async {
-    var params = {
-      "currentPage": currentPage,
-      "itemPerPage": itemPerPage,
-      "bhk": bhk,
-      "minAmount": minAmount,
-      "maxAmount": maxAmount,
-      "minSquareFeet": minSquareFeet,
-      "maxSquareFeet": maxSquareFeet
-    };
+  static Future<HomePageModel?> dashboard(String token) async {
     try {
-      var result = await _dio.get("${Config.apiBaseUrl}newdashboard",
-          queryParameters: params);
+      var result = await _dio.get(
+        "${Config.apiBaseUrl}home",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
 
-      ProjectListModel model = ProjectListModel.fromJson(result.data);
-      return model;
+      return HomePageModel.fromJson(result.data);
     } catch (e) {
-      log(e.toString());
+      log("Dashboard error: $e");
+      return null;
+    }
+  }
+
+  static Future projectList(
+    currentPage,
+    itemPerPage,
+    bhk,
+    minAmount,
+    maxAmount,
+    minSquareFeet,
+    maxSquareFeet,
+    token,
+  ) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "currentPage": currentPage,
+        "itemPerPage": itemPerPage,
+        "bhk": bhk,
+        "minAmount": minAmount,
+        "maxAmount": maxAmount,
+        "minSquareFeet": minSquareFeet,
+        "maxSquareFeet": maxSquareFeet,
+        "token": token,
+      });
+
+      var result = await _dio.post(
+        "${Config.apiBaseUrl}newdashboard",
+        data: formData,
+        options: Options(
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
+
+      return ProjectListModel.fromJson(result.data);
+    } catch (e) {
+      log("ProjectList Error => $e");
+      return null;
     }
   }
 
@@ -690,15 +634,34 @@ class HttpService {
     }
   }
 
-  static Future villaProjectList() async {
-    try {
-      var result = await _dio.get("${Config.apiBaseUrl}villaProjects");
+  // static Future villaProjectList() async {
+  //   try {
+  //     var result = await _dio.get("${Config.apiBaseUrl}villaProjects");
 
-      VillaProjectModel model = VillaProjectModel.fromJson(result.data);
-      return model;
+  //     VillaProjectModel model = VillaProjectModel.fromJson(result.data);
+  //     return model;
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+  static Future<VillaProjectModel?> villaProjectList(
+      {required String token}) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "token": token,
+      });
+      var response = await _dio.post(
+        "${Config.apiBaseUrl}villaProjects",
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+        return VillaProjectModel.fromJson(response.data);
+      }
     } catch (e) {
-      log(e.toString());
+      log("villaProjectList error: $e");
     }
+
+    return null;
   }
 
   static Future getComplaintType(token) async {
@@ -755,141 +718,226 @@ class HttpService {
       log(e.toString());
     }
   }
-   static Future<ComplaintListResponse?> getComplaintList(String token) async {
-  try {
-    FormData formData = FormData.fromMap({
-      'token': token,
-    });
 
-    var response = await _dio.post(
-      "${Config.apiBaseUrl}get_complaint_list",
-      data: formData,
-    );
+  static Future<ComplaintListResponse?> getComplaintList(String token) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'token': token,
+      });
 
-    ComplaintListResponse model =
-        ComplaintListResponse.fromJson(response.data);
+      var response = await _dio.post(
+        "${Config.apiBaseUrl}get_complaint_list",
+        data: formData,
+      );
 
-    return model;
-  } catch (e) {
-    log("getComplaintList Error: ${e.toString()}");
-    return null;
-  }
-}
+      ComplaintListResponse model =
+          ComplaintListResponse.fromJson(response.data);
 
-static Future<bool> deleteComplaint(String token, String id) async {
-  try {
-    FormData data = FormData.fromMap({
-      "token": token,
-      "id": id,
-    });
-
-    await _dio.post("${Config.apiBaseUrl}deleteComplaint", data: data);
-
-    return true;
-  } catch (e) {
-    log("Delete error: $e");
-    return false;
-  }
-}
-
- static Future<ComplaintDetailResponse> getComplaintById(
-    String token,
-    int id,
-) async {
-  try {
-    FormData data = FormData.fromMap({
-      "token": token,
-      "id": id.toString(),
-    });
-
-    final response = await _dio.post(
-      "${Config.apiBaseUrl}getComplaintById", // update endpoint if needed
-      data: data,
-    );
-
-    if (response.statusCode == 200) {
-      return ComplaintDetailResponse.fromJson(response.data);
-    } else {
-      throw Exception("Failed to fetch complaint details");
-    }
-  } catch (e, st) {
-    log("Get complaint error: $e\n$st");
-    rethrow;
-  }
-}
-
-static Future<ApiResponse?> updateComplaint({
-  required String token,
-  required int complaintId,
-  required String complaintType,
-  required String reportedBy,
-  required String incidentDate,
-  required String description,
-  required String nature,
-  File? image,
-}) async {
-  try {
-    FormData data = FormData.fromMap({
-      "token": token,
-      "complaint_id": complaintId.toString(),
-      "complaint_type": complaintType,
-      "reported_by": reportedBy,
-      "incident_date": incidentDate,
-      "description": description,
-      "nature": nature,
-      if (image != null)
-        "image": await MultipartFile.fromFile(
-          image.path,
-          filename: image.path.split('/').last,
-        ),
-    });
-
-    final response = await _dio.post(
-      "${Config.apiBaseUrl}updateComplaint", // your API endpoint
-      data: data,
-    );
-
-    if (response.statusCode == 200) {
-      return ApiResponse.fromJson(response.data);
-    } else {
-      throw Exception("Failed to update complaint");
-    }
-  } catch (e, st) {
-    log("Update complaint error: $e\n$st");
-    return null;
-  }
-}
-
-
-static Future<EmiListResponse?> getEmiList({String? token, required String projectId}) async {
-  try {
-    FormData formData = FormData.fromMap({
-      "token": token ?? "",
-      "projectId": projectId,
-    });
-
-    final response = await _dio.post(
-      "${Config.apiBaseUrl}getEmiLists", 
-      data: formData,
-    );
-
-    if (response.statusCode == 200) {
-      EmiListResponse model = EmiListResponse.fromJson(response.data);
       return model;
-    } else {
-      log("getEmiList failed: ${response.statusCode}");
+    } catch (e) {
+      log("getComplaintList Error: ${e.toString()}");
       return null;
     }
-  } catch (e, st) {
-    log("getEmiList Error: $e\n$st");
-    return null;
   }
-}
 
+  static Future<bool> deleteComplaint(String token, String id) async {
+    try {
+      FormData data = FormData.fromMap({
+        "token": token,
+        "id": id,
+      });
 
+      await _dio.post("${Config.apiBaseUrl}deleteComplaint", data: data);
 
+      return true;
+    } catch (e) {
+      log("Delete error: $e");
+      return false;
+    }
+  }
 
+  static Future<ComplaintDetailResponse> getComplaintById(
+    String token,
+    int id,
+  ) async {
+    try {
+      FormData data = FormData.fromMap({
+        "token": token,
+        "id": id.toString(),
+      });
 
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}getComplaintById", // update endpoint if needed
+        data: data,
+      );
 
+      if (response.statusCode == 200) {
+        return ComplaintDetailResponse.fromJson(response.data);
+      } else {
+        throw Exception("Failed to fetch complaint details");
+      }
+    } catch (e, st) {
+      log("Get complaint error: $e\n$st");
+      rethrow;
+    }
+  }
 
+  static Future<ApiResponse?> updateComplaint({
+    required String token,
+    required int complaintId,
+    required String complaintType,
+    required String reportedBy,
+    required String incidentDate,
+    required String description,
+    required String nature,
+    File? image,
+  }) async {
+    try {
+      FormData data = FormData.fromMap({
+        "token": token,
+        "complaint_id": complaintId.toString(),
+        "complaint_type": complaintType,
+        "reported_by": reportedBy,
+        "incident_date": incidentDate,
+        "description": description,
+        "nature": nature,
+        if (image != null)
+          "image": await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+      });
+
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}updateComplaint",
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        return ApiResponse.fromJson(response.data);
+      } else {
+        throw Exception("Failed to update complaint");
+      }
+    } catch (e, st) {
+      log("Update complaint error: $e\n$st");
+      return null;
+    }
+  }
+
+  static Future<EmiListResponse?> getEmiList(
+      {String? token, required String projectId}) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "token": token ?? "",
+        "projectId": projectId,
+      });
+
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}getEmiLists",
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        EmiListResponse model = EmiListResponse.fromJson(response.data);
+        return model;
+      } else {
+        log("getEmiList failed: ${response.statusCode}");
+        return null;
+      }
+    } catch (e, st) {
+      log("getEmiList Error: $e\n$st");
+      return null;
+    }
+  }
+
+  static Future getDocsData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_project_documents",
+          data: formData);
+      //log(params);
+
+      GetDocsDetails model = GetDocsDetails.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future getGraphData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_stage_percent",
+          data: formData);
+      //log(params);
+
+      GetPercentModel model = GetPercentModel.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future getCountData(token, projectId) async {
+    log(token);
+    var formData = FormData.fromMap({
+      'token': token,
+      'projectId': projectId,
+    });
+    try {
+      var result = await _dio.post("${Config.apiBaseUrl}get_labours_count",
+          data: formData);
+      //log(params);
+      GetCountLabours model = GetCountLabours.fromJson(result.data);
+
+      return model;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future<Map<String, dynamic>> verifyPin(String pin) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "pin": pin,
+      });
+
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}verify_pin",
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'success': response.data['status'] == true,
+          'message': response.data['message'] ?? '',
+          'data': response.data['data'] ?? [],
+        };
+      } else {
+        log("PIN verification failed: ${response.statusCode}");
+        return {
+          'success': false,
+          'message': 'Verification failed',
+          'data': [],
+        };
+      }
+    } catch (e, st) {
+      log("PIN verification Error: $e\n$st");
+      return {
+        'success': false,
+        'message': 'Network error',
+        'data': [],
+      };
+    }
+  }
 }

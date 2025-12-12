@@ -8,7 +8,11 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final String? userPin;
+  const Login({
+    super.key,
+    this.userPin,
+  });
 
   @override
   _LoginState createState() => _LoginState();
@@ -43,7 +47,8 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFC24B68),
       body: Form(
         key: formkey,
         child: SizedBox(
@@ -61,11 +66,11 @@ class _LoginState extends State<Login> {
                         children: [
                           Center(
                             child: Container(
-                              height: 150,
-                              width: 150,
+                              height: 250,
+                              width: 250,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: AssetImage(Assets.logo),
+                                  image: AssetImage(Assets.whiteLogo),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -84,7 +89,8 @@ class _LoginState extends State<Login> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color:
+                                      const Color.fromARGB(221, 255, 255, 255),
                                   letterSpacing: 1,
                                 ),
                               ),
@@ -167,6 +173,7 @@ class _LoginState extends State<Login> {
                                   Common.showProgressDialog(
                                       context, "Loading..");
                                   LoginModel object = await HttpService.login(
+                                    widget.userPin,
                                       username.text,
                                       password.text,
                                       firebaseToken);
@@ -216,40 +223,41 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PhoneNumberPage()),
-                                    );
-                                  },
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: "Forgot Password ?",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 20,
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 15, right: 15),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.end,
+                          //     children: [
+                          //       InkWell(
+                          //         onTap: () {
+                          //           Navigator.push(
+                          //             context,
+                          //             MaterialPageRoute(
+                          //                 builder: (context) =>
+                          //                     PhoneNumberPage()),
+                          //           );
+                          //         },
+                          //         child: RichText(
+                          //           text: TextSpan(
+                          //             children: [
+                          //               TextSpan(
+                          //                 text: "Forgot Password ?",
+                          //                 style: TextStyle(
+                          //                   color: const Color.fromARGB(
+                          //                       255, 255, 255, 255),
+                          //                   fontWeight: FontWeight.bold,
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     )),

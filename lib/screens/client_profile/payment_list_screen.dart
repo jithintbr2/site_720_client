@@ -135,11 +135,15 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, 
+                  color: const Color.fromARGB(255, 255, 255, 255), 
                 ),
-                title: Text("Payment Details"),
+                title: Text("Payment Details",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -173,7 +177,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                               height: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF876B6F)),
+                                  color: Color(0xFFC430011)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -362,7 +366,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

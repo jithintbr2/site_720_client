@@ -55,11 +55,15 @@ class _SchedulePaymentState extends State<SchedulePayment> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Payments Scheduled"),
+                title: Text("Payments Scheduled",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -97,7 +101,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                               width: MediaQuery.of(context).size.width * 0.95,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                   color: Color(0xFF876B6F)),
+                                   color: Color(0xFFC430011)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -290,7 +294,7 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

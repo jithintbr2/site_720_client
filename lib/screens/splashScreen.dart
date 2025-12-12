@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:site720_client/model/forceUpdateModel.dart';
+import 'package:site720_client/screens/client_profile/pin_entry_screen.dart';
 import 'package:site720_client/screens/dashboard.dart';
 import 'package:site720_client/screens/forceUpdate.dart';
 import 'package:site720_client/service/service.dart';
@@ -17,7 +18,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final splashDelay = 2;
-  String? firebaseToken;
   ForceUpdateModel? updatedata;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -27,158 +27,133 @@ class _SplashScreenState extends State<SplashScreen> {
     buildSignature: 'Unknown',
   );
 
+  final Color backgroundColor = const Color(0xFFC24B68); 
+
   @override
   void initState() {
     super.initState();
-    // handleAsync();
     getData();
-
-    //_loadWidget();
   }
 
-  // getData() async {
-  //   updatedata = await HttpService.forceUpdate();
-  //   final info = await PackageInfo.fromPlatform();
-  //   setState(() {
-  //     _packageInfo = info;
-  //   });
-  //   final appVersion = _packageInfo.version;
-  //   print(appVersion);
-  //   print('min version');
-  //   print(updatedata!.data!.minVersion);
-  //   print('current version');
-  //   print(updatedata!.data!.currentVersion);
-  //   int versionCompare =
-  //       appVersion.compareTo(updatedata!.data!.minVersion.toString());
-  //   print(versionCompare);
-
-  //   if (versionCompare < 0) {
-  //     _checkVersion();
-  //   } else {
-  //     _loadWidget();
-  //   }
-  // }
   getData() async {
-  try {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+    try {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _packageInfo = info;
+      });
 
-    final appVersion = _packageInfo.version;
-    print(appVersion);
+      final appVersion = _packageInfo.version;
+      print(appVersion);
 
-    updatedata = await HttpService.forceUpdate();
+      updatedata = await HttpService.forceUpdate();
 
-    // ✅ Null safety check
-    if (updatedata == null || updatedata!.data == null) {
-      print("Force update API failed, skipping version check");
-      _loadWidget();
-      return;
+      if (updatedata == null || updatedata!.data == null) {
+        print("Force update API failed, skipping version check");
+        _checkFirstInstall();
+        return;
+      }
+
+      print('min version: ${updatedata!.data!.minVersion}');
+      print('current version: ${updatedata!.data!.currentVersion}');
+
+      int versionCompare =
+          appVersion.compareTo(updatedata!.data!.minVersion.toString());
+
+      if (versionCompare < 0) {
+        _checkVersion();
+      } else {
+        _checkFirstInstall();
+      }
+    } catch (e) {
+      print("Splash error: $e");
+      _checkFirstInstall();
     }
-
-    print('min version');
-    print(updatedata!.data!.minVersion);
-
-    print('current version');
-    print(updatedata!.data!.currentVersion);
-
-    int versionCompare =
-        appVersion.compareTo(updatedata!.data!.minVersion.toString());
-
-    if (versionCompare < 0) {
-      _checkVersion();
-    } else {
-      _loadWidget();
-    }
-
-  } catch (e) {
-    print("Splash error: $e");
-    _loadWidget(); // ✅ Never crash, always move forward
   }
-}
 
+  void _checkVersion() {
+    if (!mounted) return;
 
-  void _checkVersion() async {
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => ForceUpdate()),
-        (Route<dynamic> route) => false);
+      MaterialPageRoute(builder: (context) => const ForceUpdate()),
+      (Route<dynamic> route) => false,
+    );
   }
 
-  _loadWidget() async {
-    var duration = Duration(seconds: splashDelay);
-    // return '';
-    // return Timer(_duration, navigationPage);
-    return Timer(duration, routeTOHomePage);
+  void _checkFirstInstall() {
+    Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      _checkPinStatus();
+    });
+  }
+
+  void _checkPinStatus() async {
+    if (!mounted) return;
+    String? pinVerified = await Common.getSharedPref("pin_verified");
+    if (pinVerified == "true") {
+      String? token = await Common.getSharedPref("token");
+      _goToDashboard(token ?? '');
+    } else {
+      _goToPinEntry();
+    }
+  }
+
+  void _goToDashboard(String token) {
+    if (!mounted) return;
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => Dashboard(token: token)),
+      (Route<dynamic> route) => false,
+    );
+  }
+
+  void _goToPinEntry() {
+    if (!mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PinEntryScreen(
+          onComplete: (bool success, String? message) {
+            if (success) {
+              Future.microtask(() {
+                if (!mounted) return;
+                Navigator.pop(context);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  Common.getSharedPref("token").then((token) {
+                    if (!mounted) return;
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => Dashboard(token: token ?? ''),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  });
+                });
+              });
+            } else {
+              print('PIN verification failed: $message');
+            }
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   FirebaseServices().init(context);
-    // });
-
     return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(Assets.splash),
-          fit: BoxFit.cover,
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: Container(
+          width: 150, 
+          height: 150, 
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(Assets.whiteSplash),
+              fit: BoxFit.contain, 
+            ),
+          ),
         ),
       ),
-    ));
-  }
-
-  routeTOHomePage() async {
-    String? token = await Common.getSharedPref("token");
-    print(token);
-
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Dashboard(token: token)),
-        (Route<dynamic> route) => false);
-
-    //
-    //   print(token);
-    //
-    //   if (token != null)
-    //   {
-    //     UserCheckModel userCheck = await HttpService.userCheck(token);
-    //     if(userCheck.data==true){
-    //       SurveyCountModel object = await HttpService.surveyCount(token);
-    //       if(object.data!>0)
-    //       {
-    //         Navigator.of(context).pushAndRemoveUntil(
-    //             MaterialPageRoute(builder: (context) => Dashboard(token)),
-    //                 (Route<dynamic> route) => false);
-    //       }
-    //       else
-    //       {
-    //         Navigator.of(context).pushAndRemoveUntil(
-    //             MaterialPageRoute(builder: (context) => SurveyPage(token)),
-    //                 (Route<dynamic> route) => false);
-    //       }
-    //     }
-    //     else{
-    //       Common.toastMessaage(
-    //           'Token Expired', Colors.green);
-    //       Navigator.of(context).pushAndRemoveUntil(
-    //           MaterialPageRoute(builder: (context) => LoginPage()),
-    //               (Route<dynamic> route) => false);
-    //     }
-    //
-    //
-    //   }
-    //
-    //
-    //   else
-    //   {
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //         MaterialPageRoute(builder: (context) => IntroductionScreenPage()),
-    //             (Route<dynamic> route) => false);
-    //   }
-    //   // Navigator.of(context).pushAndRemoveUntil(
-    //   //     MaterialPageRoute(builder: (context) => IntroductionScreenPage()),
-    //   //     (Route<dynamic> route) => false);
-    // }
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:site720_client/model/addComplaintModel.dart';
 import 'package:site720_client/model/apiResponseModel.dart';
 import 'package:site720_client/model/complaintTypeModel.dart';
 import 'package:site720_client/model/complaintReportedByModel.dart';
@@ -119,7 +120,7 @@ class _AddComplaintState extends State<AddComplaint> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         elevation: 0.5,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Color(0xFFC24B68)),
         backgroundColor: Colors.white,
         title: Text(
           isEditMode ? 'Edit Complaint' : 'Add Complaint',
@@ -263,7 +264,8 @@ class _AddComplaintState extends State<AddComplaint> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
+          backgroundColor: Color(0xFFC24B68),
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -310,21 +312,30 @@ class _AddComplaintState extends State<AddComplaint> {
               image: selectedImage,
             );
 
-      Navigator.pop(context); 
+      Navigator.pop(context, true);
 
-      if (res is ApiResponse && res.status == true) {
-        Common.toastMessaage(res.message, Colors.green);
-        Navigator.pop(context);
-      } else if (res is ApiResponse) {
-        Common.toastMessaage(
-          res.message,
-          Colors.red,
-        );
+      if (res is ApiResponse) {
+        if (res.status == true) {
+          Common.toastMessaage(res.message, Colors.green);
+          Navigator.pop(context, true);
+        } else {
+          Common.toastMessaage(res.message, Colors.red);
+        }
+        return;
+      }
+      if (res is AddComplaintModel) {
+        if (res.status == true) {
+          Common.toastMessaage(res.message, Colors.green);
+          Navigator.pop(context, true);
+        } else {
+          Common.toastMessaage(res.message, Colors.red);
+        }
+        return;
       } else {
         Common.toastMessaage("Something went wrong", Colors.red);
       }
     } catch (e) {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       Common.toastMessaage("Error: ${e.toString()}", Colors.red);
     }
   }

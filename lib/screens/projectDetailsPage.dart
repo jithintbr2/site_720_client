@@ -9,7 +9,8 @@ import 'bottomNavigationBarScreen.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
   String projectId;
-  ProjectDetailsPage(this.projectId, {super.key});
+    String token;
+  ProjectDetailsPage(this.projectId,this.token, {super.key});
 
   @override
   _ProjectDetailsPageState createState() => _ProjectDetailsPageState();
@@ -438,7 +439,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 : const Center(
                     child: CircularProgressIndicator(),
                   ),
-            bottomNavigationBar: BottomNavigationBarScreen(),
+            bottomNavigationBar: BottomNavigationBarScreen(token:widget.token,),
           )
         : Scaffold(
             backgroundColor: Colors.white,

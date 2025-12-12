@@ -55,11 +55,11 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xFFC24B68),
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Deduction Work"),
+                title: Text("Deduction Work",style: TextStyle(color: Colors.white)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -97,7 +97,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                               width: MediaQuery.of(context).size.width * 0.95,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFF876B6F)),
+                                  color: Color(0xFFC430011)),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -236,7 +236,7 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(),
+              bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )
         : Scaffold(

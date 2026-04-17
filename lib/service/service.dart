@@ -336,9 +336,7 @@ class HttpService {
     try {
       var result = await _dio.post("${Config.apiBaseUrl}getClientExtraWork",
           data: formData);
-
       ExtraWorkModel model = ExtraWorkModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());

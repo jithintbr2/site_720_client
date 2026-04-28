@@ -169,7 +169,7 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 8),
+                   // const SizedBox(height: 8),
 
                     Text(
                       'Please enter the 4-digit PIN provided to you',
@@ -192,7 +192,6 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
                         ),
                       ),
                     ),
-
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 20),
                       child: Row(
@@ -289,7 +288,7 @@ class _PinEntryScreenState extends State<PinEntryScreen> {
                         ),
                       ),
 
-                    const SizedBox(height: 40),
+                  //  const SizedBox(height: 40),
                     Container(
                       constraints: const BoxConstraints(maxWidth: 320),
                       child: Column(

@@ -20,6 +20,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   DrawingsModel? drawings;
   bool? result = true;
   String token = "";
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -28,6 +29,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
   }
 
   getData() async {
+    setState(() {
+      isLoading = true;
+    });
     token = await Common.getSharedPref("token");
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
@@ -42,9 +46,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
       });
     }
     drawings = await HttpService.getClientSiteDrawings(token);
-    if (drawings != null) {
-      setState(() {});
-    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -58,7 +62,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
                   color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
@@ -85,61 +89,118 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   ),
                 ],
               ),
-              body: drawings != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: SingleChildScrollView(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, bottom: 20),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => FullImagePage(
-                                                drawings!.data[index].imgPath)),
-                                      );
-                                    },
-                                    child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                1,
-                                        height: 220,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .3,
-                                              imageUrl:
-                                                  drawings!.data[index].imgPath,
-                                              fit: BoxFit.cover,
-                                              placeholder: (_, __) => Center(
-                                                    child: Lottie.asset(
-                                                        'assets/images/loading.json',
-                                                        fit: BoxFit.fill),
-                                                  ),
-                                              errorWidget: (_, __, ___) =>
-                                                  Center(
-                                                      child: Icon(Icons.error,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor))),
-                                        )),
+              body: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : (drawings == null || drawings!.status == false || drawings!.data.isEmpty)
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 250,
+                                height: 250,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(Assets.noResult),
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                            itemCount: drawings!.data.length),
-                      ),
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                drawings?.message ?? "No Drawings Found!",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color.fromARGB(255, 126, 126, 126),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                child: Text(
+                                  drawings?.status == false 
+                                    ? "We couldn't retrieve the drawings at this time. Please try again later."
+                                    : "It seems there are no drawings available for this site at the moment.",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () => getData(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(248, 218, 177, 188),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: const Text("Retry"),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: SingleChildScrollView(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) => Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20, bottom: 20),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => FullImagePage(
+                                                    drawings!.data[index]
+                                                        .imgPath)),
+                                          );
+                                        },
+                                        child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                1,
+                                            height: 220,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .3,
+                                                  imageUrl: drawings!
+                                                      .data[index].imgPath,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (_, __) =>
+                                                      Center(
+                                                        child: Lottie.asset(
+                                                            'assets/images/loading.json',
+                                                            fit: BoxFit.fill),
+                                                      ),
+                                                  errorWidget: (_, __, ___) =>
+                                                      Center(
+                                                          child: Icon(Icons.error,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor))),
+                                            )),
+                                      ),
+                                    ),
+                                itemCount: drawings!.data.length),
+                          ),
+                        ),
               bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )

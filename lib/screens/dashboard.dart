@@ -330,7 +330,7 @@ class _DashboardState extends State<Dashboard> {
                                                   width: 100,
                                                   height: 35,
                                                   decoration: BoxDecoration(
-                                                      color: Color(0xFFC24B68),
+                                                      color: Color.fromARGB(255, 230, 195, 204),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5)),
@@ -412,7 +412,7 @@ class _DashboardState extends State<Dashboard> {
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
                                       image: AssetImage(
-                                          "assets/images/homes4slides-3.jpg"),
+                                          "assets/images/homes4slides-34.png"),
                                       fit: BoxFit.fill,
                                     )),
                               ),
@@ -452,14 +452,14 @@ class _DashboardState extends State<Dashboard> {
                                           width: 100,
                                           height: 35,
                                           decoration: BoxDecoration(
-                                              color: Color(0xFFC24B68),
+                                              color: Color.fromARGB(255, 230, 195, 204),
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Center(
                                               child: Text(
                                             'Login',
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: const Color.fromARGB(255, 80, 64, 64),
                                                 fontSize: 19,
                                                 fontWeight: FontWeight.bold),
                                           )),

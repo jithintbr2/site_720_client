@@ -52,7 +52,7 @@ class _StageScreenState extends State<StageScreen> {
             child: Scaffold(
               backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 elevation: 1,
                 iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
                 title: const Text("Stagewise Schedule",

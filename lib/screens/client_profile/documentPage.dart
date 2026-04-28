@@ -64,7 +64,7 @@ class _DocumentPageState extends State<DocumentPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Project Documents"),
-        backgroundColor: Color(0xFFC24B68),
+        backgroundColor: Color.fromARGB(248, 218, 177, 188),
         foregroundColor: Colors.white,
       ),
       body: isLoading

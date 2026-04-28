@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:site720_client/model/loginModel.dart';
+import 'package:site720_client/screens/client_profile/pin_entry_screen.dart';
 import 'package:site720_client/screens/dashboard.dart';
 import 'package:site720_client/screens/phoneNumberPage.dart';
 import 'package:site720_client/service/service.dart';
@@ -25,6 +26,7 @@ class _LoginState extends State<Login> {
   late bool isLoading = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   String? firebaseToken;
+  String? currentPin;
 
   handleAsync() async {
     firebaseToken = await FirebaseMessaging.instance.getToken();
@@ -40,6 +42,7 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    currentPin = widget.userPin;
     // firebase = FirebaseNotifcation();
     handleAsync();
   }
@@ -47,8 +50,81 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
-      backgroundColor: Color(0xFFC24B68),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: 180,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Center(
+            child: InkWell(
+              onTap: () async {
+                // Clear existing PIN from shared preferences
+                await Common.clearPinVerification();
+
+                if (mounted) {
+                  setState(() {
+                    currentPin = null;
+                  });
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PinEntryScreen(
+                      onComplete: (success, message) async {
+                        if (success) {
+                          // Fetch the newly set PIN
+                          String? newPin = await Common.getUserPin();
+                          if (mounted) {
+                            setState(() {
+                              currentPin = newPin;
+                            });
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_reset_rounded,
+                      size: 18,
+                      color: Colors.black.withOpacity(0.7),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "RESET PIN",
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.8),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      backgroundColor: Color.fromARGB(255, 230, 195, 204),
       body: Form(
         key: formkey,
         child: SizedBox(
@@ -89,8 +165,7 @@ class _LoginState extends State<Login> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      const Color.fromARGB(221, 255, 255, 255),
+                                  color: const Color.fromARGB(221, 31, 28, 28),
                                   letterSpacing: 1,
                                 ),
                               ),
@@ -173,7 +248,7 @@ class _LoginState extends State<Login> {
                                   Common.showProgressDialog(
                                       context, "Loading..");
                                   LoginModel object = await HttpService.login(
-                                    widget.userPin,
+                                      currentPin,
                                       username.text,
                                       password.text,
                                       firebaseToken);
@@ -223,6 +298,38 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                           ),
+                          // Add a button to go back to Pin Entry Screen
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       horizontal: 20, vertical: 10),
+                          //   child: OutlinedButton.icon(
+                          //     icon: Icon(Icons.lock_outline),
+                          //     label: Text('Re-enter PIN'),
+                          //     style: OutlinedButton.styleFrom(
+                          //       side: BorderSide(color: Colors.black),
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //       ),
+                          //       foregroundColor: Colors.black,
+                          //       padding: EdgeInsets.symmetric(
+                          //           vertical: 12, horizontal: 16),
+                          //     ),
+                          //     onPressed: () {
+                          //       Navigator.pushReplacement(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => PinEntryScreen(
+                          //             onComplete: (success, message) {
+                          //               if (success) {
+                          //                 Navigator.pop(context);
+                          //               }
+                          //             },
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                           // SizedBox(
                           //   height: 20,
                           // ),

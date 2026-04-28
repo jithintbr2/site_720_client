@@ -23,7 +23,7 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
   int pendingCount = 0;
   int dueCount = 0;
 
-  final Color primaryColor = const Color(0xFFB80D37);
+  final Color primaryColor = const Color.fromARGB(248, 218, 177, 188);
   final Color paidColor = const Color(0xFF0DB87E);
   final Color pendingColor = const Color(0xFFFF6B35);
   final Color dueColor = const Color(0xFFFF4757);
@@ -133,7 +133,6 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
       ),
       child: Column(
         children: [
-          /// Overall Summary
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

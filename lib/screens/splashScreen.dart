@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     buildSignature: 'Unknown',
   );
 
-  final Color backgroundColor = const Color(0xFFC24B68); 
+  final Color backgroundColor =  Color.fromARGB(255, 230, 195, 204); 
 
   @override
   void initState() {

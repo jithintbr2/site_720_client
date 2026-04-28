@@ -264,7 +264,7 @@ class _AddComplaintState extends State<AddComplaint> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFFC24B68),
+          backgroundColor: Color.fromARGB(255, 173, 128, 140),
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape:

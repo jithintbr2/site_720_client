@@ -27,6 +27,6 @@ class Assets {
   static String get splash => "assets/images/splash.jpg";
   static String get quotation => "assets/images/quotation.png";
   static String get noResult => "assets/images/nodatafound.png";
-  static String get whiteLogo => "assets/images/site720-white.png";
-   static String get whiteSplash => "assets/images/site720_w.png";
+  static String get whiteLogo => "assets/images/logo.png";
+   static String get whiteSplash => "assets/images/logo.png";
 }

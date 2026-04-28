@@ -67,7 +67,7 @@ class _DailyStatusState extends State<DailyStatus> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 foregroundColor: Colors.white,
                 elevation: 1,
                 iconTheme: const IconThemeData(color: Colors.white),
@@ -104,7 +104,7 @@ class _DailyStatusState extends State<DailyStatus> {
 
                               Color containerColor = isWorking
                                   ? const Color.fromARGB(255, 149, 173, 150)
-                                  : const Color.fromARGB(255, 155, 89, 97);
+                                  : const Color.fromARGB(248, 218, 177, 188);
 
                               return Card(
                                 margin: const EdgeInsets.only(bottom: 16),

@@ -84,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.white, fontWeight: FontWeight.bold),
               ),
               // backgroundColor: const Color.fromARGB(255, 110, 69, 69),
-              backgroundColor: Color(0xFFC24B68),
+              backgroundColor: Color.fromARGB(248, 218, 177, 188),
               elevation: 0,
               centerTitle: true,
               leading: IconButton(
@@ -263,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           decoration: BoxDecoration(
                                             // color: const Color.fromARGB(
                                             //     255, 218, 179, 179),
-                                              color: Color(0xFFCab5a71),
+                                              color: Color.fromARGB(248, 218, 177, 188),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             boxShadow: const [

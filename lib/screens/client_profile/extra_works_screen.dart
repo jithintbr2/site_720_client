@@ -55,7 +55,7 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
                   color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),

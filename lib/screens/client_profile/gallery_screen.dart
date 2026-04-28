@@ -25,15 +25,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
   String? name;
   String token = "";
   int galleryIndex = 0;
+  bool isLoading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
 
   getData() async {
+    setState(() {
+      isLoading = true;
+    });
     name = await Common.getSharedPref("name");
     token = await Common.getSharedPref("token");
     final List<ConnectivityResult> connectivityResult =
@@ -49,9 +52,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
       });
     }
     gallery = await HttpService.getGallery(token);
-    if (gallery != null) {
-      setState(() {});
-    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -65,7 +68,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
                   color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
@@ -92,9 +95,66 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   ),
                 ],
               ),
-              body: gallery != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(20),
+              body: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : (gallery == null || gallery!.status == false || gallery!.data.isEmpty)
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 250,
+                                height: 250,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(Assets.noResult),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                gallery?.message ?? "No Gallery Items Found!",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color.fromARGB(255, 126, 126, 126),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                child: Text(
+                                  gallery?.status == false 
+                                    ? "We couldn't retrieve the gallery at this time. Please try again later."
+                                    : "It seems there are no photos or videos available for this site at the moment.",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () => getData(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(248, 218, 177, 188),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: const Text("Retry"),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -263,9 +323,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           ],
                         ),
                       ),
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
                     ),
               bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),

@@ -44,7 +44,7 @@ class LabourGraphWidget extends StatelessWidget {
                 pointColorMapper: (_LabourData data, int index) {
                   if (index == 0) return Colors.green;
                   // return Colors.blue.shade400;
-                    return Color(0xFFC24B68);
+                    return Color.fromARGB(248, 218, 177, 188);
                 },
                 dataLabelSettings: const DataLabelSettings(isVisible: true),
               ),

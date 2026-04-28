@@ -148,7 +148,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xFFC24B68),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 elevation: 1,
                 iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
                 title: const Text("Overview",
@@ -367,7 +367,7 @@ Widget buildProjectInfoSection(List<ProjectInfo> projectInfo,
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Color(0xFFC24B68),
+                      color: Color.fromARGB(255, 221, 192, 199),
                       borderRadius:
                           const BorderRadius.vertical(top: Radius.circular(8)),
                     ),
@@ -393,8 +393,6 @@ Widget buildProjectInfoSection(List<ProjectInfo> projectInfo,
                       ],
                     ),
                   ),
-
-                  // Rows for each ProjectInfo
                   ...projectInfo.map((info) => Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 12),

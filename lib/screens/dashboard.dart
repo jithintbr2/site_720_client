@@ -45,29 +45,13 @@ class _DashboardState extends State<Dashboard> {
   final PageController _pageController = PageController(
     initialPage: 0,
   );
-  bool? isPinVerified = false;
-  String? userPin;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
-    _checkPinStatus();
   }
 
-  Future<void> _checkPinStatus() async {
-    String? pinVerified = await Common.getSharedPref("pin_verified");
-    userPin = await Common.getSharedPref("user_pin");
-
-    if (mounted) {
-      setState(() {
-        isPinVerified = pinVerified == "true";
-      });
-    }
-    if (userPin != null && userPin!.isNotEmpty) {
-      print('Saved PIN: $userPin');
-    }
-  }
 
   @override
   void dispose() {
@@ -443,9 +427,7 @@ class _DashboardState extends State<Dashboard> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Login(
-                                                      userPin: userPin,
-                                                    )),
+                                                builder: (context) => const Login()),
                                           );
                                         },
                                         child: Container(

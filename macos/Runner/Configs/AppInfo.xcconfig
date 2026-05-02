@@ -8,7 +8,7 @@
 PRODUCT_NAME = site720_client
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.site720Client
+PRODUCT_BUNDLE_IDENTIFIER = com.home4
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.

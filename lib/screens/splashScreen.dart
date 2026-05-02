@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:site720_client/model/forceUpdateModel.dart';
-import 'package:site720_client/screens/client_profile/pin_entry_screen.dart';
 import 'package:site720_client/screens/dashboard.dart';
 import 'package:site720_client/screens/forceUpdate.dart';
+import 'package:site720_client/screens/login.dart';
 import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
@@ -88,13 +88,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _checkPinStatus() async {
     if (!mounted) return;
-    String? pinVerified = await Common.getSharedPref("pin_verified");
-    if (pinVerified == "true") {
-      String? token = await Common.getSharedPref("token");
-      _goToDashboard(token ?? '');
+    String? token = await Common.getSharedPref("token");
+    if (token != null && token.isNotEmpty) {
+      _goToDashboard(token);
     } else {
-      _goToPinEntry();
+      _goToLogin();
     }
+  }
+
+  void _goToLogin() {
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const Login()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   void _goToDashboard(String token) {
@@ -106,37 +113,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void _goToPinEntry() {
-    if (!mounted) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PinEntryScreen(
-          onComplete: (bool success, String? message) {
-            if (success) {
-              Future.microtask(() {
-                if (!mounted) return;
-                Navigator.pop(context);
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (!mounted) return;
-                  Common.getSharedPref("token").then((token) {
-                    if (!mounted) return;
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => Dashboard(token: token ?? ''),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
-                  });
-                });
-              });
-            } else {
-              print('PIN verification failed: $message');
-            }
-          },
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

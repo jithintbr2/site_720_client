@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '249155218155',
     projectId: 'site720-client',
     storageBucket: 'site720-client.firebasestorage.app',
-    iosBundleId: 'com.example.site720Client',
+    iosBundleId: 'com.home4',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '249155218155',
     projectId: 'site720-client',
     storageBucket: 'site720-client.firebasestorage.app',
-    iosBundleId: 'com.example.site720Client',
+    iosBundleId: 'com.home4',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

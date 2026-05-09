@@ -92,7 +92,8 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token != null && token.isNotEmpty) {
       _goToDashboard(token);
     } else {
-      _goToLogin();
+      _goToDashboard("");
+    //  _goToLogin();
     }
   }
 

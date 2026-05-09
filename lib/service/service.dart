@@ -436,58 +436,102 @@ class HttpService {
     }
   }
 
- static Future<AddComplaintModel?> addComplaint({
-  required String token,
-  required String complaintType,
-  required String reportedBy,
-  required String incidentDate,
-  required String description,
-  required String nature,
-  File? image,
-}) async {
-  try {
-    FormData formData = FormData.fromMap({
-      "token": token,
-      "complaint_type": complaintType,
-      "reported_by": reportedBy,
-      "incident_date": incidentDate,
-      "description": description,
-      "nature": nature,
-      if (image != null)
-        "image": await MultipartFile.fromFile(
-          image.path,
-          filename: image.path.split('/').last,
-        ),
-    });
+  static Future<AddComplaintModel?> addComplaint({
+    required String token,
+    required String complaintType,
+    required String reportedBy,
+    required String incidentDate,
+    required String description,
+    required String nature,
+    File? image,
+  }) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "token": token,
+        "complaint_type": complaintType,
+        "reported_by": reportedBy,
+        "incident_date": incidentDate,
+        "description": description,
+        "nature": nature,
+        if (image != null)
+          "image": await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+      });
 
-    final response = await _dio.post(
-      "${Config.apiBaseUrl}add_complaint",
-      data: formData,
-    );
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}add_complaint",
+        data: formData,
+      );
 
-    if (response.statusCode == 200) {
-      return AddComplaintModel.fromJson(response.data);
-    } else {
-      throw Exception("Failed to add complaint");
+      if (response.statusCode == 200) {
+        return AddComplaintModel.fromJson(response.data);
+      } else {
+        throw Exception("Failed to add complaint");
+      }
+    } catch (e, st) {
+      log("Add Complaint Error: $e\n$st");
+      return null;
     }
-  } catch (e, st) {
-    log("Add Complaint Error: $e\n$st");
-    return null;
   }
-}
 
+  // static Future<HomePageModel?> dashboard(String token) async {
+  //   print("Dashboard token: $token");
+  //   try {
+  //     var result = await _dio.get(
+  //       "${Config.apiBaseUrl}home",
+  //       options: Options(
+  //         headers: {
+  //           "Authorization": "Bearer $token",
+  //         },
+  //       ),
+  //     );
+
+  //     return HomePageModel.fromJson(result.data);
+  //   } catch (e) {
+  //     log("Dashboard error: $e");
+  //     return null;
+  //   }
+  // }
+
+  // static Future<HomePageModel?> dashboard(String token) async {
+  //   print("Dashboard token: $token");
+  //   try {
+  //     var result = await _dio.post(
+  //       "${Config.apiBaseUrl}home",
+  //       options: Options(
+  //         headers: {
+  //           "Authorization": "Bearer $token",
+  //         },
+  //       ),
+  //       data: {
+  //         "token": token,
+  //       },
+  //     );
+  //     return HomePageModel.fromJson(result.data);
+  //   } catch (e) {
+  //     log("Dashboard error: $e");
+  //     return null;
+  //   }
+  // }
 
   static Future<HomePageModel?> dashboard(String token) async {
+    print("Dashboard token: $token");
     try {
-      var result = await _dio.get(
+      FormData formData = FormData.fromMap({
+        "token": token,
+      });
+      var result = await _dio.post(
         "${Config.apiBaseUrl}home",
+        data: formData,
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
+            "Content-Type": "multipart/form-data",
           },
         ),
       );
-
       return HomePageModel.fromJson(result.data);
     } catch (e) {
       log("Dashboard error: $e");
@@ -895,7 +939,6 @@ class HttpService {
     try {
       var result = await _dio.post("${Config.apiBaseUrl}get_labours_count",
           data: formData);
-      //log(params);
       GetCountLabours model = GetCountLabours.fromJson(result.data);
 
       return model;

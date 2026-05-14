@@ -20,8 +20,8 @@ class PaymentListModel {
   factory PaymentListModel.fromJson(Map<String, dynamic> json) =>
       PaymentListModel(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-        status: json["status"],
-        message: json["message"],
+        status: json["status"] ?? false,
+        message: json["message"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -30,7 +30,9 @@ class PaymentListModel {
         "message": message,
       };
 }
+
 class Datum {
+  String id;
   String amount;
   String transactionDate;
   String description;
@@ -40,8 +42,11 @@ class Datum {
   String phaseName;
   String accountHead;
   String paymentMethod;
+  String paidAmount;
+  String scheduledAmount;
 
   Datum({
+    required this.id,
     required this.amount,
     required this.transactionDate,
     required this.description,
@@ -51,21 +56,27 @@ class Datum {
     required this.phaseName,
     required this.accountHead,
     required this.paymentMethod,
+    required this.paidAmount,
+    required this.scheduledAmount,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        amount: json["amount"],
-        transactionDate: json["transaction_date"],
-        description: json["description"],
-        collectedById: json["collected_by_id"],
-        paymentMethodId: json["payment_method_id"],
-        phaseId: json["phase_id"],
-        phaseName: json["phase_name"],
-        accountHead: json["account_head"],
-        paymentMethod: json["payment_method"],
+        id: json["id"]?.toString() ?? "",
+        amount: json["amount"]?.toString() ?? "0",
+        transactionDate: json["transaction_date"]?.toString() ?? "",
+        description: json["description"]?.toString() ?? "",
+        collectedById: json["collected_by_id"]?.toString() ?? "",
+        paymentMethodId: json["payment_method_id"]?.toString() ?? "",
+        phaseId: json["phase_id"]?.toString() ?? "",
+        phaseName: json["phase_name"]?.toString() ?? "",
+        accountHead: json["account_head"]?.toString() ?? "",
+        paymentMethod: json["payment_method"]?.toString() ?? "",
+        paidAmount: json["paid_amount"]?.toString() ?? "0",
+        scheduledAmount: json["scheduled_amount"]?.toString() ?? "0",
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "amount": amount,
         "transaction_date": transactionDate,
         "description": description,
@@ -75,5 +86,7 @@ class Datum {
         "phase_name": phaseName,
         "account_head": accountHead,
         "payment_method": paymentMethod,
+        "paid_amount": paidAmount,
+        "scheduled_amount": scheduledAmount,
       };
 }

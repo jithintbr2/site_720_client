@@ -34,8 +34,10 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   getData() async {
-     token = await Common.getSharedPref("token");
-    name = await Common.getSharedPref("name");
+    //  token = await Common.getSharedPref("token");
+    // name = await Common.getSharedPref("name");
+    token = await Common.getSharedPref("token") ?? "";
+    name = await Common.getSharedPref("name") ?? "";
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
@@ -82,8 +84,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     card: NetworkImage(
                       aboutUs!.data!.subImage.toString(),
-                      
-                      ),
+                    ),
                     backButton: true,
                     backButtonColors: [Colors.white, Colors.black],
                     body: Container(
@@ -513,8 +514,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                           child: InkWell(
                                             onTap: () {},
                                             child: YoutubePlayer(
-                                              key: ObjectKey(
-                                                  controllers[index]),
+                                              key:
+                                                  ObjectKey(controllers[index]),
                                               controller: controllers[index],
                                               actionsPadding:
                                                   const EdgeInsets.only(
@@ -577,7 +578,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 : Center(
                     child: CircularProgressIndicator(),
                   ),
-            bottomNavigationBar: BottomNavigationBarScreen(token:token),
+            bottomNavigationBar: BottomNavigationBarScreen(token: token),
           )
         : Scaffold(
             backgroundColor: Colors.white,

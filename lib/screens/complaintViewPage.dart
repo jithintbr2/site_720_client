@@ -226,31 +226,31 @@ class ComplaintViewPage extends StatelessWidget {
                       ),
 
                     /// Timeline/Notes Section
-                    const SizedBox(height: 20),
-                    _buildDetailCard(
-                      icon: Icons.history_outlined,
-                      title: 'Activity Timeline',
-                      children: [
-                        _buildTimelineItem(
-                          title: 'Complaint Created',
-                          time: 'Today, 10:30 AM',
-                          icon: Icons.add_circle_outline,
-                          color: Colors.blue,
-                        ),
-                        _buildTimelineItem(
-                          title: 'Assigned to Support',
-                          time: 'Today, 11:15 AM',
-                          icon: Icons.person_add_outlined,
-                          color: Colors.orange,
-                        ),
-                        _buildTimelineItem(
-                          title: 'In Progress',
-                          time: 'Today, 2:45 PM',
-                          icon: Icons.autorenew_outlined,
-                          color: Colors.purple,
-                        ),
-                      ],
-                    ),
+                    // const SizedBox(height: 20),
+                    // _buildDetailCard(
+                    //   icon: Icons.history_outlined,
+                    //   title: 'Activity Timeline',
+                    //   children: [
+                    //     _buildTimelineItem(
+                    //       title: 'Complaint Created',
+                    //       time: 'Today, 10:30 AM',
+                    //       icon: Icons.add_circle_outline,
+                    //       color: Colors.blue,
+                    //     ),
+                    //     _buildTimelineItem(
+                    //       title: 'Assigned to Support',
+                    //       time: 'Today, 11:15 AM',
+                    //       icon: Icons.person_add_outlined,
+                    //       color: Colors.orange,
+                    //     ),
+                    //     _buildTimelineItem(
+                    //       title: 'In Progress',
+                    //       time: 'Today, 2:45 PM',
+                    //       icon: Icons.autorenew_outlined,
+                    //       color: Colors.purple,
+                    //     ),
+                    //   ],
+                    // ),
 
                     /// Action Buttons
                     const SizedBox(height: 30),

@@ -54,7 +54,7 @@ class BottomNavigationBarScreen extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              if (token != null) {
+              if (token != null && token != "" ) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

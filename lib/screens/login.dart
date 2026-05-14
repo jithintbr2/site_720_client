@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      backgroundColor: Color.fromARGB(255, 230, 195, 204),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Form(
         key: formkey,
         child: SizedBox(
@@ -63,7 +63,7 @@ class _LoginState extends State<Login> {
               Expanded(
                 child: Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(top: 100),
+                    margin: const EdgeInsets.only(top: 50),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -71,8 +71,8 @@ class _LoginState extends State<Login> {
                         children: [
                           Center(
                             child: Container(
-                              height: 250,
-                              width: 250,
+                              height: 150,
+                              width: 150,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: AssetImage(Assets.whiteLogo),

@@ -3,28 +3,22 @@
 //     final schedulePaymentModel = schedulePaymentModelFromJson(jsonString);
 
 import 'dart:convert';
-
 SchedulePaymentModel schedulePaymentModelFromJson(String str) => SchedulePaymentModel.fromJson(json.decode(str));
-
 String schedulePaymentModelToJson(SchedulePaymentModel data) => json.encode(data.toJson());
-
 class SchedulePaymentModel {
     List<Schedule> data;
     bool status;
     String message;
-
     SchedulePaymentModel({
         required this.data,
         required this.status,
         required this.message,
     });
-
     factory SchedulePaymentModel.fromJson(Map<String, dynamic> json) => SchedulePaymentModel(
         data: List<Schedule>.from(json["data"].map((x) => Schedule.fromJson(x))),
         status: json["status"],
         message: json["message"],
     );
-
     Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
         "status": status,
@@ -37,6 +31,9 @@ class Schedule {
     String phaseNo;
     String description;
     String estCost;
+        String extraWorkAmount;
+            String deductionAmount;
+                String percentage;
     String paidAmount;
     String balanceAmount;
     String status;
@@ -46,6 +43,9 @@ class Schedule {
         required this.phaseNo,
         required this.description,
         required this.estCost,
+        required this.extraWorkAmount,
+        required this.deductionAmount,
+        required this.percentage,
         required this.paidAmount,
         required this.balanceAmount,
         required this.status,
@@ -56,6 +56,9 @@ class Schedule {
         phaseNo: json["phase_no"],
         description: json["description"],
         estCost: json["est_cost"],
+        extraWorkAmount: json["extra_work_amount"],
+        deductionAmount: json["deduction_amount"],
+        percentage: json["percentage"],
         paidAmount: json["paid_amount"],
         balanceAmount: json["balance_amount"],
         status: json["status"],
@@ -66,6 +69,9 @@ class Schedule {
         "phase_no": phaseNo,
         "description": description,
         "est_cost": estCost,
+        "extra_work_amount": extraWorkAmount,
+        "deduction_amount": deductionAmount,
+        "percentage": percentage,
         "paid_amount": paidAmount,
         "balance_amount": balanceAmount,
         "status": status,

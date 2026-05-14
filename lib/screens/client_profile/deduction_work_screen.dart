@@ -60,182 +60,214 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                   color: const Color.fromARGB(255, 255, 255, 255), //change your color here
                 ),
                 title: Text("Deduction Work",style: TextStyle(color: Colors.white)),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        // SizedBox(width: 5,),
-                        // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                      ],
-                    ),
-                  ),
-                ],
+                // actions: [
+                //   Padding(
+                //     padding: const EdgeInsets.only(right: 20),
+                //     child: Row(
+                //       children: [
+                //         Container(
+                //           height: 25,
+                //           width: 25,
+                //           decoration: BoxDecoration(
+                //             image: DecorationImage(
+                //               image: AssetImage(Assets.h4logo),
+                //               fit: BoxFit.fitWidth,
+                //             ),
+                //           ),
+                //         ),
+                //         // SizedBox(width: 5,),
+                //         // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                //       ],
+                //     ),
+                //   ),
+                // ],
               ),
               body: deductionWorks != null
-                  ? SingleChildScrollView(
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        reverse: true,
-                        // reverse: true,
-                        itemCount: deductionWorks!.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.95,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xFFC430011)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .56,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Phase:${deductionWorks!.data[index].phaseName.toString()}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 18),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            deductionWorks!.data[index].itemName
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 15),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "Description : ${deductionWorks!.data[index].description.toString()}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.white,
-                                                fontSize: 16),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                        ],
-                                      ),
+    ? deductionWorks!.data.isNotEmpty
+        ? ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: deductionWorks!.data.length,
+            itemBuilder: (context, index) {
+              final item = deductionWorks!.data[index];
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Colors.grey.shade200,
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.10),
+                      blurRadius: 20,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Top Section
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// Left Content
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// Phase Badge
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade50,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    'Phase: ${item.phaseName ?? ''}',
+                                    style: TextStyle(
+                                      color: Colors.blue.shade700,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
                                     ),
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.calendar_today,
-                                                      color: Colors.white,
-                                                      size: 12,
-                                                    ),
-                                                    SizedBox(width: 6),
-                                                    Text(
-                                                      deductionWorks!
-                                                          .data[index].createdAt
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.28,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                const Text(
-                                                  'Amount',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
-                                                      fontSize: 9),
-                                                ),
-                                                Text(
-                                                  deductionWorks!
-                                                      .data[index].itemAmount
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Colors.black,
-                                                      fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
+
+                                const SizedBox(height: 14),
+
+                                /// Item Name
+                                Text(
+                                  item.itemName ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1F2937),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                /// Description
+                                Text(
+                                  item.description ?? '',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    height: 1.5,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(width: 14),
+
+                          /// Amount Box
+                          Container(
+                            width: 110,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade50,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: Colors.green.shade100,
                               ),
                             ),
-                          );
-                        },
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Amount',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.green.shade700,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '₹ ${item.itemAmount ?? '0'}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green.shade800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+
+                      const SizedBox(height: 18),
+
+                      /// Divider
+                      Divider(
+                        color: Colors.grey.shade200,
+                        height: 1,
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      /// Date Row
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.calendar_today_outlined,
+                              size: 14,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              item.createdAt ?? '',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : const Center(
+            child: Text(
+              'No deduction records found',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          )
+    : const Center(
+        child: CircularProgressIndicator(),
+      ),
               bottomNavigationBar: BottomNavigationBarScreen(token:token),
             ),
           )

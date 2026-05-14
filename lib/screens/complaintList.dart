@@ -23,7 +23,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
   bool? result = true;
   bool isLoading = false;
 
-  final Color primaryColor = const Color.fromARGB(255, 179, 131, 143);
+  final Color primaryColor = const Color.fromARGB(255, 124, 51, 69);
   final Color secondaryColor = const Color(0xFF0DB87E);
   final Color backgroundColor = const Color(0xFFF5F7FA);
   final Color cardColor = Colors.white;

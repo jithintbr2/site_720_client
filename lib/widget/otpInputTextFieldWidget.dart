@@ -19,7 +19,7 @@ class OtpInputTextFieldWidget extends StatelessWidget {
       obscureText: false,
       keyboardType: TextInputType.number,
       textStyle: const TextStyle(color: Colors.black),
-      animationType: AnimationType.fade,
+   //   animationType: AnimationType.fade,
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
         borderRadius: BorderRadius.circular(7),

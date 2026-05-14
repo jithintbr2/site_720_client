@@ -150,31 +150,54 @@ class _AddComplaintState extends State<AddComplaint> {
   Widget _buildComplaintType() {
     return _sectionCard(
       title: "Complaint Type *",
-      child: Column(
-        children: complaintTypes.map((e) {
-          return _radioTile(
-            title: e.name,
-            value: e.id,
-            groupValue: selectedComplaintType,
-            onChanged: (val) => setState(() => selectedComplaintType = val),
-          );
-        }).toList(),
-      ),
+      child: complaintTypes.isEmpty
+          ? _buildNoDataBox()
+          : Column(
+              children: complaintTypes.map((e) {
+                return _radioTile(
+                  title: e.name,
+                  value: e.id,
+                  groupValue: selectedComplaintType,
+                  onChanged: (val) =>
+                      setState(() => selectedComplaintType = val),
+                );
+              }).toList(),
+            ),
     );
   }
 
   Widget _buildReportedBy() {
     return _sectionCard(
       title: "Complaint Reported By",
-      child: Column(
-        children: reportedByList.map((e) {
-          return _radioTile(
-            title: e.name,
-            value: e.id,
-            groupValue: selectedReportedBy,
-            onChanged: (val) => setState(() => selectedReportedBy = val),
-          );
-        }).toList(),
+      child: reportedByList.isEmpty
+          ? _buildNoDataBox()
+          : Column(
+              children: reportedByList.map((e) {
+                return _radioTile(
+                  title: e.name,
+                  value: e.id,
+                  groupValue: selectedReportedBy,
+                  onChanged: (val) => setState(() => selectedReportedBy = val),
+                );
+              }).toList(),
+            ),
+    );
+  }
+
+  Widget _buildNoDataBox() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        vertical: 14,
+        horizontal: 12,
+      ),
+      decoration: _inputDecoration(),
+      child: const Text(
+        "No data available",
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 14,
+        ),
       ),
     );
   }
@@ -213,16 +236,18 @@ class _AddComplaintState extends State<AddComplaint> {
   Widget _buildNature() {
     return _sectionCard(
       title: "Nature of Complaint",
-      child: Column(
-        children: natureList.map((e) {
-          return _radioTile(
-            title: e.name,
-            value: e.id,
-            groupValue: selectedNature,
-            onChanged: (val) => setState(() => selectedNature = val),
-          );
-        }).toList(),
-      ),
+      child: natureList.isEmpty
+          ? _buildNoDataBox()
+          : Column(
+              children: natureList.map((e) {
+                return _radioTile(
+                  title: e.name,
+                  value: e.id,
+                  groupValue: selectedNature,
+                  onChanged: (val) => setState(() => selectedNature = val),
+                );
+              }).toList(),
+            ),
     );
   }
 
@@ -264,7 +289,7 @@ class _AddComplaintState extends State<AddComplaint> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 173, 128, 140),
+          backgroundColor: Color.fromARGB(255, 105, 38, 56),
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape:
@@ -294,7 +319,7 @@ class _AddComplaintState extends State<AddComplaint> {
       final res = isEditMode
           ? await HttpService.updateComplaint(
               token: widget.token,
-              complaintId: widget.complaintId!, // ✅ corrected key name
+              complaintId: widget.complaintId!,
               complaintType: selectedComplaintType!,
               reportedBy: selectedReportedBy!,
               incidentDate: DateFormat('yyyy-MM-dd').format(incidentDate),

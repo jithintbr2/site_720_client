@@ -71,10 +71,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
           Icon(icon, size: 28, color: textColor), // 🔹 icon added
           const SizedBox(height: 8),
           Text(
-            title,
+            title.toUpperCase(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               color: textColor,
             ),
@@ -150,25 +150,27 @@ class _OverviewScreenState extends State<OverviewScreen> {
               appBar: AppBar(
                 backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 elevation: 1,
-                iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
+                iconTheme: const IconThemeData(
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 title: const Text("Overview",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold)),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Container(
-                      height: 28,
-                      width: 28,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(Assets.h4logo),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontWeight: FontWeight.bold)),
+                // actions: [
+                //   Padding(
+                //     padding: const EdgeInsets.only(right: 20),
+                //     child: Container(
+                //       height: 28,
+                //       width: 28,
+                //       decoration: BoxDecoration(
+                //         image: DecorationImage(
+                //           image: AssetImage(Assets.h4logo),
+                //           fit: BoxFit.fitWidth,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ],
               ),
               body: profilePage != null
                   ? SingleChildScrollView(
@@ -205,7 +207,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                 const Color.fromARGB(255, 53, 29, 29),
                               ),
                               buildStatCard(
-                                "Balance To Pay",
+                                "Balance To Receive",
                                 "₹${profilePage!.data.costPending ?? "0"}",
                                 Icons.pending_actions,
                                 const Color.fromARGB(255, 241, 242, 243),
@@ -308,7 +310,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       ),
                     )
                   : const Center(child: CircularProgressIndicator()),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token,),
+              bottomNavigationBar: BottomNavigationBarScreen(
+                token: token,
+              ),
             ),
           )
         : Scaffold(
@@ -377,19 +381,27 @@ Widget buildProjectInfoSection(List<ProjectInfo> projectInfo,
                         Expanded(
                             flex: 2,
                             child: Text("Name",
-                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white))),
                         Expanded(
                             flex: 2,
                             child: Text("Sq.Feet",
-                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white))),
                         Expanded(
                             flex: 2,
                             child: Text("Rate",
-                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white))),
                         Expanded(
                             flex: 3,
                             child: Text("Total",
-                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white))),
                       ],
                     ),
                   ),
@@ -458,10 +470,9 @@ Widget buildProjectInfoSection(List<ProjectInfo> projectInfo,
           : Text(
               "Fixed Rate: ₹$fixedRate",
               style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade700,
-                 fontWeight: FontWeight.bold
-              ),
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.bold),
             ),
     ],
   );

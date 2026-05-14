@@ -21,11 +21,13 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
   double totalAmount = 0;
   int paidCount = 0;
   int pendingCount = 0;
+  int partialCount = 0;
   int dueCount = 0;
 
   final Color primaryColor = const Color.fromARGB(248, 218, 177, 188);
   final Color paidColor = const Color(0xFF0DB87E);
   final Color pendingColor = const Color(0xFFFF6B35);
+  final Color partialColor = const Color(0xFFFFA500);
   final Color dueColor = const Color(0xFFFF4757);
   final Color backgroundColor = const Color(0xFFF5F7FA);
   final Color cardColor = Colors.white;
@@ -75,21 +77,37 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
   void _calculateTotals() {
     totalPaid = 0;
     totalPending = 0;
+    totalAmount = 0;
     paidCount = 0;
     pendingCount = 0;
+    partialCount = 0;
     dueCount = 0;
 
     for (var emi in emiList!.data) {
-      double amount = double.tryParse(emi.installmentAmount) ?? 0;
+      double totalInstallmentAmount = double.tryParse(emi.installmentAmount) ?? 0;
+      double paidAmount = double.tryParse(emi.paidAmount) ?? 0;
+      String status = emi.status.toLowerCase().trim();
       
-      if (emi.status.toLowerCase() == 'paid') {
-        totalPaid += amount;
+      if (status == 'paid') {
+        // Fully paid
+        totalPaid += totalInstallmentAmount;
         paidCount++;
+      } else if (status == 'partial') {
+        // Partially paid - add paid amount to totalPaid, remaining to totalPending
+        totalPaid += paidAmount;
+        totalPending += (totalInstallmentAmount - paidAmount);
+        partialCount++;
+        
+        // Check if this partial installment is due
+        if (_isDueDate(emi.installmentDate)) {
+          dueCount++;
+        }
       } else {
-        totalPending += amount;
+        // Pending/Upcoming - no payment made
+        totalPending += totalInstallmentAmount;
         pendingCount++;
         
-        // Check if this installment is due
+        // Check if this pending installment is due
         if (_isDueDate(emi.installmentDate)) {
           dueCount++;
         }
@@ -97,6 +115,12 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
     }
 
     totalAmount = totalPaid + totalPending;
+  }
+
+  double getRemainingAmount(EmiData emi) {
+    double totalInstallmentAmount = double.tryParse(emi.installmentAmount) ?? 0;
+    double paidAmount = double.tryParse(emi.paidAmount) ?? 0;
+    return totalInstallmentAmount - paidAmount;
   }
 
   String _formatDate(String date) {
@@ -183,7 +207,7 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                 child: _buildStatItem(
                   title: 'PAID',
                   value: _formatCurrency(totalPaid),
-                  count: paidCount,
+                  count: paidCount + partialCount,
                   color: paidColor,
                   icon: Icons.check_circle_outline,
                 ),
@@ -193,7 +217,7 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                 child: _buildStatItem(
                   title: 'PENDING',
                   value: _formatCurrency(totalPending),
-                  count: pendingCount,
+                  count: pendingCount + partialCount,
                   color: pendingColor,
                   icon: Icons.pending_outlined,
                 ),
@@ -303,9 +327,37 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
   }
 
   Widget _buildEmiCard(EmiData emi, int index) {
-    bool isPaid = emi.status.toLowerCase() == 'paid';
-    bool isDue = _isDueDate(emi.installmentDate);
-    bool isUpcoming = _isUpcomingDate(emi.installmentDate);
+    final status = emi.status.toLowerCase().trim();
+    double totalAmount = double.tryParse(emi.installmentAmount) ?? 0;
+    double paidAmount = double.tryParse(emi.paidAmount) ?? 0;
+    double remainingAmount = totalAmount - paidAmount;
+
+    bool isPaid = status == 'paid';
+    bool isPartial = status == 'partial';
+    bool isDue = !isPaid && _isDueDate(emi.installmentDate);
+
+    // Color based on status
+    Color statusColor;
+    String statusText;
+    IconData statusIcon;
+
+    if (isPaid) {
+      statusColor = paidColor;
+      statusText = 'PAID';
+      statusIcon = Icons.check_circle_outline;
+    } else if (isPartial) {
+      statusColor = partialColor;
+      statusText = 'PARTIAL';
+      statusIcon = Icons.pie_chart_outline;
+    } else if (isDue) {
+      statusColor = dueColor;
+      statusText = 'DUE';
+      statusIcon = Icons.warning_amber_outlined;
+    } else {
+      statusColor = pendingColor;
+      statusText = 'UPCOMING';
+      statusIcon = Icons.pending_outlined;
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -354,16 +406,14 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: isPaid
-                        ? paidColor.withOpacity(0.1)
-                        : (isDue ? dueColor.withOpacity(0.1) : pendingColor.withOpacity(0.1)),
+                    color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isPaid
-                          ? paidColor.withOpacity(0.3)
-                          : (isDue ? dueColor.withOpacity(0.3) : pendingColor.withOpacity(0.3)),
+                      color: statusColor.withOpacity(0.3),
                     ),
                   ),
                   child: Row(
@@ -373,17 +423,17 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: isPaid ? paidColor : (isDue ? dueColor : pendingColor),
+                          color: statusColor,
                           shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        isPaid ? 'PAID' : (isDue ? 'DUE' : 'UPCOMING'),
+                        statusText,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: isPaid ? paidColor : (isDue ? dueColor : pendingColor),
+                          color: statusColor,
                         ),
                       ),
                     ],
@@ -410,7 +460,7 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'AMOUNT',
+                            isPartial ? 'TOTAL AMOUNT' : 'AMOUNT',
                             style: TextStyle(
                               fontSize: 11,
                               color: textSecondary,
@@ -418,20 +468,42 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            _formatCurrency(
-                                double.tryParse(emi.installmentAmount) ?? 0),
+                            _formatCurrency(totalAmount),
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w800,
                               color: textPrimary,
                             ),
                           ),
+                          if (isPartial) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              'Paid: ${_formatCurrency(paidAmount)}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: paidColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'Remaining: ${_formatCurrency(remainingAmount)}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: pendingColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
+
+                      /// Show badge based on status
                       if (isDue && !isPaid)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: dueColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -458,9 +530,40 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                             ],
                           ),
                         ),
+                      if (isPartial)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: partialColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: partialColor.withOpacity(0.2),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.pie_chart_outline,
+                                size: 14,
+                                color: partialColor,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'PARTIAL PAID',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: partialColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
-                  
                   if (!isPaid) ...[
                     const SizedBox(height: 12),
                     const Divider(height: 1),
@@ -496,27 +599,29 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: (isPaid ? paidColor : pendingColor).withOpacity(0.05),
+                color: statusColor.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   Icon(
-                    isPaid ? Icons.check_circle_outline : Icons.info_outline,
+                    statusIcon,
                     size: 16,
-                    color: isPaid ? paidColor : pendingColor,
+                    color: statusColor,
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      isPaid 
-                          ? 'Payment completed on time'
-                          : (isDue 
-                              ? 'Payment is overdue. Please settle at earliest.'
-                              : 'Payment due on ${_formatDate(emi.installmentDate)}'),
+                      isPaid
+                          ? 'Payment completed successfully.'
+                          : isPartial
+                              ? 'Partial payment of ${_formatCurrency(paidAmount)} received. Remaining balance of ${_formatCurrency(remainingAmount)} is pending.'
+                              : isDue
+                                  ? 'Payment is overdue. Please settle at earliest.'
+                                  : 'Full payment of ${_formatCurrency(totalAmount)} due on ${_formatDate(emi.installmentDate)}',
                       style: TextStyle(
                         fontSize: 13,
-                        color: isPaid ? paidColor : (isDue ? dueColor : textSecondary),
+                        color: statusColor,
                       ),
                     ),
                   ),
@@ -573,6 +678,13 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
   }
 
   void _showInstallmentDetails(EmiData emi, int index) {
+    final status = emi.status.toLowerCase().trim();
+    bool isPaid = status == 'paid';
+    bool isPartial = status == 'partial';
+    double totalAmount = double.tryParse(emi.installmentAmount) ?? 0;
+    double paidAmount = double.tryParse(emi.paidAmount) ?? 0;
+    double remainingAmount = totalAmount - paidAmount;
+    
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -653,10 +765,26 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                   ),
                   const SizedBox(height: 15),
                   _buildDetailRow(
-                    label: 'Amount',
-                    value: _formatCurrency(double.tryParse(emi.installmentAmount) ?? 0),
+                    label: 'Total Amount',
+                    value: _formatCurrency(totalAmount),
                     icon: Icons.currency_rupee_outlined,
                   ),
+                  if (isPartial) ...[
+                    const SizedBox(height: 15),
+                    _buildDetailRow(
+                      label: 'Paid Amount',
+                      value: _formatCurrency(paidAmount),
+                      icon: Icons.check_circle_outline,
+                      valueColor: paidColor,
+                    ),
+                    const SizedBox(height: 15),
+                    _buildDetailRow(
+                      label: 'Remaining Amount',
+                      value: _formatCurrency(remainingAmount),
+                      icon: Icons.pending_outlined,
+                      valueColor: pendingColor,
+                    ),
+                  ],
                   const SizedBox(height: 15),
                   _buildDetailRow(
                     label: 'Due Date',
@@ -667,14 +795,14 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                   _buildDetailRow(
                     label: 'Status',
                     value: emi.status.toUpperCase(),
-                    icon: emi.status.toLowerCase() == 'paid' 
+                    icon: isPaid 
                         ? Icons.check_circle_outline 
-                        : Icons.pending_outlined,
-                    valueColor: emi.status.toLowerCase() == 'paid' 
+                        : (isPartial ? Icons.pie_chart_outline : Icons.pending_outlined),
+                    valueColor: isPaid 
                         ? paidColor 
-                        : (_isDueDate(emi.installmentDate) ? dueColor : pendingColor),
+                        : (isPartial ? partialColor : (_isDueDate(emi.installmentDate) ? dueColor : pendingColor)),
                   ),
-                  if (emi.status.toLowerCase() != 'paid') ...[
+                  if (!isPaid) ...[
                     const SizedBox(height: 15),
                     _buildDetailRow(
                       label: 'Days Remaining',
@@ -800,7 +928,6 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                           color: textPrimary,
                         ),
                       ),
-                     
                     ],
                   ),
                   const Spacer(),

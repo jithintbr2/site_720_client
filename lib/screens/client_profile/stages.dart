@@ -57,21 +57,21 @@ class _StageScreenState extends State<StageScreen> {
                 iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
                 title: const Text("Stagewise Schedule",
                     style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(Assets.h4logo),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                // actions: [
+                //   Padding(
+                //     padding: const EdgeInsets.only(right: 20),
+                //     child: Container(
+                //       height: 25,
+                //       width: 25,
+                //       decoration: BoxDecoration(
+                //         image: DecorationImage(
+                //           image: AssetImage(Assets.h4logo),
+                //           fit: BoxFit.fitWidth,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ],
               ),
               body: stages != null
                   ? SingleChildScrollView(
@@ -150,7 +150,7 @@ class _StageScreenState extends State<StageScreen> {
                                                       Text(
                                                         stage.stageName,
                                                         style: TextStyle(
-                                                          fontSize: 16,
+                                                          fontSize: 11,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color:
@@ -162,11 +162,12 @@ class _StageScreenState extends State<StageScreen> {
                                                         Text(
                                                           stage.startDate,
                                                           style: TextStyle(
-                                                            fontSize: 12,
+                                                            fontSize: 10,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             color: Config
                                                                 .themeColor,
+                                                                overflow: TextOverflow.ellipsis,
                                                           ),
                                                         ),
                                                     ],

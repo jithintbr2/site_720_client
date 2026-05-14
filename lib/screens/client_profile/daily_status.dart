@@ -82,122 +82,141 @@ class _DailyStatusState extends State<DailyStatus> {
                   ),
                 ],
               ),
-              body: workStatus != null
-                  ? SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          //  const LabourGraphWidget(),
-                          countData != null && countData!.data.isNotEmpty
-                              ? LabourGraphWidget(data: countData!.data)
-                              : const SizedBox.shrink(),
-                          const SizedBox(height: 20),
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: workStatus!.data.length,
-                            itemBuilder: (context, i) {
-                              final data = workStatus!.data[i];
-                              bool isWorking =
-                                  data.isWorking.toString().toLowerCase() ==
-                                      "yes";
+              body: workStatus == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : (workStatus!.status == false || workStatus!.data.isEmpty)
+                      ? const Center(
+                          child: Text(
+                            "No data available",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              //  const LabourGraphWidget(),
+                              countData != null && countData!.data.isNotEmpty
+                                  ? LabourGraphWidget(data: countData!.data)
+                                  : const SizedBox.shrink(),
+                              const SizedBox(height: 20),
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: workStatus!.data.length,
+                                itemBuilder: (context, i) {
+                                  final data = workStatus!.data[i];
+                                  bool isWorking =
+                                      data.isWorking.toString().toLowerCase() ==
+                                          "yes";
 
-                              Color containerColor = isWorking
-                                  ? const Color.fromARGB(255, 149, 173, 150)
-                                  : const Color.fromARGB(248, 218, 177, 188);
+                                  Color containerColor = isWorking
+                                      ? const Color.fromARGB(255, 149, 173, 150)
+                                      : const Color.fromARGB(
+                                          248, 218, 177, 188);
 
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                color: containerColor,
-                                elevation: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      // Left side details
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
+                                  return Card(
+                                    margin: const EdgeInsets.only(bottom: 16),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    color: containerColor,
+                                    elevation: 3,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          // Left side details
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                const Icon(Icons.calendar_today,
-                                                    color: Color.fromARGB(
-                                                        221, 253, 253, 253),
-                                                    size: 18),
-                                                const SizedBox(width: 8),
+                                                Row(
+                                                  children: [
+                                                    const Icon(
+                                                        Icons.calendar_today,
+                                                        color: Color.fromARGB(
+                                                            221, 253, 253, 253),
+                                                        size: 18),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      data.workDate.toString(),
+                                                      style: const TextStyle(
+                                                        color: Color.fromARGB(
+                                                            221, 247, 247, 247),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
                                                 Text(
-                                                  data.workDate.toString(),
+                                                  "Stage: ${data.stageName}",
                                                   style: const TextStyle(
                                                     color: Color.fromARGB(
-                                                        221, 247, 247, 247),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                                                        221, 255, 255, 255),
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Text(
+                                                  "Description: ${data.description}",
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 255, 255, 255),
+                                                    fontSize: 13,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              "Stage: ${data.stageName}",
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    221, 255, 255, 255),
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            Text(
-                                              "Description: ${data.description}",
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 255, 255, 255),
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      // Right side stats
-                                      Column(
-                                        children: [
-                                          _buildCircleInfo(
-                                            label: "Labours",
-                                            value: data.totalLabours.toString(),
-                                            bgColor: Colors.blue.shade100,
-                                            textColor: Colors.blue.shade800,
                                           ),
-                                          const SizedBox(height: 12),
-                                          _buildCircleInfo(
-                                            label: "Worked",
-                                            value: isWorking ? "Yes" : "No",
-                                            bgColor: isWorking
-                                                ? Colors.green.shade200
-                                                : Colors.red.shade200,
-                                            textColor: isWorking
-                                                ? Colors.green.shade800
-                                                : Colors.red.shade800,
+
+                                          // Right side stats
+                                          Column(
+                                            children: [
+                                              _buildCircleInfo(
+                                                label: "Labours",
+                                                value: data.totalLabours
+                                                    .toString(),
+                                                bgColor: Colors.blue.shade100,
+                                                textColor: Colors.blue.shade800,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _buildCircleInfo(
+                                                label: "Worked",
+                                                value: isWorking ? "Yes" : "No",
+                                                bgColor: isWorking
+                                                    ? Colors.green.shade200
+                                                    : Colors.red.shade200,
+                                                textColor: isWorking
+                                                    ? Colors.green.shade800
+                                                    : Colors.red.shade800,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
-                  : const Center(child: CircularProgressIndicator()),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token),
+                        ),
+              //  : const Center(child: CircularProgressIndicator()),
+              bottomNavigationBar: BottomNavigationBarScreen(token: token),
             ),
           )
         : _noNetworkWidget();

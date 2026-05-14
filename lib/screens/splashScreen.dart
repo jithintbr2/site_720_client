@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     buildSignature: 'Unknown',
   );
 
-  final Color backgroundColor =  Color.fromARGB(255, 230, 195, 204); 
+  final Color backgroundColor = const Color.fromARGB(255, 255, 255, 255);
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _goToDashboard(token);
     } else {
       _goToDashboard("");
-    //  _goToLogin();
+      //  _goToLogin();
     }
   }
 
@@ -114,19 +114,18 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Center(
         child: Container(
-          width: 150, 
-          height: 150, 
+          width: 250,
+          height: 250,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(Assets.whiteSplash),
-              fit: BoxFit.contain, 
+              image: AssetImage(Assets.logo2),
+              fit: BoxFit.contain,
             ),
           ),
         ),

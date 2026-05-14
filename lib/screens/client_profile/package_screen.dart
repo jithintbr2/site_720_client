@@ -74,16 +74,16 @@ class _PackageScreenState extends State<PackageScreen> {
                     padding: const EdgeInsets.only(right: 20),
                     child: Row(
                       children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Assets.h4logo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   height: 25,
+                        //   width: 25,
+                        //   decoration: BoxDecoration(
+                        //     image: DecorationImage(
+                        //       image: AssetImage(Assets.h4logo),
+                        //       fit: BoxFit.fitWidth,
+                        //     ),
+                        //   ),
+                        // ),
                         // SizedBox(width: 5,),
                         // Text('HOMES4',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
                       ],

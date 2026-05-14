@@ -59,7 +59,11 @@ class _ListPageState extends State<ListPage> {
   // }
 
   getData() async {
-     token = await Common.getSharedPref("token");
+    //  if(token.isEmpty){
+    //  token = await Common.getSharedPref("token");
+    String? tokenFromPref = await Common.getSharedPref("token");
+    token = tokenFromPref ?? "";
+    // }
     if (!hasMoreData) {
       setState(() {
         hasMoreData = true;
@@ -199,8 +203,7 @@ class _ListPageState extends State<ListPage> {
                                                               ConstrainedBox(
                                                             constraints:
                                                                 const BoxConstraints(
-                                                              maxHeight:
-                                                                  300,
+                                                              maxHeight: 300,
                                                             ),
                                                             child:
                                                                 SingleChildScrollView(
@@ -440,7 +443,8 @@ class _ListPageState extends State<ListPage> {
                                                         ProjectDetailsPage(
                                                             items[index]
                                                                 .id
-                                                                .toString(),token)),
+                                                                .toString(),
+                                                            token)),
                                               );
                                             },
                                             child: SizedBox(
@@ -570,7 +574,7 @@ class _ListPageState extends State<ListPage> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token),
+              bottomNavigationBar: BottomNavigationBarScreen(token: token),
             ),
           )
         : Scaffold(

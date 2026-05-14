@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Config {
   static String get applicationName => "Site720";
-  static String get apiBaseUrl => "https://s1.site720.com/clientv1/api/";
+  static String get apiBaseUrl => "https://s1.site720.com/homes4clientv1/api/";
 
   static double get cartTileHeight => 60;
   static bool get addButtonInvert => false;

@@ -1,5 +1,5 @@
 class Assets {
-  static String get logo => "assets/images/logo.png";
+  static String get logo => "assets/images/logo.jpeg";
   static String get avathar => "assets/images/avathar.png";
   static String get noNetwork => "assets/images/noNetwork.jpg";
   static String get banner1 => "assets/images/banner_1.png";
@@ -8,7 +8,7 @@ class Assets {
   static String get banner3 => "assets/images/banner_3.png";
   static String get about => "assets/images/about_us.png";
   static String get loginImg => "assets/images/loginImg.png";
-  static String get h4logo => "assets/images/h4logo.png";
+  static String get h4logo => "assets/images/h4logo.jpeg";
   static String get home1 => "assets/images/home1.png";
   static String get home2 => "assets/images/home2.png";
   static String get home3 => "assets/images/home3.png";
@@ -18,7 +18,7 @@ class Assets {
   static String get icon4 => "assets/images/icon4.png";
   static String get icon5 => "assets/images/icon5.png";
   static String get icon6 => "assets/images/icon6.png";
-  static String get logo2 => "assets/images/logo.png";
+  static String get logo2 => "assets/images/logo33.png";
   static String get avathar1 => "assets/images/avathar1.png";
   static String get contactus => "assets/images/contactus.jpg";
   static String get noComplaints => "assets/images/noComplaints.jpg";
@@ -27,6 +27,7 @@ class Assets {
   static String get splash => "assets/images/splash.jpg";
   static String get quotation => "assets/images/quotation.png";
   static String get noResult => "assets/images/nodatafound.png";
-  static String get whiteLogo => "assets/images/logo.png";
-   static String get whiteSplash => "assets/images/logo.png";
+  static String get whiteLogo => "assets/images/logo.jpeg";
+    static String get lognLogo => "assets/images/loginlogo.png";
+   static String get whiteSplash => "assets/images/logo.jpeg";
 }

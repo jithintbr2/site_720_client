@@ -52,7 +52,6 @@ class _DashboardState extends State<Dashboard> {
     getData();
   }
 
-
   @override
   void dispose() {
     super.dispose();
@@ -112,7 +111,6 @@ class _DashboardState extends State<Dashboard> {
         return;
       }
 
-      // ✅ Safe API call
       dashboardDetails = await HttpService.dashboard(
         (widget.token ?? "").toString(),
       );
@@ -226,7 +224,7 @@ class _DashboardState extends State<Dashboard> {
                             SizedBox(
                               height: 20,
                             ),
-                           widget.token != null && widget.token!=""
+                            widget.token != null && widget.token != ""
                                 ? Padding(
                                     padding: const EdgeInsets.only(bottom: 20),
                                     child: Stack(children: [
@@ -314,7 +312,8 @@ class _DashboardState extends State<Dashboard> {
                                                   width: 100,
                                                   height: 35,
                                                   decoration: BoxDecoration(
-                                                      color: Color.fromARGB(255, 230, 195, 204),
+                                                      color: Color.fromARGB(
+                                                          255, 131, 61, 79),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5)),
@@ -376,7 +375,7 @@ class _DashboardState extends State<Dashboard> {
                                       image: AssetImage(
                                           "assets/images/homes4slides-2.png"),
                                       fit: BoxFit.fill,
-                                    )), 
+                                    )),
                               ),
                             ),
                             SizedBox(
@@ -404,7 +403,7 @@ class _DashboardState extends State<Dashboard> {
                             SizedBox(
                               height: 20,
                             ),
-                            widget.token == null || widget.token==""
+                            widget.token == null || widget.token == ""
                                 ? Stack(children: [
                                     Container(
                                       width:
@@ -427,21 +426,24 @@ class _DashboardState extends State<Dashboard> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => const Login()),
+                                                builder: (context) =>
+                                                    const Login()),
                                           );
                                         },
                                         child: Container(
                                           width: 100,
                                           height: 35,
                                           decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 230, 195, 204),
+                                              color: Color.fromARGB(
+                                                  255, 117, 64, 78),
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Center(
                                               child: Text(
                                             'Login',
                                             style: TextStyle(
-                                                color: const Color.fromARGB(255, 80, 64, 64),
+                                                color: const Color.fromARGB(
+                                                    255, 248, 248, 248),
                                                 fontSize: 19,
                                                 fontWeight: FontWeight.bold),
                                           )),
@@ -460,11 +462,9 @@ class _DashboardState extends State<Dashboard> {
               drawer: SizedBox(
                 width: 250,
                 child: Drawer(
-                  // column holds all the widgets in the drawer
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        // ListView contains a group of widgets that scroll inside the drawer
                         child: ListView(
                           children: <Widget>[
                             Container(
@@ -488,7 +488,8 @@ class _DashboardState extends State<Dashboard> {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            widget.token == null || widget.token==""
+                                            widget.token == null ||
+                                                    widget.token == ""
                                                 ? InkWell(
                                                     onTap: () {
                                                       Navigator.push(
@@ -566,7 +567,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     },
                                   ),
-                                 widget.token != null && widget.token!=""
+                                  widget.token != null && widget.token != ""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -593,7 +594,7 @@ class _DashboardState extends State<Dashboard> {
                                           },
                                         )
                                       : SizedBox(),
-                                  widget.token != null && widget.token!=""
+                                  widget.token != null && widget.token != ""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -620,7 +621,7 @@ class _DashboardState extends State<Dashboard> {
                                           },
                                         )
                                       : SizedBox(),
-                                  widget.token != null && widget.token!=""
+                                  widget.token != null && widget.token != ""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,
@@ -636,15 +637,37 @@ class _DashboardState extends State<Dashboard> {
                                             'Complaint',
                                             style: TextStyle(fontSize: 14),
                                           ),
-                                          onTap: () => {
+                                          onTap: () {
+                                            if (widget.token == null ||
+                                                widget.token!.isEmpty || widget.token == "") {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Please login to continue'),
+                                                ),
+                                              );
+                                              return;
+                                            }
+
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ComplaintListPage(
-                                                          widget.token!)),
-                                            ),
+                                                builder: (context) =>
+                                                    ComplaintListPage(
+                                                        widget.token!),
+                                              ),
+                                            );
                                           },
+                                          // onTap: () => {
+                                          //   Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ComplaintListPage(
+                                          //                 widget.token!)),
+                                          //   ),
+                                          // },
                                         )
                                       : SizedBox(),
                                   ListTile(
@@ -672,7 +695,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     },
                                   ),
-                                   widget.token != null && widget.token!=""
+                                  widget.token != null && widget.token != ""
                                       ? ListTile(
                                           dense: true,
                                           minLeadingWidth: 5,

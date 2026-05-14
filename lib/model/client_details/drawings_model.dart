@@ -35,19 +35,22 @@ class DrawingsModel {
 class Drawings {
     String remarks;  
     String imgPath; 
-
+    String stageName; 
     Drawings({
         required this.remarks,
         required this.imgPath,
+        required this.stageName,
     });
 
     factory Drawings.fromJson(Map<String, dynamic> json) => Drawings(
         remarks: json["remarks"],
         imgPath: json["img_path"],
+        stageName: json["stage_name"],
     );
 
     Map<String, dynamic> toJson() => {
         "remarks": remarks,
         "img_path": imgPath,
+        "stage_name": stageName,
     };
 }

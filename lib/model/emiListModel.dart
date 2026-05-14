@@ -15,8 +15,7 @@ class EmiListResponse {
       status: json['status'] ?? false,
       message: json['message'] ?? '',
       data: json['data'] != null
-          ? List<EmiData>.from(
-              json['data'].map((x) => EmiData.fromJson(x)))
+          ? List<EmiData>.from(json['data'].map((x) => EmiData.fromJson(x)))
           : [],
     );
   }
@@ -31,14 +30,16 @@ class EmiListResponse {
 class EmiData {
   String id;
   String installmentAmount;
+
   String installmentDate;
   String status;
-
+  String paidAmount;
   EmiData({
     required this.id,
     required this.installmentAmount,
     required this.installmentDate,
     required this.status,
+    required this.paidAmount,
   });
 
   factory EmiData.fromJson(Map<String, dynamic> json) {
@@ -47,6 +48,7 @@ class EmiData {
       installmentAmount: json['installment_amount'] ?? '',
       installmentDate: json['installment_date'] ?? '',
       status: json['status'] ?? '',
+      paidAmount: json['paid_amount'] ?? '',
     );
   }
 
@@ -55,5 +57,6 @@ class EmiData {
         'installment_amount': installmentAmount,
         'installment_date': installmentDate,
         'status': status,
+        'paid_amount': paidAmount,
       };
 }

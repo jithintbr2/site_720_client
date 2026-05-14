@@ -39,6 +39,7 @@ import 'package:site720_client/model/projectListModel.dart';
 import 'package:site720_client/model/resetPasswordModel.dart';
 import 'package:site720_client/model/sendOtpModel.dart';
 import 'package:site720_client/model/serviceListModel.dart';
+import 'package:site720_client/settings/common.dart';
 import 'package:site720_client/settings/config.dart';
 
 import '../model/bhkFilterListModel.dart';
@@ -201,8 +202,6 @@ class HttpService {
       var result = await _dio.post(
           "${Config.apiBaseUrl}getClientScheduledPayment",
           data: formData);
-      //log(params);
-
       SchedulePaymentModel model = SchedulePaymentModel.fromJson(result.data);
 
       return model;
@@ -255,9 +254,7 @@ class HttpService {
       var result = await _dio.post("${Config.apiBaseUrl}getClientPhasesVideo",
           data: formData);
       //log(params);
-
       PhaseVideoModel model = PhaseVideoModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());
@@ -390,10 +387,7 @@ class HttpService {
     try {
       var result = await _dio.post("${Config.apiBaseUrl}getClientSiteDrawings",
           data: formData);
-      //log(params);
-
       DrawingsModel model = DrawingsModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());
@@ -408,8 +402,6 @@ class HttpService {
     try {
       var result =
           await _dio.post("${Config.apiBaseUrl}getIcons", data: formData);
-      //log(params);
-
       GetIconsModel model = GetIconsModel.fromJson(result.data);
 
       return model;
@@ -560,7 +552,6 @@ class HttpService {
         "maxSquareFeet": maxSquareFeet,
         "token": token,
       });
-
       var result = await _dio.post(
         "${Config.apiBaseUrl}newdashboard",
         data: formData,
@@ -592,16 +583,38 @@ class HttpService {
     }
   }
 
-  static Future aboutUs() async {
-    try {
-      var result = await _dio.get("${Config.apiBaseUrl}about_us");
+  // static Future aboutUs() async {
+  //   try {
+  //     var result = await _dio.get("${Config.apiBaseUrl}about_us");
 
-      AboutUsModel model = AboutUsModel.fromJson(result.data);
-      return model;
-    } catch (e) {
-      log(e.toString());
-    }
+  //     AboutUsModel model = AboutUsModel.fromJson(result.data);
+  //     return model;
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+  static Future<AboutUsModel?> aboutUs() async {
+  try {
+    final token = await Common.getSharedPref("token");
+
+    var result = await _dio.post(
+      "${Config.apiBaseUrl}about_us",
+      data: FormData.fromMap({
+        "token": token,
+        "is_homes4":"1"
+      }),
+      options: Options(
+        contentType: "multipart/form-data",
+      ),
+    );
+
+    AboutUsModel model = AboutUsModel.fromJson(result.data);
+    return model;
+  } catch (e) {
+    log(e.toString());
+    return null;
   }
+}
 
   static Future serviceList() async {
     log('a');
@@ -715,9 +728,7 @@ class HttpService {
       var result = await _dio.post("${Config.apiBaseUrl}get_complaint_type",
           data: formData);
       //log(params);
-
       ComplaintTypeModel model = ComplaintTypeModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());
@@ -751,10 +762,7 @@ class HttpService {
     try {
       var result = await _dio.post("${Config.apiBaseUrl}get_complaint_nature",
           data: formData);
-      //log(params);
-
       ComplaintNatureModel model = ComplaintNatureModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());
@@ -923,7 +931,6 @@ class HttpService {
       //log(params);
 
       GetPercentModel model = GetPercentModel.fromJson(result.data);
-
       return model;
     } catch (e) {
       log(e.toString());

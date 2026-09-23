@@ -33,10 +33,10 @@ class _AddComplaintState extends State<AddComplaint> {
   String? selectedNature;
 
   DateTime incidentDate = DateTime.now();
-  File? selectedImage;
+  List<File> selectedImages = [];
 
   bool isEditMode = false;
-  String? existingImageUrl;
+  List<String> existingImageUrls = [];
 
   @override
   void initState() {
@@ -65,7 +65,10 @@ class _AddComplaintState extends State<AddComplaint> {
           selectedNature = data.complaintNature;
           complaintDesc.text = data.description ?? '';
           incidentDate = DateTime.parse(data.incidentDate!);
-          existingImageUrl = data.mediaUrl;
+          if (data.mediaUrl != null && data.mediaUrl!.isNotEmpty) {
+            existingImageUrls =
+                data.mediaUrl!.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          }
         });
       }
     } catch (e) {
@@ -98,9 +101,11 @@ class _AddComplaintState extends State<AddComplaint> {
   }
 
   Future<void> pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() => selectedImage = File(picked.path));
+    final picked = await ImagePicker().pickMultiImage();
+    if (picked.isNotEmpty) {
+      setState(() {
+        selectedImages.addAll(picked.map((e) => File(e.path)));
+      });
     }
   }
 
@@ -253,33 +258,100 @@ class _AddComplaintState extends State<AddComplaint> {
 
   Widget _buildImagePicker() {
     return _sectionCard(
-      title: "Upload Image",
-      child: GestureDetector(
-        onTap: pickImage,
-        child: Container(
-          width: double.infinity,
-          height: 140,
-          decoration: _inputDecoration(),
-          child: selectedImage != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.file(selectedImage!, fit: BoxFit.cover),
-                )
-              : (existingImageUrl != null && existingImageUrl!.isNotEmpty)
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child:
-                          Image.network(existingImageUrl!, fit: BoxFit.cover),
-                    )
-                  : const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.cloud_upload_outlined, size: 40),
-                        SizedBox(height: 8),
-                        Text("Tap to upload image"),
-                      ],
+      title: "Upload Images",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (existingImageUrls.isNotEmpty) ...[
+            const Text("Existing Images",
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: existingImageUrls.map((url) {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        url,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-        ),
+                  ],
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+          if (selectedImages.isNotEmpty) ...[
+            const Text("Selected Images",
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: selectedImages.asMap().entries.map((entry) {
+                int index = entry.key;
+                File file = entry.value;
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        file,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: -8,
+                      right: -8,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedImages.removeAt(index);
+                          });
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.close,
+                              color: Colors.white, size: 16),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+          GestureDetector(
+            onTap: pickImage,
+            child: Container(
+              width: double.infinity,
+              height: 100,
+              decoration: _inputDecoration(),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_photo_alternate_outlined, size: 30),
+                  SizedBox(height: 8),
+                  Text("Tap to select multiple images"),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -325,7 +397,7 @@ class _AddComplaintState extends State<AddComplaint> {
               incidentDate: DateFormat('yyyy-MM-dd').format(incidentDate),
               description: complaintDesc.text,
               nature: selectedNature!,
-              image: selectedImage,
+              images: selectedImages,
             )
           : await HttpService.addComplaint(
               token: widget.token,
@@ -334,7 +406,7 @@ class _AddComplaintState extends State<AddComplaint> {
               incidentDate: DateFormat('yyyy-MM-dd').format(incidentDate),
               description: complaintDesc.text,
               nature: selectedNature!,
-              image: selectedImage,
+              images: selectedImages,
             );
 
       Navigator.pop(context, true);

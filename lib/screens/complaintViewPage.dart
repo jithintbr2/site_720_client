@@ -17,19 +17,13 @@ class ComplaintViewPage extends StatelessWidget {
     final Color cardColor = Colors.white;
     final Color textPrimary = const Color(0xFF1A1A1A);
     final Color textSecondary = const Color(0xFF666666);
-    
-    // Format date
     String formattedDate = _formatDate(data.incidentDate);
-    
-    // Get status color
     Color statusColor = _getStatusColor(data.statusName);
-    
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            /// Custom Header
             Container(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
               decoration: BoxDecoration(
@@ -45,7 +39,6 @@ class ComplaintViewPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Back Button & Title
                   Row(
                     children: [
                       Container(
@@ -111,8 +104,6 @@ class ComplaintViewPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
-                  /// Complaint Description Card
                   const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -152,15 +143,12 @@ class ComplaintViewPage extends StatelessWidget {
                 ],
               ),
             ),
-
-            /// Details Section
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Customer Information Card
                     _buildDetailCard(
                       icon: Icons.person_outline,
                       title: 'Customer Information',
@@ -184,8 +172,6 @@ class ComplaintViewPage extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-
-                    /// Additional Information Card
                     _buildDetailCard(
                       icon: Icons.info_outline,
                       title: 'Additional Information',
@@ -207,8 +193,6 @@ class ComplaintViewPage extends StatelessWidget {
                         ),
                       ],
                     ),
-
-                    /// Media Section
                     if (data.mediaUrl != null && data.mediaUrl!.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,34 +209,19 @@ class ComplaintViewPage extends StatelessWidget {
                         ],
                       ),
 
-                    /// Timeline/Notes Section
-                    // const SizedBox(height: 20),
-                    // _buildDetailCard(
-                    //   icon: Icons.history_outlined,
-                    //   title: 'Activity Timeline',
-                    //   children: [
-                    //     _buildTimelineItem(
-                    //       title: 'Complaint Created',
-                    //       time: 'Today, 10:30 AM',
-                    //       icon: Icons.add_circle_outline,
-                    //       color: Colors.blue,
-                    //     ),
-                    //     _buildTimelineItem(
-                    //       title: 'Assigned to Support',
-                    //       time: 'Today, 11:15 AM',
-                    //       icon: Icons.person_add_outlined,
-                    //       color: Colors.orange,
-                    //     ),
-                    //     _buildTimelineItem(
-                    //       title: 'In Progress',
-                    //       time: 'Today, 2:45 PM',
-                    //       icon: Icons.autorenew_outlined,
-                    //       color: Colors.purple,
-                    //     ),
-                    //   ],
-                    // ),
+           
+                    if (data.taskHistory != null && data.taskHistory!.isNotEmpty) ...[
+                      const SizedBox(height: 20),
+                      _buildDetailCard(
+                        icon: Icons.history_outlined,
+                        title: 'Activity Timeline',
+                        children: [
+                          const SizedBox(height: 10),
+                          _buildTaskHistoryTimeline(context),
+                        ],
+                      ),
+                    ],
 
-                    /// Action Buttons
                     const SizedBox(height: 30),
                     Row(
                       children: [
@@ -505,60 +474,169 @@ class ComplaintViewPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineItem({
-    required String title,
-    required String time,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: color.withOpacity(0.3),
-                width: 2,
+  Widget _buildTaskHistoryTimeline(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: data.taskHistory!.length,
+      itemBuilder: (context, index) {
+        final task = data.taskHistory![index];
+        final isLast = index == data.taskHistory!.length - 1;
+        
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 40,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFB80D37).withOpacity(0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFFB80D37).withOpacity(0.3),
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.check_circle_outline,
+                        size: 16,
+                        color: Color(0xFFB80D37),
+                      ),
+                    ),
+                    if (!isLast)
+                      Expanded(
+                        child: Container(
+                          width: 2,
+                          color: const Color(0xFFB80D37).withOpacity(0.2),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            child: Icon(
-              icon,
-              size: 18,
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              task.createdAt ?? '',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF666666),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              task.comment ?? 'No comments',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: Color(0xFF1A1A1A),
+                                height: 1.4,
+                              ),
+                            ),
+                            if (task.files != null && task.files!.isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              const Divider(color: Color(0xFFE2E8F0)),
+                              const SizedBox(height: 12),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: task.files!.map((file) {
+                                  if (file.mediaUrl != null && file.mediaUrl!.isNotEmpty) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => Scaffold(
+                                              appBar: AppBar(
+                                                backgroundColor: Colors.black,
+                                                elevation: 0,
+                                                leading: IconButton(
+                                                  icon: const Icon(Icons.close, color: Colors.white),
+                                                  onPressed: () => Navigator.pop(context),
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.black,
+                                              body: Center(
+                                                child: PhotoView(
+                                                  imageProvider: NetworkImage(file.mediaUrl!),
+                                                  backgroundDecoration: const BoxDecoration(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: CachedNetworkImage(
+                                          imageUrl: file.mediaUrl!,
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => Container(
+                                            color: Colors.grey[200],
+                                            child: const Center(
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(strokeWidth: 2),
+                                              ),
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) => Container(
+                                            color: Colors.grey[200],
+                                            child: const Icon(Icons.image_not_supported, size: 20),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                }).toList(),
+                              ),
+                            ]
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  time,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF666666),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

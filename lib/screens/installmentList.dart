@@ -441,10 +441,7 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
-
-            /// Amount & Details
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -498,38 +495,38 @@ class _InstallmentScreenState extends State<InstallmentScreen> {
                       ),
 
                       /// Show badge based on status
-                      if (isDue && !isPaid)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: dueColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: dueColor.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.warning_amber_outlined,
-                                size: 14,
-                                color: dueColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'PAYMENT DUE',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: dueColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      // if (isDue && !isPaid)
+                      //   Container(
+                      //     padding: const EdgeInsets.symmetric(
+                      //       horizontal: 12,
+                      //       vertical: 6,
+                      //     ),
+                      //     decoration: BoxDecoration(
+                      //       color: dueColor.withOpacity(0.1),
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       border: Border.all(
+                      //         color: dueColor.withOpacity(0.2),
+                      //       ),
+                      //     ),
+                      //     child: Row(
+                      //       children: [
+                      //         Icon(
+                      //           Icons.warning_amber_outlined,
+                      //           size: 14,
+                      //           color: dueColor,
+                      //         ),
+                      //         const SizedBox(width: 4),
+                      //         Text(
+                      //           'PAYMENT DUE',
+                      //           style: TextStyle(
+                      //             fontSize: 11,
+                      //             fontWeight: FontWeight.w600,
+                      //             color: dueColor,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
                       if (isPartial)
                         Container(
                           padding: const EdgeInsets.symmetric(

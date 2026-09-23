@@ -68,7 +68,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^31.1.19
   expandable_text: ^2.3.0
   youtube_player_iframe: 5.2.1
-
+  pdf_render_plus: ^1.4.12
 dev_dependencies:
   flutter_test:
     sdk: flutter

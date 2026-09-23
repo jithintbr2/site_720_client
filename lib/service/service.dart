@@ -202,6 +202,8 @@ class HttpService {
       var result = await _dio.post(
           "${Config.apiBaseUrl}getClientScheduledPayment",
           data: formData);
+          
+      print('payment:${result}');
       SchedulePaymentModel model = SchedulePaymentModel.fromJson(result.data);
 
       return model;
@@ -435,7 +437,7 @@ class HttpService {
     required String incidentDate,
     required String description,
     required String nature,
-    File? image,
+    List<File>? images,
   }) async {
     try {
       FormData formData = FormData.fromMap({
@@ -445,12 +447,19 @@ class HttpService {
         "incident_date": incidentDate,
         "description": description,
         "nature": nature,
-        if (image != null)
-          "image": await MultipartFile.fromFile(
-            image.path,
-            filename: image.path.split('/').last,
-          ),
       });
+
+      if (images != null && images.isNotEmpty) {
+        for (int i = 0; i < images.length; i++) {
+          formData.files.add(MapEntry(
+            "image[]",
+            await MultipartFile.fromFile(
+              images[i].path,
+              filename: images[i].path.split('/').last,
+            ),
+          ));
+        }
+      }
 
       final response = await _dio.post(
         "${Config.apiBaseUrl}add_complaint",
@@ -840,7 +849,7 @@ class HttpService {
     required String incidentDate,
     required String description,
     required String nature,
-    File? image,
+    List<File>? images,
   }) async {
     try {
       FormData data = FormData.fromMap({
@@ -851,12 +860,19 @@ class HttpService {
         "incident_date": incidentDate,
         "description": description,
         "nature": nature,
-        if (image != null)
-          "image": await MultipartFile.fromFile(
-            image.path,
-            filename: image.path.split('/').last,
-          ),
       });
+
+      if (images != null && images.isNotEmpty) {
+        for (int i = 0; i < images.length; i++) {
+          data.files.add(MapEntry(
+            "image[]",
+            await MultipartFile.fromFile(
+              images[i].path,
+              filename: images[i].path.split('/').last,
+            ),
+          ));
+        }
+      }
 
       final response = await _dio.post(
         "${Config.apiBaseUrl}updateComplaint",

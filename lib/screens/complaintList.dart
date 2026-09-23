@@ -422,7 +422,7 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                     ),
 
                     const SizedBox(width: 8),
-
+                 if(item.statusName =="Pending")
                     _buildActionButton(
                       icon: Icons.edit_outlined,
                       label: 'Edit',
@@ -446,14 +446,14 @@ class _ComplaintListPageState extends State<ComplaintListPage> {
                       },
                     ),
 
-                    const SizedBox(width: 8),
+                    // const SizedBox(width: 8),
 
-                    _buildActionButton(
-                      icon: Icons.delete_outline,
-                      label: 'Delete',
-                      color: Colors.red,
-                      onPressed: () => _deleteComplaint(item.id!),
-                    ),
+                    // _buildActionButton(
+                    //   icon: Icons.delete_outline,
+                    //   label: 'Delete',
+                    //   color: Colors.red,
+                    //   onPressed: () => _deleteComplaint(item.id!),
+                    // ),
                   ],
                 ),
               ],

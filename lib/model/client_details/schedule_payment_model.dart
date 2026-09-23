@@ -15,9 +15,9 @@ class SchedulePaymentModel {
         required this.message,
     });
     factory SchedulePaymentModel.fromJson(Map<String, dynamic> json) => SchedulePaymentModel(
-        data: List<Schedule>.from(json["data"].map((x) => Schedule.fromJson(x))),
-        status: json["status"],
-        message: json["message"],
+        data: json["data"] != null ? List<Schedule>.from(json["data"].map((x) => Schedule.fromJson(x))) : [],
+        status: json["status"] ?? false,
+        message: json["message"]?.toString() ?? "",
     );
     Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
@@ -31,6 +31,7 @@ class Schedule {
     String phaseNo;
     String description;
     String estCost;
+        String totalCost;
         String extraWorkAmount;
             String deductionAmount;
                 String percentage;
@@ -43,6 +44,7 @@ class Schedule {
         required this.phaseNo,
         required this.description,
         required this.estCost,
+        required this.totalCost,
         required this.extraWorkAmount,
         required this.deductionAmount,
         required this.percentage,
@@ -52,16 +54,17 @@ class Schedule {
     });
 
     factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
-        id: json["id"],
-        phaseNo: json["phase_no"],
-        description: json["description"],
-        estCost: json["est_cost"],
-        extraWorkAmount: json["extra_work_amount"],
-        deductionAmount: json["deduction_amount"],
-        percentage: json["percentage"],
-        paidAmount: json["paid_amount"],
-        balanceAmount: json["balance_amount"],
-        status: json["status"],
+        id: json["id"]?.toString() ?? "",
+        phaseNo: json["phase_no"]?.toString() ?? "",
+        description: json["description"]?.toString() ?? "",
+        estCost: json["est_cost"]?.toString() ?? "",
+        totalCost: json["total_cost"]?.toString() ?? "",
+        extraWorkAmount: json["extra_work_amount"]?.toString() ?? "",
+        deductionAmount: json["deduction_amount"]?.toString() ?? "",
+        percentage: json["percentage"]?.toString() ?? "",
+        paidAmount: json["paid_amount"]?.toString() ?? "",
+        balanceAmount: json["balance_amount"]?.toString() ?? "",
+        status: json["status"]?.toString() ?? "",
     );
 
     Map<String, dynamic> toJson() => {
@@ -69,6 +72,7 @@ class Schedule {
         "phase_no": phaseNo,
         "description": description,
         "est_cost": estCost,
+        "total_cost": totalCost,
         "extra_work_amount": extraWorkAmount,
         "deduction_amount": deductionAmount,
         "percentage": percentage,

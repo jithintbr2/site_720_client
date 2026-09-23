@@ -8,14 +8,33 @@ import 'package:site720_client/service/service.dart';
 import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});
 
   @override
   State<DrawerScreen> createState() => _DrawerScreenState();
 }
+class PdfViewerPage extends StatelessWidget {
+  final String pdfUrl;
+  final String title;
 
+  const PdfViewerPage({
+    Key? key,
+    required this.pdfUrl,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title.isEmpty ? "PDF Viewer" : title),
+      ),
+      body: SfPdfViewer.network(pdfUrl),
+    );
+  }
+}
 class _DrawerScreenState extends State<DrawerScreen> {
   DrawingsModel? drawings;
   bool? result = true;
@@ -232,6 +251,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                         physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           final drawing = groupedDrawings[getStageNames()[stageIndex]]![index];
+                                          final bool isPdf =
+                                            drawing.imgPath.toLowerCase().endsWith('.pdf');
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 20, right: 20, bottom: 20),
@@ -239,39 +260,77 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 InkWell(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => FullImagePage(drawing.imgPath),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: SizedBox(
-                                                    width: MediaQuery.of(context).size.width * 1,
-                                                    height: 220,
-                                                    child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                      child: CachedNetworkImage(
-                                                        height: MediaQuery.of(context).size.height * 0.3,
-                                                        imageUrl: drawing.imgPath,
-                                                        fit: BoxFit.cover,
-                                                        placeholder: (_, __) => Center(
-                                                          child: Lottie.asset(
-                                                            'assets/images/loading.json',
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                        ),
-                                                        errorWidget: (_, __, ___) => Center(
-                                                          child: Icon(
-                                                            Icons.error,
-                                                            color: Theme.of(context).primaryColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+  onTap: () {
+    if (isPdf) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PdfViewerPage(
+            pdfUrl: drawing.imgPath,
+            title: drawing.remarks,
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => FullImagePage(drawing.imgPath),
+        ),
+      );
+    }
+  },
+  child: SizedBox(
+    width: double.infinity,
+    height: 220,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: isPdf
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.picture_as_pdf,
+                          color: Colors.red,
+                          size: 70,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Tap to View PDF",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : CachedNetworkImage(
+              imageUrl: drawing.imgPath,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Center(
+                child: Lottie.asset(
+                  'assets/images/loading.json',
+                ),
+              ),
+              errorWidget: (_, __, ___) => const Icon(Icons.error),
+            ),
+    ),
+  ),
+),
                                                 const SizedBox(height: 8),
                                                 // Remarks section
                                                 if (drawing.remarks.isNotEmpty)
@@ -370,4 +429,5 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           );
   }
+
 }

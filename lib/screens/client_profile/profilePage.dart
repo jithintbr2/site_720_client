@@ -415,7 +415,6 @@ class _ProjectStagesPieChartState extends State<ProjectStagesPieChart> {
   @override
   Widget build(BuildContext context) {
     final List<_StageData> data = widget.percentList?.data.map((e) {
-          print();
           return _StageData(
             e.stageName,
             e.percentComplete,

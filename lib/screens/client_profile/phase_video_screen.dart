@@ -12,7 +12,8 @@ import '../../utils/youtube_utils.dart';
 import '../../widget/youtube_player_widget.dart';
 
 class VideoScreen extends StatefulWidget {
-  const VideoScreen({super.key});
+  final String projectId;
+  const VideoScreen(this.projectId, {super.key});
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -30,23 +31,42 @@ class _VideoScreenState extends State<VideoScreen> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      if (!mounted) return;
+
       setState(() {
         result = false;
       });
+      return;
     }
-    videoData = await HttpService.getClientPhasesVideo(token);
-    if (videoData != null) {
-      setState(() {});
+
+    try {
+      final data = await HttpService.getClientPhasesVideo(
+        token,
+        widget.projectId,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        videoData = data;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
     }
   }
 
@@ -61,11 +81,12 @@ class _VideoScreenState extends State<VideoScreen> {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor:Color.fromARGB(248, 218, 177, 188),
+                backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
-                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
+                  color: const Color.fromARGB(
+                      255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Videos",style: TextStyle(color: Colors.white)),
+                title: Text("Videos", style: TextStyle(color: Colors.white)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -274,7 +295,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token),
+              bottomNavigationBar: BottomNavigationBarScreen(token: token),
             ),
           )
         : Scaffold(

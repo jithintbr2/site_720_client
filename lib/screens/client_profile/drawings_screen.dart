@@ -9,12 +9,15 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({super.key});
+  final String projectId;
+  const DrawerScreen(this.projectId, {super.key});
 
   @override
   State<DrawerScreen> createState() => _DrawerScreenState();
 }
+
 class PdfViewerPage extends StatelessWidget {
   final String pdfUrl;
   final String title;
@@ -35,6 +38,7 @@ class PdfViewerPage extends StatelessWidget {
     );
   }
 }
+
 class _DrawerScreenState extends State<DrawerScreen> {
   DrawingsModel? drawings;
   bool? result = true;
@@ -66,21 +70,27 @@ class _DrawerScreenState extends State<DrawerScreen> {
         result = false;
       });
     }
-    drawings = await HttpService.getClientSiteDrawings(token);
-    
+    drawings = await HttpService.getClientSiteDrawings(
+      token,
+      widget.projectId,
+    );
+
     // Group drawings by stageName
-    if (drawings != null && drawings!.status == true && drawings!.data.isNotEmpty) {
+    if (drawings != null &&
+        drawings!.status == true &&
+        drawings!.data.isNotEmpty) {
       groupedDrawings = {};
       for (var drawing in drawings!.data) {
         // Handle empty or null stageName
-        String stageKey = drawing.stageName.trim().isEmpty ? "No Stage" : drawing.stageName;
+        String stageKey =
+            drawing.stageName.trim().isEmpty ? "No Stage" : drawing.stageName;
         if (!groupedDrawings.containsKey(stageKey)) {
           groupedDrawings[stageKey] = [];
         }
         groupedDrawings[stageKey]!.add(drawing);
       }
     }
-    
+
     setState(() {
       isLoading = false;
     });
@@ -105,13 +115,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 iconTheme: const IconThemeData(
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
-                title: const Text("Drawings", style: TextStyle(color: Colors.white)),
+                title: const Text("Drawings",
+                    style: TextStyle(color: Colors.white)),
               ),
               body: isLoading
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : (drawings == null || drawings!.status == false || drawings!.data.isEmpty)
+                  : (drawings == null ||
+                          drawings!.status == false ||
+                          drawings!.data.isEmpty)
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,11 +151,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               ),
                               const SizedBox(height: 10),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 40),
                                 child: Text(
-                                  drawings?.status == false 
-                                    ? "We couldn't retrieve the drawings at this time. Please try again later."
-                                    : "It seems there are no drawings available for this site at the moment.",
+                                  drawings?.status == false
+                                      ? "We couldn't retrieve the drawings at this time. Please try again later."
+                                      : "It seems there are no drawings available for this site at the moment.",
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 14,
@@ -154,7 +168,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               ElevatedButton(
                                 onPressed: () => getData(),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(248, 218, 177, 188),
+                                  backgroundColor:
+                                      const Color.fromARGB(248, 218, 177, 188),
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -174,13 +189,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 // Stage selector tabs
                                 Container(
                                   alignment: Alignment.center,
-                                  margin: const EdgeInsets.only(left: 10, top: 18),
+                                  margin:
+                                      const EdgeInsets.only(left: 10, top: 18),
                                   width: MediaQuery.of(context).size.width,
                                   height: 30,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
                                     children: [
-                                      for (int i = 0; i < getStageNames().length; i++)
+                                      for (int i = 0;
+                                          i < getStageNames().length;
+                                          i++)
                                         InkWell(
                                           onTap: () {
                                             setState(() {
@@ -188,16 +206,24 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                             });
                                           },
                                           child: Container(
-                                            width: MediaQuery.of(context).size.width * 0.25,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.25,
                                             height: 30,
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.white, width: 0),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 0),
                                               color: Colors.white,
-                                              borderRadius: const BorderRadius.all(Radius.circular(6)),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(6)),
                                             ),
                                             child: Center(
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Column(
                                                     children: [
@@ -205,20 +231,31 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                                         getStageNames()[i],
                                                         style: TextStyle(
                                                           color: stageIndex == i
-                                                              ? const Color(0xFF3c9f9a)
-                                                              : const Color(0xFF717171),
+                                                              ? const Color(
+                                                                  0xFF3c9f9a)
+                                                              : const Color(
+                                                                  0xFF717171),
                                                           fontSize: 12,
                                                         ),
                                                       ),
                                                       const SizedBox(height: 5),
                                                       stageIndex == i
                                                           ? Container(
-                                                              decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(5),
-                                                                color: const Color(0xFF3c9f9a),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                color: const Color(
+                                                                    0xFF3c9f9a),
                                                               ),
                                                               height: 3,
-                                                              width: MediaQuery.of(context).size.width * 0.2,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.2,
                                                             )
                                                           : Container(),
                                                     ],
@@ -233,7 +270,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 ),
                                 const SizedBox(height: 20),
                                 // Check if selected stage has drawings
-                                groupedDrawings[getStageNames()[stageIndex]]?.isEmpty ?? true
+                                groupedDrawings[getStageNames()[stageIndex]]
+                                            ?.isEmpty ??
+                                        true
                                     ? const Center(
                                         child: Padding(
                                           padding: EdgeInsets.all(50),
@@ -248,114 +287,165 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                       )
                                     : ListView.builder(
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          final drawing = groupedDrawings[getStageNames()[stageIndex]]![index];
-                                          final bool isPdf =
-                                            drawing.imgPath.toLowerCase().endsWith('.pdf');
+                                          final drawing = groupedDrawings[
+                                                  getStageNames()[stageIndex]]![
+                                              index];
+                                          final bool isPdf = drawing.imgPath
+                                              .toLowerCase()
+                                              .endsWith('.pdf');
                                           return Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 20, right: 20, bottom: 20),
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 20),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 InkWell(
-  onTap: () {
-    if (isPdf) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PdfViewerPage(
-            pdfUrl: drawing.imgPath,
-            title: drawing.remarks,
-          ),
-        ),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => FullImagePage(drawing.imgPath),
-        ),
-      );
-    }
-  },
-  child: SizedBox(
-    width: double.infinity,
-    height: 220,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: isPdf
-          ? Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.picture_as_pdf,
-                          color: Colors.red,
-                          size: 70,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Tap to View PDF",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : CachedNetworkImage(
-              imageUrl: drawing.imgPath,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => Center(
-                child: Lottie.asset(
-                  'assets/images/loading.json',
-                ),
-              ),
-              errorWidget: (_, __, ___) => const Icon(Icons.error),
-            ),
-    ),
-  ),
-),
+                                                  onTap: () {
+                                                    if (isPdf) {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              PdfViewerPage(
+                                                            pdfUrl:
+                                                                drawing.imgPath,
+                                                            title:
+                                                                drawing.remarks,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              FullImagePage(
+                                                                  drawing
+                                                                      .imgPath),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    height: 220,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: isPdf
+                                                          ? Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade100,
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade300),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Stack(
+                                                                fit: StackFit
+                                                                    .expand,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: const [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .picture_as_pdf,
+                                                                          color:
+                                                                              Colors.red,
+                                                                          size:
+                                                                              70,
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                10),
+                                                                        Text(
+                                                                          "Tap to View PDF",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontSize:
+                                                                                15,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : CachedNetworkImage(
+                                                              imageUrl: drawing
+                                                                  .imgPath,
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  (_, __) =>
+                                                                      Center(
+                                                                child: Lottie
+                                                                    .asset(
+                                                                  'assets/images/loading.json',
+                                                                ),
+                                                              ),
+                                                              errorWidget: (_,
+                                                                      __,
+                                                                      ___) =>
+                                                                  const Icon(Icons
+                                                                      .error),
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ),
                                                 const SizedBox(height: 8),
                                                 // Remarks section
                                                 if (drawing.remarks.isNotEmpty)
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 5),
                                                     child: Text(
                                                       'Remarks: ${drawing.remarks}',
                                                       style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.black87,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                       maxLines: 2,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 if (drawing.remarks.isEmpty)
                                                   const Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 5),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5),
                                                     child: Text(
                                                       "No remarks available",
                                                       style: TextStyle(
                                                         fontSize: 12,
                                                         color: Colors.grey,
-                                                        fontStyle: FontStyle.italic,
+                                                        fontStyle:
+                                                            FontStyle.italic,
                                                       ),
                                                     ),
                                                   ),
@@ -363,7 +453,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                             ),
                                           );
                                         },
-                                        itemCount: groupedDrawings[getStageNames()[stageIndex]]?.length ?? 0,
+                                        itemCount: groupedDrawings[
+                                                    getStageNames()[stageIndex]]
+                                                ?.length ??
+                                            0,
                                       ),
                                 const SizedBox(height: 20),
                               ],
@@ -429,5 +522,4 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           );
   }
-
 }

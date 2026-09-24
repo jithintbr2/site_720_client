@@ -8,7 +8,8 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class SchedulePayment extends StatefulWidget {
-  const SchedulePayment({super.key});
+  final String projectId;
+  const SchedulePayment(this.projectId, {super.key});
 
   @override
   State<SchedulePayment> createState() => _SchedulePaymentState();
@@ -47,7 +48,10 @@ class _SchedulePaymentState extends State<SchedulePayment> {
       }
       return;
     }
-    paymentList = await HttpService.getClientScheduledPayment(token);
+    paymentList = await HttpService.getClientScheduledPayment(
+      token,
+      widget.projectId,
+    );
     if (mounted) {
       setState(() {
         isLoading = false;
@@ -419,8 +423,12 @@ class _SchedulePaymentState extends State<SchedulePayment> {
 
   Widget _buildMilestoneTimeline(String? description) {
     if (description == null || description.isEmpty) return const SizedBox();
-    
-    final stages = description.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+
+    final stages = description
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
     if (stages.isEmpty) return const SizedBox();
 
     return Column(
@@ -446,7 +454,8 @@ class _SchedulePaymentState extends State<SchedulePayment> {
               return Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: primaryColor.withOpacity(0.08),
                       border: Border.all(color: primaryColor.withOpacity(0.2)),
@@ -620,11 +629,9 @@ class _SchedulePaymentState extends State<SchedulePayment> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
               const Divider(height: 1),
               const SizedBox(height: 18),
-
               Column(
                 children: [
                   Row(

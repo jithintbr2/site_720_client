@@ -10,7 +10,8 @@ import 'package:site720_client/settings/common.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PackageScreen extends StatefulWidget {
-  const PackageScreen({super.key});
+  final String projectId;
+  const PackageScreen(this.projectId, {super.key});
 
   @override
   State<PackageScreen> createState() => _PackageScreenState();
@@ -28,28 +29,58 @@ class _PackageScreenState extends State<PackageScreen> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      if (!mounted) return;
+
       setState(() {
         result = false;
       });
+      return;
     }
-    package = await HttpService.getClientPackage(token);
-    if (package != null) {
-      Directory tempDir = await getTemporaryDirectory();
-      filePath = "${tempDir.path}/downloaded_file.pdf";
 
-      File file = File(filePath);
-      await file.writeAsBytes(package.data);
-      setState(() {});
+    try {
+      final data = await HttpService.getClientPackage(
+        token,
+        widget.projectId,
+      );
+
+      if (data == null) {
+        if (!mounted) return;
+
+        setState(() {
+          result = false;
+        });
+        return;
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      final path = "${tempDir.path}/downloaded_file.pdf";
+
+      final file = File(path);
+      await file.writeAsBytes(data.data);
+
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        package = data;
+        filePath = path;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
     }
   }
 
@@ -58,7 +89,7 @@ class _PackageScreenState extends State<PackageScreen> {
     return result == true
         ? RefreshIndicator(
             onRefresh: () async {
-              getData();
+              await getData();
               return;
             },
             child: Scaffold(
@@ -66,9 +97,11 @@ class _PackageScreenState extends State<PackageScreen> {
               appBar: AppBar(
                 backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
-                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
+                  color: const Color.fromARGB(
+                      255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Package Details",style: TextStyle(color: Colors.white)),
+                title: Text("Package Details",
+                    style: TextStyle(color: Colors.white)),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -103,7 +136,7 @@ class _PackageScreenState extends State<PackageScreen> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token),
+              bottomNavigationBar: BottomNavigationBarScreen(token: token),
             ),
           )
         : Scaffold(

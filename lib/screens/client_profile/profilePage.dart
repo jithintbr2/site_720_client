@@ -44,10 +44,12 @@ class _ProfilePageState extends State<ProfilePage> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     name = await Common.getSharedPref("name");
+
     final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
+        await Connectivity().checkConnectivity();
+
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi)) {
       setState(() {
@@ -58,8 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
         result = false;
       });
     }
+
     iconsList = await HttpService.getIcons(widget.token);
-    //percentList = await HttpService.getGraphData(widget.token,iconsList?.data.projectId ?? "");
+
     if (iconsList?.data.projectId != null &&
         iconsList!.data.projectId.isNotEmpty) {
       percentList = await HttpService.getGraphData(
@@ -171,99 +174,112 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        DrawerScreen()));
+                                                        DrawerScreen(iconsList!
+                                                            .data.projectId)));
                                           } else if (id == "3") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        ExtraWorksScreen()));
+                                                        ExtraWorksScreen(
+                                                            iconsList!.data
+                                                                .projectId)));
                                           } else if (id == "4") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        GalleryScreen()));
+                                                        GalleryScreen(iconsList!
+                                                            .data.projectId)));
                                           } else if (id == "5") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        PackageScreen()));
+                                                        PackageScreen(iconsList!
+                                                            .data.projectId)));
                                           } else if (id == "6") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        PaymentListScreen()));
+                                                        PaymentListScreen(
+                                                            iconsList!.data
+                                                                .projectId)));
                                           } else if (id == "7") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        SchedulePayment()));
+                                                        SchedulePayment(
+                                                            iconsList!.data
+                                                                .projectId)));
                                           } else if (id == "8") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        VideoScreen()));
+                                                    builder: (_) => VideoScreen(
+                                                        iconsList!
+                                                            .data.projectId)));
                                           } else if (id == "9") {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        StageScreen()));
+                                                    builder: (_) => StageScreen(
+                                                        iconsList!
+                                                            .data.projectId)));
                                           } else if (iconsList!
-                                                .data.icons[index].iconId ==
-                                            "10") {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DeductionWorkScreen(),
-                                              ));
-                                        } else if (iconsList!
-                                                .data.icons[index].iconId ==
-                                            "11") {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OverviewScreen(),
-                                              ));
-                                        }
-                                         else if (iconsList!
-                                                .data.icons[index].iconId ==
-                                            "12") {
-                                         Navigator.push(
+                                                  .data.icons[index].iconId ==
+                                              "10") {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DeductionWorkScreen(
+                                                          iconsList!
+                                                              .data.projectId),
+                                                ));
+                                          } else if (iconsList!
+                                                  .data.icons[index].iconId ==
+                                              "11") {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OverviewScreen(iconsList!
+                                                          .data.projectId),
+                                                ));
+                                          } else if (iconsList!
+                                                  .data.icons[index].iconId ==
+                                              "12") {
+                                            Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (_) => DocumentPage(
-                                                  projectId: iconsList!.data
-                                                      .projectId,
+                                                  projectId:
+                                                      iconsList!.data.projectId,
                                                 ),
                                               ),
                                             );
-                                        }
-                                        else if (iconsList!
-                                                .data.icons[index].iconId ==
-                                            "13") {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InstallmentScreen(iconsList!
-                                                .data.projectId,token: widget.token!,),
-                                              ));
-                                        }
-                                      },
-                                      
+                                          } else if (iconsList!
+                                                  .data.icons[index].iconId ==
+                                              "13") {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      InstallmentScreen(
+                                                    iconsList!.data.projectId,
+                                                    token: widget.token!,
+                                                  ),
+                                                ));
+                                          }
+                                        },
                                         child: Container(
                                           decoration: BoxDecoration(
                                             // color: const Color.fromARGB(
                                             //     255, 218, 179, 179),
-                                              color: Color.fromARGB(248, 218, 177, 188),
+                                            color: Color(0xFFCab5a71),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             boxShadow: const [
@@ -307,7 +323,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     .data.icons[index].iconName,
                                                 style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(255, 255, 255, 255),
+                                                    color: Color.fromARGB(
+                                                        255, 255, 255, 255),
                                                     fontSize: 12),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
@@ -324,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   )
                 : const Center(child: CircularProgressIndicator()),
-            bottomNavigationBar: BottomNavigationBarScreen(token:widget.token),
+            bottomNavigationBar: BottomNavigationBarScreen(token: widget.token),
           )
         : Scaffold(
             backgroundColor: Colors.white,
@@ -398,6 +415,7 @@ class _ProjectStagesPieChartState extends State<ProjectStagesPieChart> {
   @override
   Widget build(BuildContext context) {
     final List<_StageData> data = widget.percentList?.data.map((e) {
+          print();
           return _StageData(
             e.stageName,
             e.percentComplete,

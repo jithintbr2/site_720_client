@@ -7,7 +7,8 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class ExtraWorksScreen extends StatefulWidget {
-  const ExtraWorksScreen({super.key});
+  final String projectId;
+  const ExtraWorksScreen(this.projectId, {super.key});
 
   @override
   State<ExtraWorksScreen> createState() => _ExtraWorksScreenState();
@@ -24,23 +25,42 @@ class _ExtraWorksScreenState extends State<ExtraWorksScreen> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      if (!mounted) return;
+
       setState(() {
         result = false;
       });
+      return;
     }
-    extraWorks = await HttpService.getClientExtraWork(token);
-    if (extraWorks != null) {
-      setState(() {});
+
+    try {
+      final data = await HttpService.getClientExtraWork(
+        token,
+        widget.projectId,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        extraWorks = data;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
     }
   }
 

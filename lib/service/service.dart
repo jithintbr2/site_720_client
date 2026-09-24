@@ -138,135 +138,185 @@ class HttpService {
     }
   }
 
-  static Future getClientByID(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<ClientByIdModel?> getClientByID(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result =
-          await _dio.post("${Config.apiBaseUrl}getClientByID", data: formData);
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
 
-      ClientByIdModel model = ClientByIdModel.fromJson(result.data);
-
-      return model;
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  static Future getGallery(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
-    try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientPhasesImages",
-          data: formData);
-      //log(params);
-
-      GalleryModel model = GalleryModel.fromJson(result.data);
-
-      return model;
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  static Future getClientPaymentDetails(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
-    try {
-      var result = await _dio
-          .post("${Config.apiBaseUrl}getClientPaymentDetails", data: formData);
-      //log(params);
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientByID",
+        data: formData,
+      );
 
       if (result.statusCode == 200) {
-        PaymentListModel model = PaymentListModel.fromJson(result.data);
-        return model;
+        return ClientByIdModel.fromJson(result.data);
       }
+
+      return null;
     } catch (e) {
       log(e.toString());
       return null;
     }
   }
 
-  static Future getClientScheduledPayment(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<GalleryModel?> getGallery(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post(
-          "${Config.apiBaseUrl}getClientScheduledPayment",
-          data: formData);
-          
-      print('payment:${result}');
-      SchedulePaymentModel model = SchedulePaymentModel.fromJson(result.data);
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
 
-      return model;
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}getClientPhasesImages",
+        data: formData,
+      );
+
+      return GalleryModel.fromJson(response.data);
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
-  static Future getStageList(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<PaymentListModel?> getClientPaymentDetails(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientStages",
-          data: formData);
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientPaymentDetails",
+        data: formData,
+      );
 
       if (result.statusCode == 200) {
-        StageListModel model = StageListModel.fromJson(result.data);
-        return model;
+        return PaymentListModel.fromJson(result.data);
       }
+
+      return null;
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
-  static Future getClientDeductionWork(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<SchedulePaymentModel?> getClientScheduledPayment(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientDeductionWork",
-          data: formData);
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientScheduledPayment",
+        data: formData,
+      );
+
+      return SchedulePaymentModel.fromJson(result.data);
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  static Future<StageListModel?> getStageList(
+    String token,
+    String projectId, {
+    int page = 1,
+    int pageSize = 10,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+        'page': page,
+        'page_size': pageSize,
+      });
+
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientStages",
+        data: formData,
+      );
+
       if (result.statusCode == 200) {
-        DeductionWorkModel model = DeductionWorkModel.fromJson(result.data);
-        return model;
+        return StageListModel.fromJson(result.data);
       }
+
+      return null;
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
-  static Future getClientPhasesVideo(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<DeductionWorkModel?> getClientDeductionWork(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientPhasesVideo",
-          data: formData);
-      //log(params);
-      PhaseVideoModel model = PhaseVideoModel.fromJson(result.data);
-      return model;
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientDeductionWork",
+        data: formData,
+      );
+
+      if (result.statusCode == 200) {
+        return DeductionWorkModel.fromJson(result.data);
+      }
+
+      return null;
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
-  static Future getWorkStatus(token) async {
-    log(token);
+  static Future<PhaseVideoModel?> getClientPhasesVideo(
+    String token,
+    String projectId,
+  ) async {
+    try {
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final result = await _dio.post(
+        "${Config.apiBaseUrl}getClientPhasesVideo",
+        data: formData,
+      );
+
+      return PhaseVideoModel.fromJson(result.data);
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  static Future getWorkStatus(token, projectId) async {
+    print('token :$token');
     var formData = FormData.fromMap({
       'token': token,
+      'project_id': projectId,
     });
     try {
       var result = await _dio.post("${Config.apiBaseUrl}getClientWorkUpdates",
@@ -327,39 +377,50 @@ class HttpService {
     }
   }
 
-  static Future getClientExtraWork(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<ExtraWorkModel?> getClientExtraWork(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientExtraWork",
-          data: formData);
-      ExtraWorkModel model = ExtraWorkModel.fromJson(result.data);
-      return model;
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}getClientExtraWork",
+        data: formData,
+      );
+
+      return ExtraWorkModel.fromJson(response.data);
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
-  static Future getClientPackage(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future getClientPackage(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post(
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final result = await _dio.post(
         "${Config.apiBaseUrl}getClientPackage",
         data: formData,
-        options: Options(responseType: ResponseType.bytes),
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
       );
-      //
-
-      // PackageModel model = PackageModel.fromJson(result.data);
 
       return result;
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
@@ -381,18 +442,25 @@ class HttpService {
     }
   }
 
-  static Future getClientSiteDrawings(token) async {
-    log(token);
-    var formData = FormData.fromMap({
-      'token': token,
-    });
+  static Future<DrawingsModel?> getClientSiteDrawings(
+    String token,
+    String projectId,
+  ) async {
     try {
-      var result = await _dio.post("${Config.apiBaseUrl}getClientSiteDrawings",
-          data: formData);
-      DrawingsModel model = DrawingsModel.fromJson(result.data);
-      return model;
+      final formData = FormData.fromMap({
+        'token': token,
+        'project_id': projectId,
+      });
+
+      final response = await _dio.post(
+        "${Config.apiBaseUrl}getClientSiteDrawings",
+        data: formData,
+      );
+
+      return DrawingsModel.fromJson(response.data);
     } catch (e) {
       log(e.toString());
+      return null;
     }
   }
 
@@ -603,27 +671,24 @@ class HttpService {
   //   }
   // }
   static Future<AboutUsModel?> aboutUs() async {
-  try {
-    final token = await Common.getSharedPref("token");
+    try {
+      final token = await Common.getSharedPref("token");
 
-    var result = await _dio.post(
-      "${Config.apiBaseUrl}about_us",
-      data: FormData.fromMap({
-        "token": token,
-        "is_homes4":"1"
-      }),
-      options: Options(
-        contentType: "multipart/form-data",
-      ),
-    );
+      var result = await _dio.post(
+        "${Config.apiBaseUrl}about_us",
+        data: FormData.fromMap({"token": token, "is_homes4": "1"}),
+        options: Options(
+          contentType: "multipart/form-data",
+        ),
+      );
 
-    AboutUsModel model = AboutUsModel.fromJson(result.data);
-    return model;
-  } catch (e) {
-    log(e.toString());
-    return null;
+      AboutUsModel model = AboutUsModel.fromJson(result.data);
+      return model;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
   }
-}
 
   static Future serviceList() async {
     log('a');
@@ -947,6 +1012,7 @@ class HttpService {
       //log(params);
 
       GetPercentModel model = GetPercentModel.fromJson(result.data);
+
       return model;
     } catch (e) {
       log(e.toString());

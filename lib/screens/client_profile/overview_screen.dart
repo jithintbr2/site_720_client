@@ -7,7 +7,8 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class OverviewScreen extends StatefulWidget {
-  const OverviewScreen({super.key});
+  final String projectId;
+  const OverviewScreen(this.projectId, {super.key});
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
@@ -24,23 +25,42 @@ class _OverviewScreenState extends State<OverviewScreen> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      if (!mounted) return;
+
       setState(() {
         result = false;
       });
+      return;
     }
-    profilePage = await HttpService.getClientByID(token);
-    if (profilePage != null) {
-      setState(() {});
+
+    try {
+      final data = await HttpService.getClientByID(
+        token,
+        widget.projectId,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        profilePage = data;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
     }
   }
 

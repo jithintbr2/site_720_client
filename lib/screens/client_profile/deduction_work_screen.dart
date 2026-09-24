@@ -7,7 +7,8 @@ import 'package:site720_client/settings/assets.dart';
 import 'package:site720_client/settings/common.dart';
 
 class DeductionWorkScreen extends StatefulWidget {
-  const DeductionWorkScreen({super.key});
+  final String projectId;
+  const DeductionWorkScreen(this.projectId, {super.key});
 
   @override
   State<DeductionWorkScreen> createState() => _DeductionWorkScreenState();
@@ -24,23 +25,42 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() {
-        result = true;
-      });
-    } else {
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      if (!mounted) return;
+
       setState(() {
         result = false;
       });
+      return;
     }
-    deductionWorks = await HttpService.getClientDeductionWork(token);
-    if (deductionWorks != null) {
-      setState(() {});
+
+    try {
+      final data = await HttpService.getClientDeductionWork(
+        token,
+        widget.projectId,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        deductionWorks = data;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
     }
   }
 
@@ -57,9 +77,11 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
               appBar: AppBar(
                 backgroundColor: Color.fromARGB(248, 218, 177, 188),
                 iconTheme: IconThemeData(
-                  color: const Color.fromARGB(255, 255, 255, 255), //change your color here
+                  color: const Color.fromARGB(
+                      255, 255, 255, 255), //change your color here
                 ),
-                title: Text("Deduction Work",style: TextStyle(color: Colors.white)),
+                title: Text("Deduction Work",
+                    style: TextStyle(color: Colors.white)),
                 // actions: [
                 //   Padding(
                 //     padding: const EdgeInsets.only(right: 20),
@@ -83,192 +105,198 @@ class _DeductionWorkScreenState extends State<DeductionWorkScreen> {
                 // ],
               ),
               body: deductionWorks != null
-    ? deductionWorks!.data.isNotEmpty
-        ? ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: deductionWorks!.data.length,
-            itemBuilder: (context, index) {
-              final item = deductionWorks!.data[index];
+                  ? deductionWorks!.data.isNotEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: deductionWorks!.data.length,
+                          itemBuilder: (context, index) {
+                            final item = deductionWorks!.data[index];
 
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: Colors.grey.shade200,
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.10),
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// Top Section
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// Left Content
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                /// Phase Badge
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(
+                                  color: Colors.grey.shade200,
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.10),
+                                    blurRadius: 20,
+                                    spreadRadius: 2,
+                                    offset: const Offset(0, 8),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade50,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Text(
-                                    'Phase: ${item.phaseName ?? ''}',
-                                    style: TextStyle(
-                                      color: Colors.blue.shade700,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /// Top Section
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        /// Left Content
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              /// Phase Badge
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 6,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                                child: Text(
+                                                  'Phase: ${item.phaseName ?? ''}',
+                                                  style: TextStyle(
+                                                    color: Colors.blue.shade700,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 14),
+
+                                              /// Item Name
+                                              Text(
+                                                item.itemName ?? '',
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1F2937),
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 10),
+
+                                              /// Description
+                                              Text(
+                                                item.description ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  height: 1.5,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        const SizedBox(width: 14),
+
+                                        /// Amount Box
+                                        Container(
+                                          width: 110,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 5,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                            border: Border.all(
+                                              color: Colors.green.shade100,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Amount',
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.green.shade700,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                              Text(
+                                                '₹ ${item.itemAmount ?? '0'}',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green.shade800,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
+
+                                    const SizedBox(height: 18),
+
+                                    /// Divider
+                                    Divider(
+                                      color: Colors.grey.shade200,
+                                      height: 1,
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    /// Date Row
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(
+                                            Icons.calendar_today_outlined,
+                                            size: 14,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            item.createdAt ?? '',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-
-                                const SizedBox(height: 14),
-
-                                /// Item Name
-                                Text(
-                                  item.itemName ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1F2937),
-                                  ),
-                                ),
-
-                                const SizedBox(height: 10),
-
-                                /// Description
-                                Text(
-                                  item.description ?? '',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    height: 1.5,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(width: 14),
-
-                          /// Amount Box
-                          Container(
-                            width: 110,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade50,
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color: Colors.green.shade100,
                               ),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Amount',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.green.shade700,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  '₹ ${item.itemAmount ?? '0'}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade800,
-                                  ),
-                                ),
-                              ],
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Text(
+                            'No deduction records found',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
                             ),
                           ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      /// Divider
-                      Divider(
-                        color: Colors.grey.shade200,
-                        height: 1,
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      /// Date Row
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              Icons.calendar_today_outlined,
-                              size: 14,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              item.createdAt ?? '',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          )
-        : const Center(
-            child: Text(
-              'No deduction records found',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey,
-              ),
-            ),
-          )
-    : const Center(
-        child: CircularProgressIndicator(),
-      ),
-              bottomNavigationBar: BottomNavigationBarScreen(token:token),
+                        )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+              bottomNavigationBar: BottomNavigationBarScreen(token: token),
             ),
           )
         : Scaffold(

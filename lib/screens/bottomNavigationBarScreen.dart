@@ -2,46 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:site720_client/screens/complaintList.dart';
 import '../settings/common.dart';
 import 'contactusPage.dart';
+
 class BottomNavigationBarScreen extends StatelessWidget {
   String? token;
   BottomNavigationBarScreen({this.token, super.key});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, bottom: 20, top: 10, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildButton(
-            context: context,
-            text: 'Contact Us',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ContactUsPage(token: token),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
-          _buildButton(
-            context: context,
-            text: 'Complaint',
-            onTap: () {
-              if (token != null && token != "") {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 25, bottom: 20, top: 10, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildButton(
+              context: context,
+              text: 'Contact Us',
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ComplaintListPage(token),
+                    builder: (context) => ContactUsPage(token: token),
                   ),
                 );
-              } else {
-                Common.toastMessaage("Login to watch complaints", Colors.red);
-              }
-            },
-          ),
-        ],
+              },
+            ),
+            const SizedBox(width: 10),
+            _buildButton(
+              context: context,
+              text: 'Complaint',
+              onTap: () {
+                if (token != null && token != "") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ComplaintListPage(token),
+                    ),
+                  );
+                } else {
+                  Common.toastMessaage("Login to watch complaints", Colors.red);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -72,7 +77,8 @@ class BottomNavigationBarScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 105, 38, 56).withOpacity(0.3),
+                  color:
+                      const Color.fromARGB(255, 105, 38, 56).withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -84,7 +90,9 @@ class BottomNavigationBarScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    text == 'Contact Us' ? Icons.contact_mail : Icons.assignment,
+                    text == 'Contact Us'
+                        ? Icons.contact_mail
+                        : Icons.assignment,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -107,7 +115,6 @@ class BottomNavigationBarScreen extends StatelessWidget {
     );
   }
 }
-
 
 class BottomNavigationBarScreenV2 extends StatelessWidget {
   String? token;
@@ -231,67 +238,74 @@ class BottomNavigationBarScreenV2 extends StatelessWidget {
     );
   }
 }
+
 class BottomNavigationBarScreenHover extends StatefulWidget {
   String? token;
   BottomNavigationBarScreenHover({this.token, super.key});
 
   @override
-  State<BottomNavigationBarScreenHover> createState() => _BottomNavigationBarScreenHoverState();
+  State<BottomNavigationBarScreenHover> createState() =>
+      _BottomNavigationBarScreenHoverState();
 }
 
-class _BottomNavigationBarScreenHoverState extends State<BottomNavigationBarScreenHover> {
+class _BottomNavigationBarScreenHoverState
+    extends State<BottomNavigationBarScreenHover> {
   bool _isHoveringContact = false;
   bool _isHoveringComplaint = false;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, bottom: 20, top: 10, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildHoverButton(
-            text: 'Contact Us',
-            icon: Icons.contact_mail,
-            isHovering: _isHoveringContact,
-            onHover: (value) {
-              setState(() {
-                _isHoveringContact = value;
-              });
-            },
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ContactUsPage(token: widget.token),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
-          _buildHoverButton(
-            text: 'Complaint',
-            icon: Icons.assignment,
-            isHovering: _isHoveringComplaint,
-            onHover: (value) {
-              setState(() {
-                _isHoveringComplaint = value;
-              });
-            },
-            onTap: () {
-              if (widget.token != null && widget.token != "") {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 25, bottom: 20, top: 10, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildHoverButton(
+              text: 'Contact Us',
+              icon: Icons.contact_mail,
+              isHovering: _isHoveringContact,
+              onHover: (value) {
+                setState(() {
+                  _isHoveringContact = value;
+                });
+              },
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ComplaintListPage(widget.token),
+                    builder: (context) => ContactUsPage(token: widget.token),
                   ),
                 );
-              } else {
-                Common.toastMessaage("Login to watch complaints", Colors.red);
-              }
-            },
-          ),
-        ],
+              },
+            ),
+            const SizedBox(width: 10),
+            _buildHoverButton(
+              text: 'Complaint',
+              icon: Icons.assignment,
+              isHovering: _isHoveringComplaint,
+              onHover: (value) {
+                setState(() {
+                  _isHoveringComplaint = value;
+                });
+              },
+              onTap: () {
+                if (widget.token != null && widget.token != "") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ComplaintListPage(widget.token),
+                    ),
+                  );
+                } else {
+                  Common.toastMessaage("Login to watch complaints", Colors.red);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -328,14 +342,16 @@ class _BottomNavigationBarScreenHoverState extends State<BottomNavigationBarScre
             boxShadow: isHovering
                 ? [
                     BoxShadow(
-                      color: const Color.fromARGB(255, 105, 38, 56).withOpacity(0.5),
+                      color: const Color.fromARGB(255, 105, 38, 56)
+                          .withOpacity(0.5),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
                   ]
                 : [
                     BoxShadow(
-                      color: const Color.fromARGB(255, 105, 38, 56).withOpacity(0.3),
+                      color: const Color.fromARGB(255, 105, 38, 56)
+                          .withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),

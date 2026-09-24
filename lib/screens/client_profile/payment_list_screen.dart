@@ -10,7 +10,8 @@ import '../../settings/common.dart';
 import '../bottomNavigationBarScreen.dart';
 
 class PaymentListScreen extends StatefulWidget {
-  const PaymentListScreen({super.key});
+  final String projectId;
+  const PaymentListScreen(this.projectId, {super.key});
 
   @override
   State<PaymentListScreen> createState() => _PaymentListScreenState();
@@ -57,7 +58,10 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
       return;
     }
 
-    paymentList = await HttpService.getClientPaymentDetails(token);
+    paymentList = await HttpService.getClientPaymentDetails(
+      token,
+      widget.projectId,
+    );
 
     if (mounted) {
       setState(() {
@@ -191,125 +195,125 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
   }
 
   @override
- @override
-Widget build(BuildContext context) {
-  if (!hasInternet && !isLoading) {
-    return _buildNoNetworkScreen();
-  }
+  @override
+  Widget build(BuildContext context) {
+    if (!hasInternet && !isLoading) {
+      return _buildNoNetworkScreen();
+    }
 
-  return Scaffold(
-    backgroundColor: const Color(0xFFF8FAFC),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
 
-    // AppBar remains fixed at the top
-    // (removed: extendBodyBehindAppBar: true)
-    appBar: _buildAppBar(),
+      // AppBar remains fixed at the top
+      // (removed: extendBodyBehindAppBar: true)
+      appBar: _buildAppBar(),
 
-    body: isLoading
-        ? _buildLoadingScreen()
-        : paymentList == null || paymentList!.data.isEmpty
-            ? _buildEmptyScreen()
-            : RefreshIndicator(
-                color: primaryColor,
-                onRefresh: _onRefresh,
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  slivers: [
-                    // SliverToBoxAdapter(
-                    //   child: _buildHeaderSection(),
-                    // ),
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return _buildPaymentCard(index);
-                          },
-                          childCount: paymentList!.data.length,
+      body: isLoading
+          ? _buildLoadingScreen()
+          : paymentList == null || paymentList!.data.isEmpty
+              ? _buildEmptyScreen()
+              : RefreshIndicator(
+                  color: primaryColor,
+                  onRefresh: _onRefresh,
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    slivers: [
+                      // SliverToBoxAdapter(
+                      //   child: _buildHeaderSection(),
+                      // ),
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return _buildPaymentCard(index);
+                            },
+                            childCount: paymentList!.data.length,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-    bottomNavigationBar: BottomNavigationBarScreen(token: token),
-  );
-}
-
-PreferredSizeWidget _buildAppBar() {
-  return AppBar(
-    elevation: 0,
-    backgroundColor: const Color.fromARGB(255, 224, 173, 190),
-    surfaceTintColor: const Color.fromARGB(255, 224, 173, 190),
-    shadowColor: Colors.black.withOpacity(0.15),
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: const Text(
-      'Payment Details',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.3,
-      ),
-    ),
-    centerTitle: false,
-  );
-}
-
-Widget _buildHeaderSection() {
-  final totalPayments = paymentList!.data.length;
-  double totalAmount = 0;
-  for (var item in paymentList!.data) {
-    totalAmount += double.tryParse(item.amount.toString()) ?? 0;
+      bottomNavigationBar: BottomNavigationBarScreen(token: token),
+    );
   }
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
 
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          primaryColor,
-          secondaryColor,
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(34),
-        bottomRight: Radius.circular(34),
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0x33000000),
-          blurRadius: 24,
-          offset: Offset(0, 12),
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: const Color.fromARGB(255, 224, 173, 190),
+      surfaceTintColor: const Color.fromARGB(255, 224, 173, 190),
+      shadowColor: Colors.black.withOpacity(0.15),
+      iconTheme: const IconThemeData(color: Colors.white),
+      title: const Text(
+        'Payment Details',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.3,
         ),
-      ],
-    ),
-    // child: Row(
-    //   children: [
-    //     Expanded(
-    //       child: _buildStatCard(
-    //         icon: Icons.receipt_long_rounded,
-    //         title: 'Payments',
-    //         value: totalPayments.toString(),
-    //       ),
-    //     ),
-    //     const SizedBox(width: 12),
-    //     Expanded(
-    //       child: _buildStatCard(
-    //         icon: Icons.account_balance_wallet_rounded,
-    //         title: 'Total',
-    //         value: '₹ ${totalAmount.toStringAsFixed(0)}',
-    //       ),
-    //     ),
-    //   ],
-    // ),
-  );
-}
+      ),
+      centerTitle: false,
+    );
+  }
+
+  Widget _buildHeaderSection() {
+    final totalPayments = paymentList!.data.length;
+    double totalAmount = 0;
+    for (var item in paymentList!.data) {
+      totalAmount += double.tryParse(item.amount.toString()) ?? 0;
+    }
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            secondaryColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(34),
+          bottomRight: Radius.circular(34),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 24,
+            offset: Offset(0, 12),
+          ),
+        ],
+      ),
+      // child: Row(
+      //   children: [
+      //     Expanded(
+      //       child: _buildStatCard(
+      //         icon: Icons.receipt_long_rounded,
+      //         title: 'Payments',
+      //         value: totalPayments.toString(),
+      //       ),
+      //     ),
+      //     const SizedBox(width: 12),
+      //     Expanded(
+      //       child: _buildStatCard(
+      //         icon: Icons.account_balance_wallet_rounded,
+      //         title: 'Total',
+      //         value: '₹ ${totalAmount.toStringAsFixed(0)}',
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+  }
 
   Widget _buildStatCard({
     required IconData icon,

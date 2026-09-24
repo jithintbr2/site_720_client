@@ -29,21 +29,44 @@ class _DailyStatusState extends State<DailyStatus> {
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     token = await Common.getSharedPref("token");
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      setState(() => result = true);
-    } else {
-      setState(() => result = false);
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if (!mounted) return;
+
+    final hasInternet =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!hasInternet) {
+      setState(() {
+        result = false;
+      });
+      return;
     }
 
-    workStatus = await HttpService.getWorkStatus(token);
-    countData = await HttpService.getCountData(token, widget.projectId);
+    try {
+      final responses = await Future.wait([
+        HttpService.getWorkStatus(token, widget.projectId),
+        HttpService.getCountData(token, widget.projectId),
+      ]);
 
-    if (workStatus != null) setState(() {});
+      if (!mounted) return;
+
+      setState(() {
+        result = true;
+        workStatus = responses[0] as ClientWorkStatusModel?;
+        countData = responses[1] as GetCountLabours?;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        result = false;
+      });
+    }
   }
 
   void showCustomCalendar(BuildContext context) {
